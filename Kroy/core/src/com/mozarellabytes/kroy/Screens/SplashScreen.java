@@ -16,11 +16,18 @@ public class SplashScreen implements Screen {
 
     private final Kroy game;
 
+    /** The first image displayed as the splash screen */
+    private final Texture backGroundLogo1;
     /** The image displayed as the splash screen */
-    private final Texture backgroundLogo;
+    private final Texture backgroundLogo2;
 
     /** The time that the splash screen has been displayed to the screen */
     private long startTime;
+
+    /**
+     * Controls the transparency of the first background
+     */
+    private float spriteBatchTransparency;
 
     /** Constructor for the splash screen
      *
@@ -28,8 +35,10 @@ public class SplashScreen implements Screen {
      */
     public SplashScreen(Kroy game) {
         this.game = game;
-        backgroundLogo = new Texture(Gdx.files.internal("images/backgroundLogo.jpg"), true);
-        backgroundLogo.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+        backGroundLogo1 = new Texture(Gdx.files.internal("images/SEPRet Studios Logo. Splashpng.png"));
+        backgroundLogo2 = new Texture(Gdx.files.internal("images/backgroundLogo.jpg"), true);
+        backgroundLogo2.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+        spriteBatchTransparency = 1;
     }
 
     /** Logs the time that the screen was first rendered */
@@ -47,9 +56,16 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
-        game.batch.draw(backgroundLogo, 0, 0, Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
+        game.batch.setColor(1,1,1,1);
+        game.batch.draw(backgroundLogo2, 0, 0, Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
+        game.batch.setColor(1,1,1,spriteBatchTransparency);
+        game.batch.draw(backGroundLogo1,0,0,Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
         game.batch.end();
 
+        if(TimeUtils.timeSinceMillis(startTime) > 1000) {
+            spriteBatchTransparency -= Gdx.graphics.getDeltaTime() * 1f;
+        }
+        // #Assessment3
         if(TimeUtils.timeSinceMillis(startTime) > 3000){
             game.setScreen(new ControlsScreen(game, new MenuScreen(game), "menu"));
         }
@@ -78,6 +94,6 @@ public class SplashScreen implements Screen {
     /** Called when this screen should release all resources. */
     @Override
     public void dispose() {
-        backgroundLogo.dispose();
+        backgroundLogo2.dispose();
     }
 }
