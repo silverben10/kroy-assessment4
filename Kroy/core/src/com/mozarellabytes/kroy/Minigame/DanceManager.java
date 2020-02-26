@@ -1,9 +1,5 @@
 package com.mozarellabytes.kroy.Minigame;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.Vector2;
-import com.mozarellabytes.kroy.Utilities.CameraShake;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,8 +89,8 @@ public class DanceManager {
      * Gets the distance to the nearest beat where .5f is equidistant between two beats and 0f is directly on the beat
      * @return float distance to nearest beat
      */
-    public float getBeatProxemity() {
-        return 2 * Math.abs(getPhase()-.5f);
+    public float getBeatProximity() {
+        return 3 * Math.abs(getPhase()-.5f);
     }
 
     /**
@@ -116,33 +112,33 @@ public class DanceManager {
         // This is the first attempted move this beat
         if (!doneThisBeat)
         {
-            float proxemity = getBeatProxemity();
+            float proximity = getBeatProximity();
             float phase = getPhase();
-            if (proxemity > .95f) {
+            if (proximity > .95f) {
                 doneThisBeat = true;
                 goodMove();
                 notifyResult(DanceResult.GREAT);
                 return DanceResult.GREAT;
             }
-            else if (proxemity > .9f) {
+            else if (proximity > .9f) {
                 doneThisBeat = true;
                 goodMove();
                 notifyResult(DanceResult.GOOD);
                 return DanceResult.GOOD;
             }
-            else if (proxemity > .8) {
+            else if (proximity > .8) {
                 doneThisBeat = true;
                 goodMove();
                 notifyResult(DanceResult.OKAY);
                 return DanceResult.OKAY;
             }
-            else if (proxemity > .5 && phase > .5f) {
+            else if (proximity > .5 && phase > .5f) {
                 doneThisBeat = true;
                 killCombo();
                 notifyResult(DanceResult.EARLY);
                 return DanceResult.EARLY;
             }
-            else if (proxemity > .5 && phase < .5f) {
+            else if (proximity > .5 && phase < .5f) {
                 doneThisBeat = true;
                 killCombo();
                 notifyResult(DanceResult.LATE);
