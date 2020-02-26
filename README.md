@@ -8,7 +8,7 @@ or use software of your choice.
 
 ## Step 2.
 Find a folder in your file system, then for Git Bash, use this command to clone the files to your machine:
-`git clone "https://github.com/EMHodges/SEPR-game.git"` (you should be asked to sign in)
+`git clone "https://github.com/silverben10/kroy-assessment4.git"` (you should be asked to sign in)
 
 ## Step 3.
 Download IntelliJ here https://www.jetbrains.com/idea/download/ for your operating system, 
