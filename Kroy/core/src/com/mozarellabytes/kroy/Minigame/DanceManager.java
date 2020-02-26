@@ -114,7 +114,7 @@ public class DanceManager {
         {
             float proximity = getBeatProximity();
             float phase = getPhase();
-            if (proximity > .5 && phase > .5f) {
+            if (proximity > .75 && phase > .5f) {
                 doneThisBeat = true;
                 killCombo();
                 notifyResult(DanceResult.EARLY);
