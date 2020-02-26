@@ -8,13 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.Entities.FireTruck;
 import com.mozarellabytes.kroy.Entities.Patrol;
 import com.mozarellabytes.kroy.Kroy;
 import com.mozarellabytes.kroy.Minigame.*;
-import com.mozarellabytes.kroy.Utilities.CameraShake;
 import com.mozarellabytes.kroy.Utilities.GUI;
 import com.mozarellabytes.kroy.Utilities.GameInputHandler;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
@@ -272,7 +270,7 @@ public class DanceScreen implements Screen, BeatListener {
         game.batch.draw(targetBoxTexture, arrowsOrigin.x, arrowsOrigin.y, ARROW_SIZE, ARROW_SIZE);
 
         if (danceMan.getCombo() > 2) {
-            game.font50.draw(game.batch, "Press [SPACE] to use combo!", comboHintLocation.x, (comboHintLocation.y + danceMan.getBeatProxemity()* camera.viewportHeight/32), camera.viewportWidth, 1, false);
+            game.font50.draw(game.batch, "Press [SPACE] to use combo!", comboHintLocation.x, (comboHintLocation.y + danceMan.getBeatProximity()* camera.viewportHeight/32), camera.viewportWidth, 1, false);
         }
 
         if (lastResult != null) {
