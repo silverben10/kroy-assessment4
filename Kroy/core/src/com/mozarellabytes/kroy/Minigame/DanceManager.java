@@ -114,7 +114,13 @@ public class DanceManager {
         {
             float proximity = getBeatProximity();
             float phase = getPhase();
-            if (proximity > .95f) {
+            if (proximity > .5 && phase > .5f) {
+                doneThisBeat = true;
+                killCombo();
+                notifyResult(DanceResult.EARLY);
+                return DanceResult.EARLY;
+            }
+            else if (proximity > .95f) {
                 doneThisBeat = true;
                 goodMove();
                 notifyResult(DanceResult.GREAT);
@@ -131,12 +137,6 @@ public class DanceManager {
                 goodMove();
                 notifyResult(DanceResult.OKAY);
                 return DanceResult.OKAY;
-            }
-            else if (proximity > .5 && phase > .5f) {
-                doneThisBeat = true;
-                killCombo();
-                notifyResult(DanceResult.EARLY);
-                return DanceResult.EARLY;
             }
             else if (proximity > .5 && phase < .5f) {
                 doneThisBeat = true;
