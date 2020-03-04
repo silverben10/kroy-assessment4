@@ -132,12 +132,12 @@ public class GameScreen implements Screen {
         mapLayers = map.getLayers();
         backgroundLayerIndex = new int[]{mapLayers.getIndex("background")};
 
-        structureLayersIndices = new int[]{mapLayers.getIndex("structures"),
+        structureLayersIndices = new int[]{mapLayers.getIndex("structures3"),
+                mapLayers.getIndex("structures"),
                 mapLayers.getIndex("structures2"),
-                mapLayers.getIndex("structures3"),
                 mapLayers.getIndex("transparentStructures")};
 
-        station = new FireStation(3, 7);
+        station = new FireStation(3, 8);
 
         spawn(FireTruckType.Emerald);
         spawn(FireTruckType.Amethyst);
@@ -145,12 +145,12 @@ public class GameScreen implements Screen {
         spawn(FireTruckType.Ruby);
 
         fortresses = new ArrayList<Fortress>();
-        fortresses.add(new Fortress(12, 23.5f, FortressType.Revs));
-        fortresses.add(new Fortress(30.5f, 22.5f, FortressType.Walmgate));
-        fortresses.add(new Fortress(16.5f, 3.5f, FortressType.Railway));
-        fortresses.add(new Fortress(32f, 1.5f, FortressType.Clifford));
-        fortresses.add(new Fortress(41.95f, 23.5f, FortressType.Museum));
-        fortresses.add(new Fortress(44f, 11f, FortressType.CentralHall));
+        fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
+        fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
+        fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
+        fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
+        fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
+        fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
 
         patrols = new ArrayList<Patrol>();
         patrols.add(new Patrol(this,PatrolType.Blue));
@@ -560,7 +560,7 @@ public class GameScreen implements Screen {
      */
     private void spawn(FireTruckType type) {
         SoundFX.sfx_truck_spawn.play();
-        station.spawn(new FireTruck(this, new Vector2(6,7), type));
+        station.spawn(new FireTruck(this, new Vector2(6,8), type));
         gameState.addFireTruck();
     }
 
