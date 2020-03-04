@@ -192,6 +192,12 @@ public class Patrol extends Sprite {
         current=path.getHead();
     }
 
+    /**
+     * Creates a set of intermediate points for the patrol to travel along when adding a new tile to the path.
+     * This ensures smooth movement between the tiles and different patrol speeds.
+     * @param coordinate The coordinate of the new tile.
+     * @param previous Previous coordinates of the patrol entity.
+     */
     public void addTileToPath(Vector2 coordinate, Vector2 previous) {
             int interpolation = (int) (90/type. getSpeed());
             for (int i=1; i<interpolation; i++) {
@@ -202,7 +208,6 @@ public class Patrol extends Sprite {
     }
 
     public void move() {
-
         if (moving) {
             Node next=path.getNext(current);
             Vector2 nextTile = path.getData(next);
@@ -214,17 +219,19 @@ public class Patrol extends Sprite {
         }
     }
 
-/**
+    /**
      * Deals damage to Firestation by generating a BlasterParticle and adding
      * it to the spray
      *
      * @param station FireStation being attacked
      */
-
     public void attack(FireStation station) {
         this.spray.add(new BlasterParticle(this, station));
     }
 
+    /**
+     * Updates the water spray to display new position and damage entities.
+     */
     public void updateSpray() {
         if (this.spray != null) {
             for (int i=0; i < this.spray.size(); i++) {

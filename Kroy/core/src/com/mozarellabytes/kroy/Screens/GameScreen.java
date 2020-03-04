@@ -130,9 +130,12 @@ public class GameScreen implements Screen {
 
         //Orders renderer to start rendering the background, then the player layer, then structures
         mapLayers = map.getLayers();
-        backgroundLayerIndex = new int[]{mapLayers.getIndex("background")};
+        backgroundLayerIndex = new int[]{
+                mapLayers.getIndex("background")
+        };
 
-        structureLayersIndices = new int[]{mapLayers.getIndex("structures"),
+        structureLayersIndices = new int[] {
+                mapLayers.getIndex("structures"),
                 mapLayers.getIndex("structures2"),
                 mapLayers.getIndex("structures3"),
                 mapLayers.getIndex("transparentStructures")};
@@ -196,14 +199,17 @@ public class GameScreen implements Screen {
             truck.drawSprite(mapBatch);
         }
 
+//        Draw station if it hasn't been destroyed.
        if(!gameState.hasStationDestoyed()) {
             station.draw(mapBatch);
        }
 
+//       Draw all fortresses.
         for (Fortress fortress : this.fortresses) {
             fortress.draw(mapBatch);
         }
 
+//        Draw all dead fortresses.
         for (DestroyedEntity deadFortress : deadEntities){
             deadFortress.draw(mapBatch);
         }
@@ -321,8 +327,6 @@ public class GameScreen implements Screen {
             truck.move();
             truck.updateSpray();
 
-            //truck.move();
-
             // manages attacks between trucks and fortresses
             for (Fortress fortress : this.fortresses) {
                 if (fortress.withinRange(truck.getVisualPosition())) {
@@ -335,6 +339,7 @@ public class GameScreen implements Screen {
                 }
             }
 
+//            If a patrol reaches the same tile as a fireTruck, begin the minigame.
             for (Patrol patrol : this.patrols) {
                 Vector2 patrolPos = new Vector2(Math.round(patrol.position.x), Math.round(patrol.position.y));
                 if (patrolPos.equals(truck.getTilePosition())) {
@@ -366,17 +371,17 @@ public class GameScreen implements Screen {
 
             patrol.updateSpray();
 
-            if(patrol.getType().equals(PatrolType.Station)){
-                if((gameState.firstFortressDestroyed())){
-                    if((patrol.getPosition().equals(PatrolType.Station.getPoint4()))){
+            if(patrol.getType().equals(PatrolType.Station)) {
+                if((gameState.firstFortressDestroyed())) {
+                    if((patrol.getPosition().equals(PatrolType.Station.getPoint4()))) {
                         patrol.attack(station);
                     }
-                    else{
+                    else {
                         patrol.move();
                     }
                 }
                 else{
-                    if(gameState.hasStationDestoyed()){
+                    if(gameState.hasStationDestoyed()) {
                         patrols.remove(patrol);
 
                         //patrol.move();
@@ -386,12 +391,13 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-            else{
+
+            else {
                 patrol.move();
             }
             if (patrol.getHP() <= 0) {
                 patrols.remove(patrol);
-                if((patrol.getType().equals(PatrolType.Station))&&(!gameState.hasStationDestoyed())){
+                if((patrol.getType().equals(PatrolType.Station))&&(!gameState.hasStationDestoyed())) {
                     patrols.add(new Patrol(this,PatrolType.Station));
                 }
             }
@@ -414,7 +420,6 @@ public class GameScreen implements Screen {
                     SoundFX.sfx_fortress_destroyed.play();
                 }
             }
-
         }
 
         if (gameState.getTrucksInAttackRange() > 0 && SoundFX.music_enabled){
@@ -422,8 +427,6 @@ public class GameScreen implements Screen {
         } else {
             SoundFX.stopTruckAttack();
         }
-
-        //System.out.println(SoundFX.isPlaying);
 
         shapeMapRenderer.end();
         shapeMapRenderer.setColor(Color.WHITE);
