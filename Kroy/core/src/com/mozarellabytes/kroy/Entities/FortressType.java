@@ -113,6 +113,11 @@ public enum FortressType {
 
     public int getH() { return h; }
 
+    /**
+     * Returns the correct texture for the fortress depending on its current HP.
+     * @param currentHP
+     * @return a Texture object
+     */
     public Texture getTexture(float currentHP) {
         if (currentHP > getMaxHP()/2){
             return textureFull;
