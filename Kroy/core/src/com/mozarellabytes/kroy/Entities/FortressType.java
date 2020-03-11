@@ -34,19 +34,19 @@ public enum FortressType {
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_dead.png"))),
 
     Shambles ("Shambles", 500, 7, 200, 20, 5, 3,
-            new Texture(Gdx.files.internal("sprites/fortress/shambles.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/shambles.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/shambles.png"))),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_half.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_dead.png"))),
 
     Minster ("York Minster", 1500, 8, 180, 20, 4, 5,
-            new Texture(Gdx.files.internal("sprites/fortress/minster.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/minster.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/minster.png"))),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_minster.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_half.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_dead.png"))),
     
     Railway ("Train Station", 1000, 8, 250, 15, 6, 4,
-            new Texture(Gdx.files.internal("sprites/fortress/train.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/train.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/train.png")));
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_half.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_dead.png")));
 
     /** The name for the fortress, visible once the fortress has been clicked on */
     private final String name;
