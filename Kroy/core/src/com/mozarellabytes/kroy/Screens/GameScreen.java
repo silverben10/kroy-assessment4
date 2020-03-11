@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
      * coordinates, e.g. big stat bars, buttons, pause
      * screen
      */
-    private final GUI gui;
+    private GUI gui;
 
     /**
      * Stores the progress through the game. It keeps
@@ -588,6 +588,8 @@ public class GameScreen implements Screen {
     public PlayState getState() {
         return this.state;
     }
+
+    public void setGUI(GUI gui){ this.gui = gui; }
 
 }
 
