@@ -199,14 +199,36 @@ public class Patrol extends Sprite {
      * @param previous Previous coordinates of the patrol entity.
      */
     public void addTileToPath(Vector2 coordinate, Vector2 previous) {
-            int interpolation = (int) (90/type. getSpeed());
-            for (int i=1; i<interpolation; i++) {
-                this.path.addNode(new Vector2((((previous.x - coordinate.x)*-1)/interpolation)*i + previous.x, (((previous.y - coordinate.y)*-1)/interpolation)*i + previous.y));
+        int interpolation = (int) (90/type. getSpeed());
+        float offsetX = 0;
+        float offsetY = 0;
+        for (int i=1; i<interpolation; i++) {
+            if (previous.x == coordinate.x) {
+                offsetX = getHoverOffset(interpolation, i);
+            } else {
+                offsetX = 0;
             }
-        previousTile=new Vector2(((int) coordinate.x), ((int) coordinate.y));
-        this.path.addNode(previousTile);
+            if (previous.y == coordinate.y) {
+                offsetY = getHoverOffset(interpolation, i);
+            } else {
+                offsetY = 0;
+            }
+            this.path.addNode(new Vector2((((previous.x - coordinate.x) * -1) / interpolation) * i + previous.x + offsetX, (((previous.y - coordinate.y) * -1) / interpolation) * i + previous.y + offsetY));
+        }
+            previousTile = new Vector2(((int) coordinate.x), ((int) coordinate.y));
+            this.path.addNode(previousTile);
+
     }
 
+    public float getHoverOffset(int interpolation, double i){
+        //sin() function on counter i, changes based on interpolation between 0 and 2PiRad for input
+        float tempOut;
+        double radianChange = 2*Math.PI;
+
+        tempOut =(float) (Math.sin(radianChange * (i/interpolation)) / 8);
+        //Gdx.app.log("Tag", String.valueOf(i));
+        return tempOut;
+    }
     public void move() {
         if (moving) {
             Node next=path.getNext(current);
@@ -215,7 +237,6 @@ public class Patrol extends Sprite {
             this.position = nextTile;
             current=next;
             previousTile = nextTile;
-
         }
     }
 
