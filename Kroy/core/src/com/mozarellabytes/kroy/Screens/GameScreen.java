@@ -156,10 +156,10 @@ public class GameScreen implements Screen {
         fortresses = new ArrayList<Fortress>();
         fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
         fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
-        fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
-        fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
-        fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
-        fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
+        fortresses.add(new Fortress(14.5f, 5f, FortressType.Railway));
+        fortresses.add(new Fortress(34f, 2.5f, FortressType.Clifford));
+        fortresses.add(new Fortress(41.95f, 25.5f, FortressType.Minster));
+        fortresses.add(new Fortress(44.5f, 10.5f, FortressType.Shambles));
 
         patrols = new ArrayList<Patrol>();
         patrols.add(new Patrol(this,PatrolType.Blue));
@@ -169,7 +169,7 @@ public class GameScreen implements Screen {
         patrols.add(new Patrol(this,PatrolType.Yellow));
         patrols.add(new Patrol(this,PatrolType.Station));
 
-        deadEntities = new ArrayList<>(7                           );
+        deadEntities = new ArrayList<>(7);
 
         explosions = new ArrayList<>();
         explosionsToRemove = new ArrayList<>();
