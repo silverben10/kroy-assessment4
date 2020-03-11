@@ -99,6 +99,15 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * The list of all active explosions
+     */
+    private ArrayList<Explosion> explosions;
+    /**
+     * The list of all explosions to be removed
+     */
+    private ArrayList<Explosion> explosionsToRemove;
+
+    /**
      * Constructor which has the game passed in
      *
      * @param game LibGdx game
@@ -147,20 +156,23 @@ public class GameScreen implements Screen {
         fortresses = new ArrayList<Fortress>();
         fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
         fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
-        fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
-        fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
-        fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
-        fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
+        fortresses.add(new Fortress(14.5f, 5, FortressType.Railway));
+        fortresses.add(new Fortress(34, 2.5f, FortressType.Clifford));
+        fortresses.add(new Fortress(41.95f, 25.5f, FortressType.Minster));
+        fortresses.add(new Fortress(44.5f, 10.5f, FortressType.Shambles));
 
         patrols = new ArrayList<Patrol>();
         patrols.add(new Patrol(this,PatrolType.Blue));
         patrols.add(new Patrol(this,PatrolType.Green));
-        patrols.add(new Patrol(this,PatrolType.Peach));
+        patrols.add(new Patrol(this,PatrolType.Red));
         patrols.add(new Patrol(this,PatrolType.Violet));
         patrols.add(new Patrol(this,PatrolType.Yellow));
         patrols.add(new Patrol(this,PatrolType.Station));
 
-        deadEntities = new ArrayList<>(7                           );
+        deadEntities = new ArrayList<>(7);
+
+        explosions = new ArrayList<>();
+        explosionsToRemove = new ArrayList<>();
 
 
         // sets the origin point to which all of the polygon's local vertices are relative to.
@@ -208,6 +220,9 @@ public class GameScreen implements Screen {
             deadFortress.draw(mapBatch);
         }
 
+
+
+
         mapBatch.end();
 
         mapRenderer.render(structureLayersIndices);
@@ -223,6 +238,13 @@ public class GameScreen implements Screen {
                 patrol.drawSprite(mapBatch);
             }
         }
+
+        for(Explosion explosion:explosions){
+            if(explosion.drawExplosion(mapBatch)){
+                explosionsToRemove.add(explosion);
+            }
+        }
+
         mapBatch.end();
 
         shapeMapRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -345,6 +367,9 @@ public class GameScreen implements Screen {
 
             // check if truck is destroyed
             if (truck.getHP() <= 0) {
+                mapBatch.begin();
+                explosions.add(new Explosion(4,4,(int)truck.getPosition().x-1,(int)truck.getPosition().y-1,0.025f));
+                mapBatch.end();
                 gameState.removeFireTruck();
                 station.destroyTruck(truck);
                 if (truck.equals(this.selectedTruck)) {
@@ -354,6 +379,9 @@ public class GameScreen implements Screen {
         }
 
         if (station.getHP() <= 0) {
+            mapBatch.begin();
+            explosions.add(new Explosion(12,10,(int)station.getPosition().x,(int)station.getPosition().y,0.1f));
+            mapBatch.end();
             if(!(gameState.hasStationDestoyed())){
                 gameState.setStationDestoyed();
                 deadEntities.add(station.getDestroyedStation());
@@ -407,6 +435,9 @@ public class GameScreen implements Screen {
 
             // check if fortress is destroyed
             if (fortress.getHP() <= 0) {
+                mapBatch.begin();
+                explosions.add(new Explosion(12,10,(int)fortress.getPosition().x-5,(int)fortress.getPosition().y-5,0.1f));
+                mapBatch.end();
                 gameState.addFortress();
                 deadEntities.add(fortress.createDestroyedFortress());
                 this.fortresses.remove(fortress);
