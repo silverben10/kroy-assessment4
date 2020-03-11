@@ -64,6 +64,22 @@ public class GameState {
         this.fortressesDestroyed++;
     }
 
+    /**
+     * Returns the number of fortresses that have been destroyed.
+     * @return integer number of destroyed fortresses
+     */
+    public int getFortressesDestroyed() {
+        return fortressesDestroyed;
+    }
+
+    /**
+     * Returns the number of fire trucks currently active in the game.
+     * @return integer number of remaining fire trucks
+     */
+    public int getActiveFireTrucks() {
+        return activeFireTrucks;
+    }
+
     /** Determines whether the game has ended either when a certain
      * number of fortresses have been destroyed or when there are no
      * fire trucks left

@@ -98,6 +98,8 @@ public class GameScreen implements Screen {
         PLAY, PAUSE
     }
 
+    public SaveManager saveManager = new SaveManager();
+
     /**
      * Constructor which has the game passed in
      *
@@ -178,6 +180,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        saveManager.saveGame(this, gameState);
+        System.out.println("Saved game state.");
     }
 
     @Override
@@ -587,6 +591,14 @@ public class GameScreen implements Screen {
 
     public PlayState getState() {
         return this.state;
+    }
+
+    public ArrayList<DestroyedEntity> getDeadEntities() {
+        return this.deadEntities;
+    }
+
+    public DifficultyControl getDifficultyControl() {
+        return difficultyControl;
     }
 
 }
