@@ -33,20 +33,20 @@ public enum FortressType {
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_dead.png"))),
 
-    CentralHall ("Central Hall", 500, 7, 200, 20, 4, 3,
-            new Texture(Gdx.files.internal("sprites/fortress/UoY_central_hall_full.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/UoY_central_hall_half.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/UoY_central_hall_dead.png"))),
+    Shambles ("Shambles", 500, 7, 200, 20, 5, 3,
+            new Texture(Gdx.files.internal("sprites/fortress/shambles.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/shambles.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/shambles.png"))),
 
-    Museum ("York Museum", 1500, 8, 180, 20, 4, 3,
-            new Texture(Gdx.files.internal("sprites/fortress/fortress_yorkshire_museum_full.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/fortress_yorkshire_museum_half.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/fortress_yorkshire_museum_dead.png"))),
+    Minster ("York Minster", 1500, 8, 180, 20, 4, 5,
+            new Texture(Gdx.files.internal("sprites/fortress/minster.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/minster.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/minster.png"))),
     
-    Railway ("Railway Museum", 1000, 8, 250, 15, 5, 4,
-            new Texture(Gdx.files.internal("sprites/fortress/york_railway_museum_full.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/york_railway_museum_half.png")),
-            new Texture(Gdx.files.internal("sprites/fortress/york_railway_museum_dead.png")));
+    Railway ("Train Station", 1000, 8, 250, 15, 6, 4,
+            new Texture(Gdx.files.internal("sprites/fortress/train.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/train.png")),
+            new Texture(Gdx.files.internal("sprites/fortress/train.png")));
 
     /** The name for the fortress, visible once the fortress has been clicked on */
     private final String name;
