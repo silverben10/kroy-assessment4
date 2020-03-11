@@ -344,6 +344,7 @@ public class GUI {
     }
 
     public void idleInfoButton() {
+        gameScreen.setGUI(this);
         currentInfoTexture = infoButtonIdle;
     }
 

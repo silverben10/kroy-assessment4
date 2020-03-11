@@ -66,7 +66,7 @@ public class DanceManager {
         if (halfTime >= period)
         {
             halfTime = 0f;
-            if (!doneThisBeat && getNearestMove() != DanceMove.NONE && getNearestMove() != DanceMove.WAIT) {
+            if ((!doneThisBeat && getNearestMove() != DanceMove.NONE && getNearestMove() != DanceMove.WAIT) && getPhase() < 0.5 && getBeatProximity() < 0.75) {
                 // Player missed a turn
                 killCombo();
                 missedLastTurn = true;
