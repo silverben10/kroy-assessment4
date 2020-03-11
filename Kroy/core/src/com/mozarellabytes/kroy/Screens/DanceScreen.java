@@ -130,6 +130,11 @@ public class DanceScreen implements Screen, BeatListener {
 
         danceMan.update(delta);
 
+        /*
+        * Checks whether either the firefighter or the ET has 0 health.
+        * Sets the health of both game entities (fireTruck & patrol) to the respective health of the entities in the minigame.
+        * Sets the current screen to the main game screen again.
+        * */
         if (firefighter.getHealth() <= 0 || etDancer.getHealth() <= 0) {
             this.firetruck.setHP(firefighter.getHealth());
             this.patrol.setHP(etDancer.getHealth());
