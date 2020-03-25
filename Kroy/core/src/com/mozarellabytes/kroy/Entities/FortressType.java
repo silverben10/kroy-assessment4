@@ -126,7 +126,5 @@ public enum FortressType {
         } else {
             return textureDead;
         }
-        //return textureFull;
-        }
-
+    }
 }
