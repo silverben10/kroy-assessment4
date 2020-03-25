@@ -98,8 +98,6 @@ public class GameScreen implements Screen {
         PLAY, PAUSE
     }
 
-    public SaveManager saveManager = new SaveManager();
-
     /**
      * Constructor which has the game passed in
      *
@@ -162,7 +160,7 @@ public class GameScreen implements Screen {
         patrols.add(new Patrol(this,PatrolType.Yellow));
         patrols.add(new Patrol(this,PatrolType.Station));
 
-        deadEntities = new ArrayList<>(7                           );
+        deadEntities = new ArrayList<>(7);
 
 
         // sets the origin point to which all of the polygon's local vertices are relative to.
@@ -180,8 +178,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        saveManager.saveGame(this, gameState);
-        System.out.println("Saved game state.");
+        SaveManager.saveGameData(this, gameState);
     }
 
     @Override
