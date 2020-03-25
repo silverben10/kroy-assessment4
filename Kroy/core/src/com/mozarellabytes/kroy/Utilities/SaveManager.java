@@ -11,7 +11,7 @@ public class SaveManager {
     public SaveManager() {
     }
 
-    public void saveGame(GameScreen gameScreen, GameState gameState) {
+    public void saveGameData(GameScreen gameScreen, GameState gameState) {
         Preferences gameData = Gdx.app.getPreferences("gameData");
 
         /* *
@@ -31,7 +31,7 @@ public class SaveManager {
         // 1. Save GameState data.
         gameData.putInteger("activeFireTrucks", gameState.getActiveFireTrucks());
         gameData.putInteger("fortressesDestroyed", gameState.getFortressesDestroyed());
-        gameData.putBoolean("stationDestroyed", gameState.hasStationDestoyed());
+        gameData.putBoolean("stationDestroyed", gameState.isStationDestroyed());
         gameData.putBoolean("hasShownDanceTutorial", gameState.hasDanceTutorialShown());
 
         // 2. Save GameScreen data.
@@ -42,7 +42,7 @@ public class SaveManager {
         gameData.putString("difficultyMultiplier", gson.toJson(gameScreen.getDifficultyControl().getDifficultyMultiplier()));
     }
 
-    public Preferences loadGame() {
+    public Preferences loadGameData() {
         return Gdx.app.getPreferences("gameData");
     }
 }
