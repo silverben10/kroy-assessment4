@@ -63,7 +63,6 @@ project(":core") {
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        // https://mvnrepository.com/artifact/com.google.code.gson/gson
         compile group: 'com.google.code.gson', name: 'gson', version: '2.2.2'
     }
 
