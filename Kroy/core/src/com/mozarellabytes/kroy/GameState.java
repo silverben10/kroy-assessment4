@@ -23,14 +23,14 @@ public class GameState {
     /** The number of trucks that have a fortress within their attack range */
     private int trucksInAttackRange;
 
-    private boolean stationDestoyed;
+    private boolean stationDestroyed;
 
     /** Constructor for GameState */
     public GameState() {
         this.activeFireTrucks = 0;
         this.fortressesDestroyed = 0;
         this.activePatrols = 0;
-        this.stationDestoyed = false;
+        this.stationDestroyed = false;
         this.hasShownDanceTutorial = false;
     }
 
@@ -40,12 +40,12 @@ public class GameState {
     }
 
 
-    public void setStationDestoyed() {
-        this.stationDestoyed = true;
+    public void setStationDestroyed() {
+        this.stationDestroyed = true;
     }
 
-    public boolean hasStationDestoyed() {
-        return this.stationDestoyed;
+    public boolean isStationDestroyed() {
+        return this.stationDestroyed;
     }
 
     /** Removes one from activeFireTrucks, called when a firetruck
@@ -94,11 +94,7 @@ public class GameState {
     }
 
     public boolean firstFortressDestroyed() {
-        if ((fortressesDestroyed >= 1)&&(stationDestoyed==false)) {
-            return true;
-        } else{
-            return false;
-        }
+        return (fortressesDestroyed >= 1) && (!stationDestroyed);
     }
 
     /** Triggers the appropriate game over screen depending

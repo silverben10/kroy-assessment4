@@ -200,7 +200,7 @@ public class GameScreen implements Screen {
             truck.drawSprite(mapBatch);
         }
 
-       if(!gameState.hasStationDestoyed()) {
+       if(!gameState.isStationDestroyed()) {
             station.draw(mapBatch);
        }
 
@@ -358,8 +358,8 @@ public class GameScreen implements Screen {
         }
 
         if (station.getHP() <= 0) {
-            if(!(gameState.hasStationDestoyed())){
-                gameState.setStationDestoyed();
+            if(!(gameState.isStationDestroyed())){
+                gameState.setStationDestroyed();
                 deadEntities.add(station.getDestroyedStation());
             }
             patrols.remove(PatrolType.Station);
@@ -380,7 +380,7 @@ public class GameScreen implements Screen {
                     }
                 }
                 else{
-                    if(gameState.hasStationDestoyed()){
+                    if(gameState.isStationDestroyed()){
                         patrols.remove(patrol);
 
                         //patrol.move();
@@ -395,7 +395,7 @@ public class GameScreen implements Screen {
             }
             if (patrol.getHP() <= 0) {
                 patrols.remove(patrol);
-                if((patrol.getType().equals(PatrolType.Station))&&(!gameState.hasStationDestoyed())){
+                if((patrol.getType().equals(PatrolType.Station))&&(!gameState.isStationDestroyed())){
                     patrols.add(new Patrol(this,PatrolType.Station));
                 }
             }
