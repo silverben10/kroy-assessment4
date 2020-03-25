@@ -1,8 +1,6 @@
 package com.mozarellabytes.kroy.Entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -85,14 +83,14 @@ public class FireTruck extends Sprite {
     final int[] directionY = {0, 0, 1, -1};
 
     /** True if a tile has been visited when constructing a path, false otherwise */
-    boolean[][] vistited;
+    boolean[][] visited;
     /** Links parents to children in order o find the shortest path */
     Vector2[] prev;
     /** the shortest path between 2 points */
     LinkedList<Vector2> reconstructedPath;
     /**Checks if the mouse was dragged off the road multiple times in one instance**/
     private int counter = 0;
-    /** Path fireturch actually uses*/
+    /** Path fireturck actually uses*/
     private Vector2[] newPath;
 
     private Vector2 previous;
@@ -272,19 +270,19 @@ public class FireTruck extends Sprite {
         Vector2 goal = endPos;
 
 
-        vistited = new boolean[48][29];
+        visited = new boolean[48][29];
         prev = new Vector2[1392];
 
 
         for(int i=0; i<48; i++){
             for(int j=0; j<29; j++){
-                vistited[i][j] = false;
+                visited[i][j] = false;
             }
         }
 
         positions.addLast(start);
 
-        vistited[(int) start.x][(int) start.y] = true;
+        visited[(int) start.x][(int) start.y] = true;
 
 
         while (!positions.isEmpty()) {
@@ -330,7 +328,7 @@ public class FireTruck extends Sprite {
             if(!isRoad) {
                 continue;
             }
-            if(vistited[(int)newPos.x][(int)newPos.y]) {
+            if(visited[(int)newPos.x][(int)newPos.y]) {
                 continue;
             }
 
@@ -338,7 +336,7 @@ public class FireTruck extends Sprite {
 
             positions.addFirst(newPos);
 
-            vistited[(int)newPos.x] [(int)newPos.y] = true;
+            visited[(int)newPos.x] [(int)newPos.y] = true;
 
             prev[convertVector2ToIntPositionInMap(newPos)] = currentPos;
         }
@@ -348,17 +346,15 @@ public class FireTruck extends Sprite {
      *
      * @param pos    The current position being queued
      *
-     * @return An int reprsenting the Vector2 as a point on the map
+     * @return An int representing the Vector2 as a point on the map
      */
     private int convertVector2ToIntPositionInMap(Vector2 pos) {
         return ((int) (pos.x * 29 + pos.y));
     }
     /**
-     * Reverses an array
+     * Reverses an array.
      *
      * @param a    The shortest path array, so it goes from start to finish rather then finish to start in order
-     *
-     * @return A reversed array
      */
     private void reverse(Vector2[] a)
     {
