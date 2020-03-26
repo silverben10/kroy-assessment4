@@ -30,12 +30,16 @@ public enum PowerUpType {
 
 
     PowerUpType(String fileName, float timer, int spawnX, int spawnY){
+        this.fileName = fileName;
+        this.timer = timer;
+        this.spawnX = spawnX;
+        this.spawnY = spawnY;
         this.powerUpIcon = new Texture(Gdx.files.internal("sprites/powerup/"+fileName+".png"));
     }
 
     //Hovering animation method
 
     //Encounter method
-    
+
     //Case statement to show all actions for each type of powerup
 }
