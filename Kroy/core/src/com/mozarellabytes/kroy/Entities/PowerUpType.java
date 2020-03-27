@@ -25,20 +25,33 @@ public enum PowerUpType {
     /** y position to show where the powerup will spawn*/
     private final int spawnY;
 
+    /** powerup position*/
+    private Vector2 position;
+
     /** the sprite for the particular powerup */
     private final Texture powerUpIcon;
-
 
     PowerUpType(String fileName, float timer, int spawnX, int spawnY){
         this.fileName = fileName;
         this.timer = timer;
         this.spawnX = spawnX;
         this.spawnY = spawnY;
+        this.position = new Vector2(spawnX,spawnY);
         this.powerUpIcon = new Texture(Gdx.files.internal("sprites/powerup/"+fileName+".png"));
     }
 
     //Hovering animation method
-
+    public void hover(){
+        for(int i = 0; i<= 3; i++) {
+            for (float j = 0f; j <= 1f; j = j + 0.1f) {
+                if((i == 0) || (i == 3)) {
+                    position.y += j;
+                }else if((i == 1) || (i==2)){
+                    position.y -= j;
+                }
+            }
+        }
+    }
     //Encounter method
 
     //Case statement to show all actions for each type of powerup
