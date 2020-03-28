@@ -183,9 +183,6 @@ public class DanceScreen implements Screen, BeatListener {
             //System.out.println("Firetruck health: " + firefighter.getHealth() + " ET health: " + etDancer.getHealth());
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
 
         Gdx.gl.glClearColor(51/255f, 34/255f, 99/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

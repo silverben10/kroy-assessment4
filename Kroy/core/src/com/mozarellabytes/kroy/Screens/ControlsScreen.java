@@ -260,9 +260,6 @@ public class ControlsScreen implements Screen {
         } else if (this.screen.equals("dance")) {
             this.game.setScreen(parent);
         }
-        else if (this.screen.equals("dance")){
-            this.game.setScreen(parent);
-        }
     }
 
     /** Draws the image being shown behind the controls panel */

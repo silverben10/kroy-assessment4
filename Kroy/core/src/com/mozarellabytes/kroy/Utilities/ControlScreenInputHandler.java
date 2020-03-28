@@ -1,5 +1,6 @@
 package com.mozarellabytes.kroy.Utilities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
@@ -12,6 +13,7 @@ import com.mozarellabytes.kroy.Screens.ControlsScreen;
 public class ControlScreenInputHandler implements InputProcessor {
 
     private final ControlsScreen controlsScreen;
+    private boolean isDanceScreen;
 
     /**
      *  Constructs the control screen input handler
@@ -21,6 +23,7 @@ public class ControlScreenInputHandler implements InputProcessor {
     public ControlScreenInputHandler(ControlsScreen controlsScreen) {
 
         this.controlsScreen = controlsScreen;
+        isDanceScreen = false;
     }
 
     /** Called when a key was pressed
@@ -34,8 +37,15 @@ public class ControlScreenInputHandler implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.ESCAPE:
+                if(isDanceScreen){
+                    Gdx.app.exit();
+                }
+                controlsScreen.changeScreen();
+                isDanceScreen = true;
+                break;
             case Input.Keys.C:
                 controlsScreen.changeScreen();
+                isDanceScreen = true;
                 break;
         }
         return true;
