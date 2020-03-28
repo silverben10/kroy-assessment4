@@ -73,7 +73,6 @@ public class DanceScreen implements Screen, BeatListener {
 
         this.danceMan = new DanceManager(120f);
         danceMan.subscribeToBeat(this);
-        SoundFX.playDanceoffMusic();
 
         //System.out.println("Firetruck health: " + firetruck.getHP() + " ET health: " + patrol.getHP());
         this.patrol = patrol;
@@ -141,8 +140,10 @@ public class DanceScreen implements Screen, BeatListener {
             GUI gui = new GUI(game, (GameScreen) previousScreen);
             Gdx.input.setInputProcessor(new GameInputHandler((GameScreen) previousScreen, gui));
             gui.idleInfoButton();
-            SoundFX.stopMusic();
-            SoundFX.playGameMusic();
+            if(SoundFX.music_enabled){
+                SoundFX.stopMusic();
+                SoundFX.playGameMusic();
+            }
             game.setScreen(previousScreen);
         }
 

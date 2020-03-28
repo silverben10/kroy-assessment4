@@ -63,6 +63,7 @@ public class SoundFX {
     /** Plays danceoff music */
     public static void playDanceoffMusic() {
         sfx_danceoff.loop(4f);
+        music_enabled = true;
     }
 
     /** Stops both menu music and game music */
