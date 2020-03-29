@@ -378,11 +378,11 @@ public class FireTruck extends Sprite {
             reconstructedPath.add(at);
         }
 
-        Object[] objectAarray = reconstructedPath.toArray();
-        Vector2[] path = new Vector2[objectAarray.length];
+        Object[] objectArray = reconstructedPath.toArray();
+        Vector2[] path = new Vector2[objectArray.length];
 
-        for(int i=0;i<objectAarray.length;i++) {
-            path[i] = (Vector2) objectAarray[i];
+        for(int i=0;i<objectArray.length;i++) {
+            path[i] = (Vector2) objectArray[i];
         }
 
         reverse(path);
