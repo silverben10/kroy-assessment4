@@ -615,4 +615,3 @@ public class FireTruck extends Sprite {
         return this.type.getRange();
     }
 }
-
