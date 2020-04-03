@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
-import com.mozarellabytes.kroy.Screens.GameScreen;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
 
 import java.util.ArrayList;
@@ -22,11 +22,10 @@ import java.util.LinkedList;
  */
 public class FireTruck extends Sprite {
 
-    /** Enables access to functions in GameScreen */
-    private final GameScreen gameScreen;
-
     /** Defines set of pre-defined attributes */
     public final FireTruckType type;
+
+    private final TiledMapTileLayer collisions;
 
     /** Health points */
     private float HP;
@@ -98,15 +97,13 @@ public class FireTruck extends Sprite {
      * Constructs a new FireTruck at a position and of a certain type
      * which have been passed in
      *
-     * @param gameScreen    used to access functions in GameScreen
      * @param position      initial location of the truck
      * @param type          used to have predefined attributes
      */
-    public FireTruck(GameScreen gameScreen, Vector2 position, FireTruckType type) {
+    public FireTruck(Vector2 position, FireTruckType type, TiledMapTileLayer collisions) {
         super(type.getLookDown());
-
-        this.gameScreen = gameScreen;
         this.type = type;
+        this.collisions = collisions;
         this.HP = type.getMaxHP();
         this.reserve = type.getMaxReserve();
         this.position = position;
@@ -234,7 +231,7 @@ public class FireTruck extends Sprite {
      */
     private boolean isValidDraw(Vector2 coordinate) {
         if (coordinate.y < 28) {
-            if (gameScreen.isRoad((Math.round(coordinate.x)), (Math.round(coordinate.y)))) {
+            if (collisions.getCell(Math.round(coordinate.x), Math.round(coordinate.y)).getTile().getProperties().get("road").equals(true)) {
                 if (this.path.isEmpty()) {
                     return this.getPosition().equals(coordinate);
                 } else {
@@ -324,7 +321,7 @@ public class FireTruck extends Sprite {
             if(newPos.x > 47 || newPos.y > 28) {
                 continue;
             }
-            boolean isRoad = gameScreen.isRoad(Math.round(newPos.x), Math.round(newPos.y));
+            boolean isRoad = (collisions.getCell(Math.round(newPos.x), Math.round(newPos.y)).getTile().getProperties().get("road").equals(true));
             if(!isRoad) {
                 continue;
             }
