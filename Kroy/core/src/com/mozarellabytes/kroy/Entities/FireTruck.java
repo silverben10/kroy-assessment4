@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
+import com.google.gson.annotations.Expose;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
 
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ import java.util.LinkedList;
  */
 public class FireTruck extends Sprite {
 
+
     /** Defines set of pre-defined attributes */
     public final FireTruckType type;
 
-    private final TiledMapTileLayer collisions;
+    /** Defines the tilemap of collision locations on the map. Excluded from serialization (using <code>transient</code>) when saving the game as this data is constant. */
+    private transient final TiledMapTileLayer collisions;
 
     /** Health points */
     private float HP;
