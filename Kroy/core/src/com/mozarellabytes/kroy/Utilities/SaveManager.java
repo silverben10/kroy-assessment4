@@ -45,8 +45,10 @@ public class SaveManager {
 
         // 2. Save GameScreen data.
         Gson gson = new Gson();
-        gameData.putString("fortressesList", gson.toJson(gameScreen.getFortresses())); // Was causing errors but fixed by removing unnecessary texture attribute from Patrol class.
-        gameData.putString("fireTruckList", gson.toJson(new Queue<Vector2>())); // Was causing errors because of fire engines containing gamescreen fixed by only giving it needed information
+        // Was causing errors but fixed by removing unnecessary texture attribute from Patrol class.
+        gameData.putString("fortressesList", gson.toJson(gameScreen.getFortresses()));
+        // Was causing errors because of fire engines containing gameScreen but fixed by only giving it needed information.
+        gameData.putString("fireTruckList", gson.toJson(gameScreen.getStation().getTrucks()));
         gameData.putString("deadEntitiesList", gson.toJson(gameScreen.getDeadEntities()));
         gameData.putString("difficultyMultiplier", gson.toJson(gameScreen.getDifficultyControl().getDifficultyMultiplier()));
 
