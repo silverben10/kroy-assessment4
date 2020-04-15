@@ -178,7 +178,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        SaveManager.saveGameData(this, gameState);
+        SaveManager.saveGameData(this, gameState, 1);
     }
 
     @Override
@@ -289,7 +289,7 @@ public class GameScreen implements Screen {
 
 
         gui.renderDifficultyCounter(difficultyControl);
-
+        SaveManager.saveGameData(this, gameState, 1);
     }
 
     /**

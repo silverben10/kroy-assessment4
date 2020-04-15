@@ -25,18 +25,22 @@ public class FireTruck extends Sprite {
 
 
     /** Defines set of pre-defined attributes */
+    @Expose
     public final FireTruckType type;
 
     /** Defines the tilemap of collision locations on the map. Excluded from serialization (using <code>transient</code>) when saving the game as this data is constant. */
-    private transient final TiledMapTileLayer collisions;
+    private final TiledMapTileLayer collisions;
 
     /** Health points */
+    @Expose
     private float HP;
 
     /** Water Reserve */
+    @Expose
     private float reserve;
 
     /** Position of FireTruck in tiles */
+    @Expose (deserialize = false)
     private Vector2 position;
 
     /** Actual path the truck follows; the fewer item in
@@ -92,7 +96,7 @@ public class FireTruck extends Sprite {
     LinkedList<Vector2> reconstructedPath;
     /**Checks if the mouse was dragged off the road multiple times in one instance**/
     private int counter = 0;
-    /** Path fireturck actually uses*/
+    /** Path firetruck actually uses*/
     private Vector2[] newPath;
 
     private Vector2 previous;

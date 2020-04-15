@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import com.google.gson.annotations.Expose;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
 
 import java.util.ArrayList;
@@ -13,18 +14,22 @@ import java.util.ArrayList;
 public class Fortress {
 
     /*** Fortress health, destroyed on zero */
+//    @Expose
     private float HP;
 
     /*** Position of the Fortress */
+//    @Expose
     private final Vector2 position;
 
     /*** Where the Fortress lies on the map */
+//    @Expose
     private final Rectangle area;
 
     /*** List of bombs that are active */
     private final ArrayList<Bomb> bombs;
 
     /*** Gives Fortress certain stats */
+//    @Expose
     private final FortressType fortressType;
 
     /**
