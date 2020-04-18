@@ -55,4 +55,17 @@ public enum PowerUpType {
     //Encounter method
 
     //Case statement to show all actions for each type of powerup
+    public void effect(){
+        //effect is called if a powerup is reached
+        switch(fileName){
+            case "mirror":
+                // code for mirror
+                //begin timer
+                //spawn mirror fire truck (must be done in gamescreen class)
+                //when timer ends, destroy
+                break;
+            default:
+                //else code
+        }
+    }
 }
