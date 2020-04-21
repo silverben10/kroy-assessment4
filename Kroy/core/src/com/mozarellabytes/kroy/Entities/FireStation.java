@@ -52,6 +52,7 @@ public class FireStation {
 
     private final ArrayList<Patrol> patrols;
 
+
     private float HP;
 
     /**

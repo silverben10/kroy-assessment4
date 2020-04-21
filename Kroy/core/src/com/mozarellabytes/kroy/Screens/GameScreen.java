@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.Entities.*;
 import com.mozarellabytes.kroy.GameState;
@@ -75,6 +76,9 @@ public class GameScreen implements Screen {
     private final ArrayList<Fortress> fortresses;
 
     private final ArrayList<Patrol> patrols;
+
+    /** List of active PowerUps on the map */
+    private final ArrayList<PowerUp> powerUps;
 
     /** Where the FireEngines' spawn, refill and repair */
     private final FireStation station;
@@ -156,6 +160,7 @@ public class GameScreen implements Screen {
         spawn(FireTruckType.Amethyst);
         spawn(FireTruckType.Sapphire);
         spawn(FireTruckType.Ruby);
+        spawn(FireTruckType.Mirror);
 
         fortresses = new ArrayList<Fortress>();
         fortresses.add(new Fortress(12, 24.5f, fixedGamedifficulty, FortressType.Revs));
@@ -172,6 +177,13 @@ public class GameScreen implements Screen {
         patrols.add(new Patrol(this,PatrolType.Violet));
         patrols.add(new Patrol(this,PatrolType.Yellow));
         patrols.add(new Patrol(this,PatrolType.Station));
+
+        powerUps = new ArrayList<PowerUp>();
+        powerUps.add(new PowerUp(this,PowerUpType.Mirror));
+        powerUps.add(new PowerUp(this,PowerUpType.Immunity));
+        powerUps.add(new PowerUp(this,PowerUpType.Repair));
+        powerUps.add(new PowerUp(this,PowerUpType.Speed));
+        powerUps.add(new PowerUp(this,PowerUpType.Damage));
 
         deadEntities = new ArrayList<>(7);
 
@@ -218,6 +230,11 @@ public class GameScreen implements Screen {
 
         for (Fortress fortress : this.fortresses) {
             fortress.draw(mapBatch);
+        }
+
+        //draw powerup sprites on the map
+        for (PowerUp powerUp : this.powerUps) {
+            powerUp.drawSprite(mapBatch);
         }
 
         for (DestroyedEntity deadFortress : deadEntities){
@@ -368,6 +385,10 @@ public class GameScreen implements Screen {
 
                 }
             }
+
+            //handles encounters between firetrucks and powerups
+            //for number of powerups, check if a firetruck position matches powerup position
+            //call effect in event of collision and remove powerup from list
 
             // check if truck is destroyed
             if (truck.getHP() <= 0) {
