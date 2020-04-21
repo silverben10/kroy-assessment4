@@ -18,32 +18,32 @@ public enum FortressType {
      * name, delay between firing bombs, attack range, maximum health points,
      * attack points, width, height and sprite.
      */
-    Revs ("Revolution", 2500, 7, 100, 10, 5, 3,
+    Revs ("Revolution", 2500, 7, 100, 5, 5, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_dead.png"))),
 
-    Walmgate ("Walmgate Bar", 1500, 8, 200, 15, 5, 5,
+    Walmgate ("Walmgate Bar", 1500, 8, 200, 8, 5, 5,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_dead.png"))),
 
-    Clifford ("Clifford's Tower", 500, 7, 150, 10, 4, 3,
+    Clifford ("Clifford's Tower", 500, 7, 150, 5, 4, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_dead.png"))),
 
-    Shambles ("Shambles", 500, 7, 200, 20, 5, 3,
+    Shambles ("Shambles", 500, 7, 200, 10, 5, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_dead.png"))),
 
-    Minster ("York Minster", 1500, 8, 180, 20, 4, 5,
+    Minster ("York Minster", 1500, 8, 180, 10, 4, 5,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_dead.png"))),
     
-    Railway ("Train Station", 1000, 8, 250, 15, 6, 4,
+    Railway ("Train Station", 1000, 8, 250, 7, 6, 4,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_dead.png")));
@@ -105,7 +105,12 @@ public enum FortressType {
 
     public float getRange() { return range; }
 
-    public float getMaxHP() { return maxHP; }
+    public float getMaxHP(int difficulty) {
+        if(difficulty != 1) {
+            return maxHP;
+        }
+        return maxHP/2;
+    }
 
     public float getAP() { return AP; }
 
@@ -118,8 +123,8 @@ public enum FortressType {
      * @param currentHP
      * @return a Texture object
      */
-    public Texture getTexture(float currentHP) {
-        if (currentHP > getMaxHP()/2){
+    public Texture getTexture(float currentHP, int difficulty) {
+        if (currentHP > getMaxHP(difficulty)/2){
             return textureFull;
         } else if (currentHP > 0){
             return textureHalf;

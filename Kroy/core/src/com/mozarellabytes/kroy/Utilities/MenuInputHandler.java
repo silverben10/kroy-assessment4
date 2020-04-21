@@ -67,11 +67,25 @@ public class MenuInputHandler implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-        if (menu.getStartButton().contains(position.x, position.y)) {
-            menu.clickedStartButton();
-        } else if (menu.getControlsButton().contains(position.x, position.y)) {
-            menu.clickedControlsButton();
-        } else if (menu.getSoundButton().contains(position.x, position.y)) {
+        if(!menu.isDifficultySelect()) {
+            if (menu.getStartButton().contains(position.x, position.y)) {
+                menu.clickedStartButton();
+            } else if (menu.getControlsButton().contains(position.x, position.y)) {
+                menu.clickedControlsButton();
+            }
+        }
+        else{
+            if(menu.getEasyButton().contains(position.x, position.y)){
+                menu.clickedEasyButton();
+            }
+            else if(menu.getMediumButton().contains(position.x, position.y)){
+                menu.clickedMediumButton();
+            }
+            else if(menu.getHardButton().contains(position.x, position.y)){
+                menu.clickedHardButton();
+            }
+        }
+        if (menu.getSoundButton().contains(position.x, position.y)) {
             menu.clickedSoundButton();
         }
         return true;
@@ -89,17 +103,34 @@ public class MenuInputHandler implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-        if (menu.getStartButton().contains(position.x, position.y)) {
-            menu.toGameScreen();
-        } else if (menu.getControlsButton().contains(position.x, position.y)) {
-            menu.toControlScreen();
-        } else if (menu.getSoundButton().contains(position.x, position.y)){
-            menu.changeSound();
-        } else {
-            menu.idleStartButton();
-            menu.idleControlsButton();
-            menu.idleSoundButton();
+        if(menu.isDifficultySelect()) {
+            if (menu.getEasyButton().contains(position.x, position.y)) {
+                menu.toGame(1);
+            }
+            else if (menu.getMediumButton().contains(position.x, position.y)) {
+                menu.toGame(2);
+            }
+            else if (menu.getHardButton().contains(position.x, position.y)) {
+                menu.toGame(4);
+            }
         }
+        else{
+            if (menu.getStartButton().contains(position.x, position.y)) {
+                menu.toDifficultySelect();
+            }
+            else if (menu.getControlsButton().contains(position.x, position.y)) {
+                menu.toControlScreen();
+            } else if (menu.getSoundButton().contains(position.x, position.y)) {
+                menu.changeSound();
+            }
+        }
+        menu.idleStartButton();
+        menu.idleControlsButton();
+        menu.idleSoundButton();
+        menu.idleEasyButton();
+        menu.idleMediumButton();
+        menu.idleHardButton();
+
         return true;
     }
 
