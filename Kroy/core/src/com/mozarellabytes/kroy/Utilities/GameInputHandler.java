@@ -42,17 +42,6 @@ public class GameInputHandler implements InputProcessor {
                 Gdx.app.exit();
                 System.exit(1);
                 break;
-                /* Outdated code
-            case Input.Keys.A:
-                System.out.println(gameScreen.gameState.getTrucksInAttackRange());
-                if (SoundFX.music_enabled && gameScreen.gameState.getTrucksInAttackRange() > 0) {
-                    SoundFX.playTruckAttack();
-                }
-                for (FireTruck truck: gameScreen.getStation().getTrucks()){
-                    truck.setAttacking(true);
-                }
-                break;
-                 */
             case Input.Keys.C:
                 gameScreen.toControlScreen();
                 break;
@@ -240,6 +229,8 @@ public class GameInputHandler implements InputProcessor {
             gui.clickedSoundButton();
         } else if (gui.getInfoButton().contains(position2d)) {
             gui.clickedInfoButton();
+        } else if (gui.getSaveButton().contains(position2d)) {
+            gui.clickedSaveButton();
         }
     }
 
@@ -290,6 +281,14 @@ public class GameInputHandler implements InputProcessor {
 
         if (gui.getInfoButton().contains(screenCoords)){
             gameScreen.toControlScreen();
+        } else {
+            gui.idleInfoButton();
+        }
+
+        if (gui.getSaveButton().contains(screenCoords)){
+            gameScreen.toSaveScreen();
+        } else {
+            gui.idleSaveButton();
         }
     }
 }
