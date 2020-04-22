@@ -178,7 +178,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        SaveManager.saveGameData(this, gameState, 1);
     }
 
     @Override

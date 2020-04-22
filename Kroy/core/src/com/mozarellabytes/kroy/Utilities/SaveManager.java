@@ -2,28 +2,22 @@ package com.mozarellabytes.kroy.Utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Queue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mozarellabytes.kroy.Entities.FireTruck;
 import com.mozarellabytes.kroy.Entities.Fortress;
-import com.mozarellabytes.kroy.GameState;
 import com.mozarellabytes.kroy.Screens.GameScreen;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Vector;
 
 public class SaveManager {
 
     public SaveManager() {
     }
 
-    public static void saveGameData(GameScreen gameScreen, GameState gameState, int saveSlot) {
+    public static void saveGameData(GameScreen gameScreen, int saveSlot) {
         Preferences gameData = Gdx.app.getPreferences("save"+saveSlot+".xml");
 
         /* *
@@ -41,10 +35,10 @@ public class SaveManager {
         * */
 
         // 1. Save GameState data.
-        gameData.putInteger("activeFireTrucks", gameState.getActiveFireTrucks());
-        gameData.putInteger("fortressesDestroyed", gameState.getFortressesDestroyed());
-        gameData.putBoolean("stationDestroyed", gameState.isStationDestroyed());
-        gameData.putBoolean("hasShownDanceTutorial", gameState.hasDanceTutorialShown());
+        gameData.putInteger("activeFireTrucks", gameScreen.gameState.getActiveFireTrucks());
+        gameData.putInteger("fortressesDestroyed", gameScreen.gameState.getFortressesDestroyed());
+        gameData.putBoolean("stationDestroyed", gameScreen.gameState.isStationDestroyed());
+        gameData.putBoolean("hasShownDanceTutorial", gameScreen.gameState.hasDanceTutorialShown());
 
         // 2. Save GameScreen data.
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
