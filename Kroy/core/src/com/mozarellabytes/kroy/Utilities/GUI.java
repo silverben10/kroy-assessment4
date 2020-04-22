@@ -131,9 +131,9 @@ public class GUI {
         soundOffClickedTexture = new Texture(Gdx.files.internal("ui/sound_off_clicked.png"), true);
         soundOffClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
 
-        saveButtonIdle = new Texture(Gdx.files.internal("ui/info_idle.png"), true);
+        saveButtonIdle = new Texture(Gdx.files.internal("ui/save_idle.png"), true);
         saveButtonIdle.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
-        saveButtonClicked = new Texture(Gdx.files.internal("ui/info_clicked.png"), true);
+        saveButtonClicked = new Texture(Gdx.files.internal("ui/save_clicked.png"), true);
         saveButtonClicked.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
 
         currentHomeTexture = homeButtonIdle;
