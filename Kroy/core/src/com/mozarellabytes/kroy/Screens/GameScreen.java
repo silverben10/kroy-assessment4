@@ -288,7 +288,6 @@ public class GameScreen implements Screen {
 
 
         gui.renderDifficultyCounter(difficultyControl);
-        SaveManager.saveGameData(this, gameState, 1);
     }
 
     /**
@@ -538,10 +537,19 @@ public class GameScreen implements Screen {
     }
 
     /** Exits the main game screen and goes to the menu, called when the home
-     * button is clicked */
+     * button is clicked.
+     */
     public void toHomeScreen() {
         game.setScreen(new MenuScreen(game));
         SoundFX.sfx_soundtrack.dispose();
+    }
+
+    /**
+     * Switches from Game to Save screen. Passes a reference to itself so the Save screen
+     * knows where to return to when its exit button is clicked.
+     */
+    public void toSaveScreen() {
+        game.setScreen(new SaveScreen(game, this));
     }
 
     /**
