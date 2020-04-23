@@ -35,6 +35,8 @@ public class MenuScreen implements Screen {
      * startClickedTexture if the start button has been pressed */
     private Texture currentStartTexture;
 
+    private final Rectangle loadButton;
+
     /** Tetxture for the load button when it hasn't been clicked */
     private final Texture loadIdleTexture;
 
@@ -126,6 +128,7 @@ public class MenuScreen implements Screen {
         }
 
         currentStartTexture = startIdleTexture;
+        currentLoadTexture = loadIdleTexture;
         currentControlsTexture = controlsIdleTexture;
 
         startButton = new Rectangle();
@@ -134,11 +137,17 @@ public class MenuScreen implements Screen {
         startButton.x = (int) (camera.viewportWidth/2 - startButton.width/2);
         startButton.y = (int) ((camera.viewportHeight/2 - startButton.height/2) * 0.8);
 
+        loadButton = new Rectangle();
+        loadButton.width = (float) (currentLoadTexture.getWidth()*0.75);
+        loadButton.height = (float) (currentLoadTexture.getHeight()*0.75);
+        loadButton.x = (int) (camera.viewportWidth/2 - loadButton.width/2);
+        loadButton.y = (int) ((camera.viewportHeight/2 - loadButton.height/2) * 0.55);
+
         controlsButton = new Rectangle();
         controlsButton.width = (float) (currentControlsTexture.getWidth()*0.75);
         controlsButton.height = (float) (currentControlsTexture.getHeight()*0.75);
         controlsButton.x = (int) (camera.viewportWidth/2 - controlsButton.width/2);
-        controlsButton.y = (int) ((camera.viewportHeight/2 - controlsButton.height/2)*0.4);
+        controlsButton.y = (int) ((camera.viewportHeight/2 - controlsButton.height/2)*0.35);
 
         soundButton = new Rectangle();
         soundButton.width = 50;
@@ -171,6 +180,7 @@ public class MenuScreen implements Screen {
         game.batch.begin();
         game.batch.draw(backgroundImage, 0, 0, camera.viewportWidth, camera.viewportHeight);
         game.batch.draw(currentStartTexture, startButton.x, startButton.y, startButton.width, startButton.height);
+        game.batch.draw(currentLoadTexture, loadButton.x, loadButton.y, loadButton.width, loadButton.height);
         game.batch.draw(currentControlsTexture, controlsButton.x, controlsButton.y, controlsButton.width, controlsButton.height);
         game.batch.draw(currentSoundTexture, soundButton.x, soundButton.y, soundButton.width, soundButton.height);
         game.batch.end();
