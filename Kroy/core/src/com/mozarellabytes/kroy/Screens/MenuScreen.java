@@ -184,7 +184,6 @@ public class MenuScreen implements Screen {
         game.batch.draw(currentControlsTexture, controlsButton.x, controlsButton.y, controlsButton.width, controlsButton.height);
         game.batch.draw(currentSoundTexture, soundButton.x, soundButton.y, soundButton.width, soundButton.height);
         game.batch.end();
-
     }
 
     @Override
@@ -231,6 +230,15 @@ public class MenuScreen implements Screen {
         this.dispose();
     }
 
+    /** Changes the screen from the menu screen to the control screen */
+    public void toControlScreen() {
+        game.setScreen(new ControlsScreen(game, this, "menu"));
+    }
+
+    public void toLoadScreen() {
+        game.setScreen(new LoadScreen(game, this));
+    }
+
     /** Changes the texture of the start button when it has been clicked on */
     public void clickedStartButton() {
         if (SoundFX.music_enabled){
@@ -254,6 +262,13 @@ public class MenuScreen implements Screen {
         } else {
             currentSoundTexture = soundOnClickedTexture;
         }
+    }
+
+    public void clickedLoadButton() {
+        if (SoundFX.music_enabled){
+            SoundFX.sfx_button_clicked.play();
+        }
+        currentLoadTexture = loadClickedTexture;
     }
 
     /** Turns the sound on and off and changes the sound icon accordingly,
@@ -288,12 +303,15 @@ public class MenuScreen implements Screen {
         }
     }
 
-    /** Changes the screen from the menu screen to the control screen */
-    public void toControlScreen(){ game.setScreen(new ControlsScreen(game, this, "menu")); }
+    public void idleLoadButton() {
+        currentLoadTexture = loadIdleTexture;
+    }
 
     public Rectangle getStartButton() { return startButton; }
 
     public Rectangle getControlsButton() { return controlsButton; }
 
     public Rectangle getSoundButton() {return soundButton; }
+
+    public Rectangle getLoadButton() { return loadButton; }
 }
