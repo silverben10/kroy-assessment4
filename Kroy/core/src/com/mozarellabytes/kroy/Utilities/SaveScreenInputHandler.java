@@ -11,7 +11,7 @@ public class SaveScreenInputHandler implements InputProcessor {
     private final SaveScreen saveScreen;
 
     /**
-     *  Constructs the Save screen input handler
+     * Constructs the Save screen input handler
      *
      * @param saveScreen the control screen that this input handler controls
      */
@@ -19,12 +19,14 @@ public class SaveScreenInputHandler implements InputProcessor {
         this.saveScreen = saveScreen;
     }
 
-    /** Called when a key was pressed
-     *
+    /**
+     * Called when a key was pressed
+     * <p>
      * Closes the save screen when the ESC key is pressed.
      *
      * @param keycode one of the constants in {@link Input.Keys}
-     * @return whether the input was processed */
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
@@ -47,8 +49,14 @@ public class SaveScreenInputHandler implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = saveScreen.getCamera().unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-        if(saveScreen.getExitButton().contains(position.x, position.y)){
+        if (saveScreen.getExitButton().contains(position.x, position.y)) {
             saveScreen.closeScreen();
+        } else if (saveScreen.getSaveButton1().contains(position.x, position.y)) {
+            SaveManager.saveGameData(saveScreen.getParent(), 1);
+        } else if (saveScreen.getSaveButton2().contains(position.x, position.y)) {
+            SaveManager.saveGameData(saveScreen.getParent(), 2);
+        } else if (saveScreen.getSaveButton3().contains(position.x, position.y)) {
+            SaveManager.saveGameData(saveScreen.getParent(), 3);
         }
         return false;
     }
