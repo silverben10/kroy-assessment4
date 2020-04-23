@@ -59,8 +59,8 @@ public class SaveManager {
         }
     }
 
-    public static Preferences loadGameData() {
-        return Gdx.app.getPreferences("gameData");
+    public static Preferences loadGameData(int saveSlot) {
+        return Gdx.app.getPreferences("same"+saveSlot+".xml");
     }
 
     /**
