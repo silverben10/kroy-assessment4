@@ -35,6 +35,18 @@ public class MenuScreen implements Screen {
      * startClickedTexture if the start button has been pressed */
     private Texture currentStartTexture;
 
+    /** Tetxture for the load button when it hasn't been clicked */
+    private final Texture loadIdleTexture;
+
+    /** Texture for the load button when it has been clicked */
+    private final Texture loadClickedTexture;
+
+    /** Contains the current state of the load button:
+     * loadIdleTexture if the load button isn't being pressed,
+     * loadClickedTexture if the load button is being pressed
+     */
+    private Texture currentLoadTexture;
+
 
     /** Rectangle containing the position of the control button */
     private final Rectangle controlsButton;
@@ -83,6 +95,11 @@ public class MenuScreen implements Screen {
         startIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
         startClickedTexture = new Texture(Gdx.files.internal("ui/start_clicked.png"), true);
         startClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+
+        loadIdleTexture = new Texture(Gdx.files.internal("ui/load_idle.png"), true);
+        loadIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+        loadClickedTexture = new Texture(Gdx.files.internal("ui/load_clicked.png"), true);
+        loadClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest,Texture.TextureFilter.MipMapLinearNearest);
 
         controlsIdleTexture = new Texture(Gdx.files.internal("ui/controls_idle.png"), true);
         controlsIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
