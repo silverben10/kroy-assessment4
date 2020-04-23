@@ -60,7 +60,10 @@ public class SaveManager {
     }
 
     public static Preferences loadGameData(int saveSlot) {
-        return Gdx.app.getPreferences("same"+saveSlot+".xml");
+        System.out.println("Loading data from slot " + saveSlot);
+        Preferences prefs = Gdx.app.getPreferences("save"+saveSlot+".xml");
+        System.out.println(prefs.get());
+        return prefs;
     }
 
     /**
