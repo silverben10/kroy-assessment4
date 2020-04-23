@@ -1,5 +1,6 @@
 package com.mozarellabytes.kroy.Utilities;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,9 +19,18 @@ public class SaveScreenInputHandler implements InputProcessor {
         this.saveScreen = saveScreen;
     }
 
+    /** Called when a key was pressed
+     *
+     * Closes the save screen when the ESC key is pressed.
+     *
+     * @param keycode one of the constants in {@link Input.Keys}
+     * @return whether the input was processed */
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        if (keycode == Input.Keys.ESCAPE) {
+            saveScreen.closeScreen();
+        }
+        return true;
     }
 
     @Override
