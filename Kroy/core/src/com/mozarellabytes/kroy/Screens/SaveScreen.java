@@ -53,7 +53,7 @@ public class SaveScreen implements Screen {
      * @param game   Reference to the Kroy LibGDX game
      * @param parent the screen that called the Save screen
      */
-    public SaveScreen(Kroy game, Screen parent) {
+    public SaveScreen(Kroy game, GameScreen parent) {
         this.game = game;
         this.parent = parent;
 
@@ -205,16 +205,20 @@ public class SaveScreen implements Screen {
         return saveButton1;
     }
 
-//    public Rectangle getSaveButton2() {
-//        return saveButton2;
-//    }
-//
-//    public Rectangle getSaveButton3() {
-//        return saveButton3;
-//    }
+    public Rectangle getSaveButton2() {
+        return saveButton2;
+    }
+
+    public Rectangle getSaveButton3() {
+        return saveButton3;
+    }
 
     public OrthographicCamera getCamera() {
         return this.camera;
+    }
+
+    public GameScreen getParent() {
+        return (GameScreen) this.parent;
     }
 
     @Override
