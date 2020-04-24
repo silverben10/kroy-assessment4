@@ -378,7 +378,7 @@ public class GameScreen implements Screen {
         mapRenderer.render(structureLayersIndices);
 
         mapBatch.begin();
-        for (Patrol patrol : this.patrols) {
+        for (Patrol patrol : patrols) {
             if (patrol.getType().equals(PatrolType.Station)) {
                 if (gameState.firstFortressDestroyed()) {
                     patrol.drawSprite(mapBatch);
@@ -401,8 +401,7 @@ public class GameScreen implements Screen {
         for (FireTruck truck : station.getTrucks()) {
             truck.drawStats(shapeMapRenderer);
         }
-
-        for (Patrol patrol : this.patrols) {
+        for (Patrol patrol : patrols) {
             if (patrol.getType().equals(PatrolType.Station)) {
                 if (gameState.firstFortressDestroyed()) {
                     patrol.drawStats(shapeMapRenderer);
@@ -543,78 +542,79 @@ public class GameScreen implements Screen {
                 }
                 patrols.remove(PatrolType.Station);
             }
+        }
 
-            for (int i = 0; i < this.patrols.size(); i++) {
-                Patrol patrol = this.patrols.get(i);
+        for (int i = 0; i < this.patrols.size(); i++) {
+            Patrol patrol = this.patrols.get(i);
+            System.out.println("Currently using patrol " + patrol);
+            patrol.updateSpray();
 
-                patrol.updateSpray();
-
-                if (patrol.getType().equals(PatrolType.Station)) {
-                    if ((gameState.firstFortressDestroyed())) {
-                        if ((patrol.getPosition().equals(PatrolType.Station.getPoint4()))) {
-                            patrol.attack(station);
-                        } else {
-                            patrol.move();
-                        }
+            if (patrol.getType().equals(PatrolType.Station)) {
+                if ((gameState.firstFortressDestroyed())) {
+                    if ((patrol.getPosition().equals(PatrolType.Station.getPoint4()))) {
+                        patrol.attack(station);
                     } else {
-                        if (gameState.isStationDestroyed()) {
-                            patrols.remove(patrol);
-
-                            //patrol.move();
-                        /*if((patrol.getPosition().equals(PatrolType.Station.getPoint1()))){
-                            patrols.remove(patrol);
-                        }*/
-                        }
+                        patrol.move();
                     }
                 } else {
-                    patrol.move();
-                }
-                if (patrol.getHP() <= 0) {
-                    patrols.remove(patrol);
-                    if ((patrol.getType().equals(PatrolType.Station)) && (!gameState.isStationDestroyed())) {
-                        patrols.add(new Patrol(this, PatrolType.Station));
+                    if (gameState.isStationDestroyed()) {
+                        patrols.remove(patrol);
+
+                        //patrol.move();
+                    /*if((patrol.getPosition().equals(PatrolType.Station.getPoint1()))){
+                        patrols.remove(patrol);
+                    }*/
                     }
                 }
-            }
-
-            for (int i = 0; i < this.fortresses.size(); i++) {
-                Fortress fortress = this.fortresses.get(i);
-
-                boolean hitTruck = fortress.updateBombs();
-                if (hitTruck) {
-                    camShake.shakeIt(.2f);
-                }
-
-                // check if fortress is destroyed
-                if (fortress.getHP() <= 0) {
-                    mapBatch.begin();
-                    explosions.add(new Explosion(12, 10, (int) fortress.getPosition().x - 5, (int) fortress.getPosition().y - 5, 0.1f));
-                    mapBatch.end();
-                    gameState.addFortress();
-                    deadEntities.add(fortress.createDestroyedFortress());
-                    this.fortresses.remove(fortress);
-                    if (SoundFX.music_enabled) {
-                        SoundFX.sfx_fortress_destroyed.play();
-                    }
-                }
-
-            }
-
-            if (gameState.getTrucksInAttackRange() > 0 && SoundFX.music_enabled) {
-                SoundFX.playTruckAttack();
             } else {
-                SoundFX.stopTruckAttack();
+                System.out.println("Moving patrols!");
+                patrol.move();
+            }
+            if (patrol.getHP() <= 0) {
+                patrols.remove(patrol);
+                if ((patrol.getType().equals(PatrolType.Station)) && (!gameState.isStationDestroyed())) {
+                    patrols.add(new Patrol(this, PatrolType.Station));
+                }
+            }
+        }
+
+        for (int i = 0; i < this.fortresses.size(); i++) {
+            Fortress fortress = this.fortresses.get(i);
+
+            boolean hitTruck = fortress.updateBombs();
+            if (hitTruck) {
+                camShake.shakeIt(.2f);
             }
 
-            //System.out.println(SoundFX.isPlaying);
+            // check if fortress is destroyed
+            if (fortress.getHP() <= 0) {
+                mapBatch.begin();
+                explosions.add(new Explosion(12, 10, (int) fortress.getPosition().x - 5, (int) fortress.getPosition().y - 5, 0.1f));
+                mapBatch.end();
+                gameState.addFortress();
+                deadEntities.add(fortress.createDestroyedFortress());
+                this.fortresses.remove(fortress);
+                if (SoundFX.music_enabled) {
+                    SoundFX.sfx_fortress_destroyed.play();
+                }
+            }
 
-            shapeMapRenderer.end();
-            shapeMapRenderer.setColor(Color.WHITE);
-
-            gui.renderSelectedEntity(selectedEntity);
-
-            difficultyControl.incrementCurrentTime(delta);
         }
+
+        if (gameState.getTrucksInAttackRange() > 0 && SoundFX.music_enabled) {
+            SoundFX.playTruckAttack();
+        } else {
+            SoundFX.stopTruckAttack();
+        }
+
+        //System.out.println(SoundFX.isPlaying);
+
+        shapeMapRenderer.end();
+        shapeMapRenderer.setColor(Color.WHITE);
+
+        gui.renderSelectedEntity(selectedEntity);
+
+        difficultyControl.incrementCurrentTime(delta);
     }
 
     @Override
