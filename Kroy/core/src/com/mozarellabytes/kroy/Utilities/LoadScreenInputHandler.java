@@ -51,11 +51,11 @@ public class LoadScreenInputHandler implements InputProcessor {
         if (loadScreen.getExitButton().contains(position.x, position.y)) {
             loadScreen.closeScreen();
         } else if (loadScreen.getLoadButton1().contains(position.x, position.y)) {
-            SaveManager.loadGameData(1);
+            loadScreen.toGameScreen(1);
         } else if (loadScreen.getLoadButton2().contains(position.x, position.y)) {
-            SaveManager.loadGameData(2);
+            loadScreen.toGameScreen(2);
         } else if (loadScreen.getLoadButton3().contains(position.x, position.y)) {
-            SaveManager.loadGameData(3);
+            loadScreen.toGameScreen(3);
         }
         return false;
     }
