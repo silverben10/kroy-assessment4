@@ -82,10 +82,12 @@ public class PowerUp extends Sprite {
         else{
             switch (this.name) {
                 case "mirror":
-                    // code for mirror
-                    //begin timer
-                    //spawn mirror fire truck (must be done in gamescreen class)
-                    //when timer ends, destroy
+                    if(timer > 0){
+                        timer -= Gdx.graphics.getDeltaTime();
+                    }
+                    else {
+                        timeTillDeletion = 0;
+                    }
                     break;
                 case "immunity":
                     if(timer > 0){
@@ -125,12 +127,6 @@ public class PowerUp extends Sprite {
     public void effect() {
         //effect is called if a powerup is reached
         switch (this.name) {
-            case "mirror":
-                // code for mirror
-                //begin timer
-                //spawn mirror fire truck (must be done in gamescreen class)
-                //when timer ends, destroy
-                break;
             case "immunity":
                 fireTruck.setImmune(true);
                 break;
@@ -162,6 +158,10 @@ public class PowerUp extends Sprite {
 
     public boolean isActive() {
         return active;
+    }
+
+    public FireTruck getFireTruck() {
+        return fireTruck;
     }
 
     public void setFireTruck(FireTruck fireTruck){this.fireTruck = fireTruck;}

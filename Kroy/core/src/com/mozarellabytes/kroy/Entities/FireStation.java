@@ -178,7 +178,7 @@ public class FireStation {
     public void checkForCollisions() {
         for (FireTruck truck : trucks) {
             for (FireTruck truck2 : trucks) {
-                if (!(truck.equals(truck2))) {
+                if (!(truck.equals(truck2)) && truck.type != FireTruckType.Mirror && truck2.type != FireTruckType.Mirror) {
                     if (!truck.trailPath.isEmpty() && !truck.getPosition().equals(truck2.getPosition())) {
                         Vector2 truck2tile = new Vector2(Math.round(truck2.getPosition().x), Math.round(truck2.getPosition().y));
                         Vector2 truckstile = new Vector2((float)Math.floor(truck2.getPosition().x),(float) Math.floor(truck2.getPosition().y));

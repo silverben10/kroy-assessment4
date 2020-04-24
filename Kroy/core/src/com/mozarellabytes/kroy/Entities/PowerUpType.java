@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
  * contains method for handling interaction with fireTruck
  */
 public enum PowerUpType {
-    Mirror("mirror", 30f),
-    Immunity("immunity", 10.0f),
+    Mirror("mirror", 10f),
+    Immunity("immunity", 15.0f),
     Repair("repair", 0f),
     Speed("speed", 20.0f),
     Damage("damage", 20.0f);

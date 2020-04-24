@@ -87,6 +87,8 @@ public class GameScreen implements Screen {
     /** Where the FireEngines' spawn, refill and repair */
     private final FireStation station;
 
+    private ArrayList<FireTruck> mirrorTrucks;
+
     /** The FireTruck that the user is currently drawing a path for */
     public FireTruck selectedTruck;
 
@@ -164,7 +166,6 @@ public class GameScreen implements Screen {
         spawn(FireTruckType.Amethyst);
         spawn(FireTruckType.Sapphire);
         spawn(FireTruckType.Ruby);
-        spawn(FireTruckType.Mirror);
 
         fortresses = new ArrayList<Fortress>();
         fortresses.add(new Fortress(12, 24.5f, fixedGamedifficulty, FortressType.Revs));
@@ -181,6 +182,8 @@ public class GameScreen implements Screen {
         patrols.add(new Patrol(this,PatrolType.Violet));
         patrols.add(new Patrol(this,PatrolType.Yellow));
         patrols.add(new Patrol(this,PatrolType.Station));
+
+        mirrorTrucks = new ArrayList<>();
 
         powerUps = new ArrayList<PowerUp>();
         powerUpsToRemove = new ArrayList<PowerUp>();
@@ -375,15 +378,38 @@ public class GameScreen implements Screen {
             powerUp.update();
             if(powerUp.getTimeTillDeletion() <= 0){
                 powerUpsToRemove.add(powerUp);
+                if(powerUp.type == PowerUpType.Mirror){
+                    station.destroyTruck(powerUp.getFireTruck());
+                    mirrorTrucks.remove(powerUp.getFireTruck());
+                }
             }
             for(FireTruck truck: station.getTrucks()){
-                if(truck.getTilePosition().equals(powerUp.getPosition()) && !powerUp.isActive()){
+                if(truck.getTilePosition().equals(powerUp.getPosition()) && !powerUp.isActive() && truck.type != FireTruckType.Mirror){
                     powerUp.setFireTruck(truck);
                     powerUp.setActive();
+                    if(powerUp.type == PowerUpType.Mirror){
+                        FireTruck mirrorTruck = new FireTruck(this,truck.getTilePosition(),FireTruckType.Mirror);
+                        mirrorTruck.setAP(truck.getAP());
+                        mirrorTruck.setSpeed(truck.getSpeed());
+                        mirrorTruck.setHP((int) truck.getHP());
+                        mirrorTruck.setInitialHP(mirrorTruck.getHP());
+                        mirrorTruck.setReserve(truck.getReserve());
+                        mirrorTruck.setInitialReserve(mirrorTruck.getReserve());
+                        mirrorTrucks.add(mirrorTruck);
+                        powerUp.setFireTruck(mirrorTruck);
+                    }
                 }
             }
         }
         powerUps.removeAll(powerUpsToRemove);
+
+        for(FireTruck mirrorTruck: mirrorTrucks){
+            if(!station.getTrucks().contains(mirrorTruck) && mirrorTruck.getHP() > 0){
+                station.spawn(mirrorTruck);
+            }
+        }
+
+
 
         for (int i = 0; i < station.getTrucks().size(); i++) {
             FireTruck truck = station.getTruck(i);
@@ -416,7 +442,7 @@ public class GameScreen implements Screen {
 
             for (Patrol patrol : this.patrols) {
                 Vector2 patrolPos = new Vector2(Math.round(patrol.position.x), Math.round(patrol.position.y));
-                if (patrolPos.equals(truck.getTilePosition())) {
+                if (patrolPos.equals(truck.getTilePosition())&& truck.type != FireTruckType.Mirror) {
                     doDanceOff(truck, patrol);
 
                 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.Entities.FireTruck;
+import com.mozarellabytes.kroy.Entities.FireTruckType;
 import com.mozarellabytes.kroy.Entities.Fortress;
 import com.mozarellabytes.kroy.Kroy;
 import com.mozarellabytes.kroy.Screens.GameScreen;
@@ -183,8 +184,14 @@ public class GUI {
      *              that are being displayed
      */
     private void renderSelectedTruck(FireTruck truck) {
-        renderSelectedEntityBar(truck.getHP(), truck.getType().getMaxHP(), Color.RED, Color.FIREBRICK, 1, 35);
-        renderSelectedEntityBar(truck.getReserve(), truck.getType().getMaxReserve(), Color.CYAN, Color.BLUE, 2, 35);
+        if(truck.type != FireTruckType.Mirror) {
+            renderSelectedEntityBar(truck.getHP(), truck.getType().getMaxHP(), Color.RED, Color.FIREBRICK, 1, 35);
+            renderSelectedEntityBar(truck.getReserve(), truck.getType().getMaxReserve(), Color.CYAN, Color.BLUE, 2, 35);
+        }
+        else{
+            renderSelectedEntityBar(truck.getHP(), truck.getInitialHP(), Color.RED, Color.FIREBRICK, 1, 35);
+            renderSelectedEntityBar(truck.getReserve(), truck.getInitialReserve(), Color.CYAN, Color.BLUE, 2, 35);
+        }
         renderSelectedEntityText(truck);
 
     }
@@ -213,9 +220,19 @@ public class GUI {
         game.batch.begin();
         game.font26.draw(game.batch, truck.getType().getName(), this.selectedX + 10, this.selectedY + this.selectedH - 10);
         game.font19.draw(game.batch, "HP: ", this.selectedX + 15, this.selectedY + this.selectedH - 50);
-        game.font19.draw(game.batch, String.format("%.1f", truck.getHP()) + " / " + String.format("%.1f", truck.getType().getMaxHP()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine);
+        if(truck.type != FireTruckType.Mirror) {
+            game.font19.draw(game.batch, String.format("%.1f", truck.getHP()) + " / " + String.format("%.1f", truck.getType().getMaxHP()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine);
+        }
+        else{
+            game.font19.draw(game.batch, String.format("%.1f", truck.getHP()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine);
+        }
         game.font19.draw(game.batch, "Reserve: ", this.selectedX + 15, this.selectedY + this.selectedH - 50 - newLine*2);
-        game.font19.draw(game.batch, String.format("%.1f", truck.getReserve()) + " / " + String.format("%.1f", truck.getType().getMaxReserve()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine*3);
+        if(truck.type != FireTruckType.Mirror) {
+            game.font19.draw(game.batch, String.format("%.1f", truck.getReserve()) + " / " + String.format("%.1f", truck.getType().getMaxReserve()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine * 3);
+        }
+        else{
+            game.font19.draw(game.batch, String.format("%.1f", truck.getReserve()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine * 3);
+        }
         game.font19.draw(game.batch, "Speed: ", this.selectedX + 15, this.selectedY + this.selectedH - 50 - newLine*4);
         game.font19.draw(game.batch, String.format("%.1f", truck.getSpeed()), this.selectedX + 20, this.selectedY + this.selectedH - 50 - newLine*5);
         game.font19.draw(game.batch, "Range: ", this.selectedX + 15, this.selectedY + this.selectedH - 50 - newLine*6);

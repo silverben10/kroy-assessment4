@@ -21,7 +21,7 @@ public enum FireTruckType {
     Sapphire(250, 2, Color.CYAN, "Sapphire Truck", 6, 0.16f, 120, "blue"),
     Amethyst(280, 1.4f, Color.PURPLE, "Amethyst Truck", 6.5f, 0.2f, 230, "purple"),
     Emerald(120, 4, Color.GREEN, "Emerald Truck", 4.5f, 0.3f, 100, "green"),
-    Mirror(500, 2, Color.CYAN, "Mirror Truck", 5, 0.1f,150,"mirror");
+    Mirror(0, 2, Color.CYAN, "Mirror Truck", 5, 0.1f,0,"mirror");
 
     /** The maximum amount of water this type of truck can have,
      * also the value of the truck's reserve when it is spawned */

@@ -33,6 +33,12 @@ public class FireTruck extends Sprite {
     /** Health points */
     private float HP;
 
+    /** The starting HP, used for mirror truck */
+    private float initialHP;
+
+    /** The starting reserve, used for mirror truck */
+    private float initialReserve;
+
     /** Attack power*/
     private float AP;
 
@@ -530,9 +536,17 @@ public class FireTruck extends Sprite {
     public void drawStats(ShapeRenderer shapeMapRenderer) {
         shapeMapRenderer.rect(this.getPosition().x + 0.2f, this.getPosition().y + 1.3f, 0.6f, 0.8f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
         shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);
-        shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.type.getMaxReserve() * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);
-        shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
-        shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);
+        if(type != FireTruckType.Mirror) {
+            shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.type.getMaxReserve() * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);
+            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
+            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);
+        }
+        else{
+            shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.initialReserve * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);
+            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
+            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.initialHP * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);
+        }
+
         for (WaterParticle particle : this.getSpray()) {
             shapeMapRenderer.rect(particle.getPosition().x, particle.getPosition().y, particle.getSize(), particle.getSize(), particle.getColour(), particle.getColour(), particle.getColour(), particle.getColour());
         }
@@ -654,6 +668,22 @@ public class FireTruck extends Sprite {
 
     public void setImmune(boolean immunity){
         immune = immunity;
+    }
+
+    public void setInitialHP(float initialHP) {
+        this.initialHP = initialHP;
+    }
+
+    public float getInitialHP() {
+        return initialHP;
+    }
+
+    public void setInitialReserve(float initialReserve) {
+        this.initialReserve = initialReserve;
+    }
+
+    public float getInitialReserve() {
+        return initialReserve;
     }
 }
 
