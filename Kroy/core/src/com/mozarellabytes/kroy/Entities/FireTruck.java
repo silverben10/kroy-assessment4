@@ -1,14 +1,13 @@
 package com.mozarellabytes.kroy.Entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
-import com.mozarellabytes.kroy.Screens.GameScreen;
+import com.google.gson.annotations.Expose;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
 
 import java.util.ArrayList;
@@ -24,19 +23,24 @@ import java.util.LinkedList;
  */
 public class FireTruck extends Sprite {
 
-    /** Enables access to functions in GameScreen */
-    private final GameScreen gameScreen;
 
     /** Defines set of pre-defined attributes */
+    @Expose
     public final FireTruckType type;
 
+    /** Defines the tilemap of collision locations on the map. Excluded from serialization (using <code>transient</code>) when saving the game as this data is constant. */
+    private final TiledMapTileLayer collisions;
+
     /** Health points */
+    @Expose
     private float HP;
 
     /** Water Reserve */
+    @Expose
     private float reserve;
 
     /** Position of FireTruck in tiles */
+    @Expose (deserialize = false)
     private Vector2 position;
 
     /** Actual path the truck follows; the fewer item in
@@ -85,14 +89,14 @@ public class FireTruck extends Sprite {
     final int[] directionY = {0, 0, 1, -1};
 
     /** True if a tile has been visited when constructing a path, false otherwise */
-    boolean[][] vistited;
+    boolean[][] visited;
     /** Links parents to children in order o find the shortest path */
     Vector2[] prev;
     /** the shortest path between 2 points */
     LinkedList<Vector2> reconstructedPath;
     /**Checks if the mouse was dragged off the road multiple times in one instance**/
     private int counter = 0;
-    /** Path fireturch actually uses*/
+    /** Path firetruck actually uses*/
     private Vector2[] newPath;
 
     private Vector2 previous;
@@ -100,15 +104,13 @@ public class FireTruck extends Sprite {
      * Constructs a new FireTruck at a position and of a certain type
      * which have been passed in
      *
-     * @param gameScreen    used to access functions in GameScreen
      * @param position      initial location of the truck
      * @param type          used to have predefined attributes
      */
-    public FireTruck(GameScreen gameScreen, Vector2 position, FireTruckType type) {
+    public FireTruck(Vector2 position, FireTruckType type, TiledMapTileLayer collisions) {
         super(type.getLookDown());
-
-        this.gameScreen = gameScreen;
         this.type = type;
+        this.collisions = collisions;
         this.HP = type.getMaxHP();
         this.reserve = type.getMaxReserve();
         this.position = position;
@@ -236,7 +238,7 @@ public class FireTruck extends Sprite {
      */
     private boolean isValidDraw(Vector2 coordinate) {
         if (coordinate.y < 28) {
-            if (gameScreen.isRoad((Math.round(coordinate.x)), (Math.round(coordinate.y)))) {
+            if (collisions.getCell(Math.round(coordinate.x), Math.round(coordinate.y)).getTile().getProperties().get("road").equals(true)) {
                 if (this.path.isEmpty()) {
                     return this.getPosition().equals(coordinate);
                 } else {
@@ -272,19 +274,19 @@ public class FireTruck extends Sprite {
         Vector2 goal = endPos;
 
 
-        vistited = new boolean[48][29];
+        visited = new boolean[48][29];
         prev = new Vector2[1392];
 
 
         for(int i=0; i<48; i++){
             for(int j=0; j<29; j++){
-                vistited[i][j] = false;
+                visited[i][j] = false;
             }
         }
 
         positions.addLast(start);
 
-        vistited[(int) start.x][(int) start.y] = true;
+        visited[(int) start.x][(int) start.y] = true;
 
 
         while (!positions.isEmpty()) {
@@ -326,11 +328,11 @@ public class FireTruck extends Sprite {
             if(newPos.x > 47 || newPos.y > 28) {
                 continue;
             }
-            boolean isRoad = gameScreen.isRoad(Math.round(newPos.x), Math.round(newPos.y));
+            boolean isRoad = (collisions.getCell(Math.round(newPos.x), Math.round(newPos.y)).getTile().getProperties().get("road").equals(true));
             if(!isRoad) {
                 continue;
             }
-            if(vistited[(int)newPos.x][(int)newPos.y]) {
+            if(visited[(int)newPos.x][(int)newPos.y]) {
                 continue;
             }
 
@@ -338,7 +340,7 @@ public class FireTruck extends Sprite {
 
             positions.addFirst(newPos);
 
-            vistited[(int)newPos.x] [(int)newPos.y] = true;
+            visited[(int)newPos.x] [(int)newPos.y] = true;
 
             prev[convertVector2ToIntPositionInMap(newPos)] = currentPos;
         }
@@ -348,17 +350,15 @@ public class FireTruck extends Sprite {
      *
      * @param pos    The current position being queued
      *
-     * @return An int reprsenting the Vector2 as a point on the map
+     * @return An int representing the Vector2 as a point on the map
      */
     private int convertVector2ToIntPositionInMap(Vector2 pos) {
         return ((int) (pos.x * 29 + pos.y));
     }
     /**
-     * Reverses an array
+     * Reverses an array.
      *
      * @param a    The shortest path array, so it goes from start to finish rather then finish to start in order
-     *
-     * @return A reversed array
      */
     private void reverse(Vector2[] a)
     {
@@ -382,11 +382,11 @@ public class FireTruck extends Sprite {
             reconstructedPath.add(at);
         }
 
-        Object[] objectAarray = reconstructedPath.toArray();
-        Vector2[] path = new Vector2[objectAarray.length];
+        Object[] objectArray = reconstructedPath.toArray();
+        Vector2[] path = new Vector2[objectArray.length];
 
-        for(int i=0;i<objectAarray.length;i++) {
-            path[i] = (Vector2) objectAarray[i];
+        for(int i=0;i<objectArray.length;i++) {
+            path[i] = (Vector2) objectArray[i];
         }
 
         reverse(path);
@@ -579,6 +579,10 @@ public class FireTruck extends Sprite {
         return this.reserve;
     }
 
+    public void setReserve(float reserve) {
+        this.reserve = reserve;
+    }
+
     public FireTruckType getType() {
         return this.type;
     }
@@ -619,4 +623,3 @@ public class FireTruck extends Sprite {
         return this.type.getRange();
     }
 }
-
