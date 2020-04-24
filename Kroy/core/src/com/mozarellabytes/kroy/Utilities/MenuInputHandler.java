@@ -78,20 +78,20 @@ public class MenuInputHandler implements InputProcessor {
                 menu.clickedStartButton();
             } else if (menu.getControlsButton().contains(position.x, position.y)) {
                 menu.clickedControlsButton();
+            } else if (menu.getSoundButton().contains(position.x, position.y)) {
+                menu.clickedSoundButton();
+            } else if (menu.getLoadButton().contains(position.x, position.y)) {
+                menu.clickedLoadButton();
+            } else {
+                if (menu.getEasyButton().contains(position.x, position.y)) {
+                    menu.clickedEasyButton();
+                } else if (menu.getMediumButton().contains(position.x, position.y)) {
+                    menu.clickedMediumButton();
+                } else if (menu.getHardButton().contains(position.x, position.y)) {
+                    menu.clickedHardButton();
+                }
             }
-        } else {
-            if (menu.getEasyButton().contains(position.x, position.y)) {
-                menu.clickedEasyButton();
-            } else if (menu.getMediumButton().contains(position.x, position.y)) {
-                menu.clickedMediumButton();
-            } else if (menu.getHardButton().contains(position.x, position.y)) {
-                menu.clickedHardButton();
-            }
-        }
-        if (menu.getSoundButton().contains(position.x, position.y)) {
-            menu.clickedSoundButton();
-        } else if (menu.getLoadButton().contains(position.x, position.y)) {
-            menu.clickedLoadButton();
+
         }
         return true;
     }
@@ -119,20 +119,21 @@ public class MenuInputHandler implements InputProcessor {
                 menu.toGame(2);
             } else if (menu.getHardButton().contains(position.x, position.y)) {
                 menu.toGame(4);
-            } else if (menu.getControlsButton().contains(position.x, position.y)) {
-                menu.toControlScreen();
-            } else if (menu.getSoundButton().contains(position.x, position.y)) {
-                menu.changeSound();
-            } else if (menu.getLoadButton().contains(position.x, position.y)) {
-                menu.toLoadScreen();
-            } else if (menu.getStartButton().contains(position.x, position.y)) {
-                menu.toDifficultySelect();
-            } else if (menu.getControlsButton().contains(position.x, position.y)) {
-                menu.toControlScreen();
-            } else if (menu.getSoundButton().contains(position.x, position.y)) {
-                menu.changeSound();
             }
+        } else if (menu.getControlsButton().contains(position.x, position.y)) {
+            menu.toControlScreen();
+        } else if (menu.getSoundButton().contains(position.x, position.y)) {
+            menu.changeSound();
+        } else if (menu.getLoadButton().contains(position.x, position.y)) {
+            menu.toLoadScreen();
+        } else if (menu.getStartButton().contains(position.x, position.y)) {
+            menu.toDifficultySelect();
+        } else if (menu.getControlsButton().contains(position.x, position.y)) {
+            menu.toControlScreen();
+        } else if (menu.getSoundButton().contains(position.x, position.y)) {
+            menu.changeSound();
         }
+
         menu.idleStartButton();
         menu.idleControlsButton();
         menu.idleSoundButton();
@@ -142,7 +143,7 @@ public class MenuInputHandler implements InputProcessor {
         menu.idleLoadButton();
 
         return true;
-    }
+}
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
