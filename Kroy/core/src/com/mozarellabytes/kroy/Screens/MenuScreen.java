@@ -226,7 +226,7 @@ public class MenuScreen implements Screen {
 
     /** Changes the screen from menu screen to game screen */
     public void toGameScreen() {
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new GameScreen(game, 0));
         this.dispose();
     }
 

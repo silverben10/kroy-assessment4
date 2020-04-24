@@ -1,5 +1,6 @@
 package com.mozarellabytes.kroy.Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -138,6 +139,10 @@ public class LoadScreen implements Screen {
     public void closeScreen() {
         Gdx.input.setInputProcessor(new MenuInputHandler((MenuScreen) parent));
         this.game.setScreen(parent);
+    }
+
+    public void toGameScreen(int loadSlot) {
+        this.game.setScreen(new GameScreen(game, loadSlot));
     }
 
     /**
