@@ -59,9 +59,8 @@ public class SaveManager {
         }
     }
 
-    public static Preferences loadGameData(int saveSlot) {
-        System.out.println("Loading data from slot " + saveSlot);
-        Preferences prefs = Gdx.app.getPreferences("save"+saveSlot+".xml");
+    public static Preferences loadGameData(int loadSlot) {
+        Preferences prefs = Gdx.app.getPreferences("save"+loadSlot+".xml");
         System.out.println(prefs.get());
         return prefs;
     }
@@ -82,8 +81,8 @@ public class SaveManager {
 
             // Creates a new JsonObject for the truck's position, since it's composed of x and y coordinates.
             JsonObject JsonTruckPos = new JsonObject();
-            JsonTruckPos.addProperty("x", truck.getPosition().x);
-            JsonTruckPos.addProperty("y", truck.getPosition().y);
+            JsonTruckPos.addProperty("x", Math.round(truck.getPosition().x));
+            JsonTruckPos.addProperty("y", Math.round(truck.getPosition().y));
 
             JsonTruck.add("position", JsonTruckPos);
 
@@ -96,7 +95,7 @@ public class SaveManager {
         JsonArray JsonFortressArray = new JsonArray();
         for (Fortress fortress : fortressList) {
             JsonObject JsonFortress = new JsonObject();
-            JsonFortress.addProperty("type", fortress.getFortressType().toString());
+            JsonFortress.addProperty("fortressType", fortress.getFortressType().toString());
             JsonFortress.addProperty("HP", fortress.getHP());
 
             JsonObject JsonFortressPos = new JsonObject();
