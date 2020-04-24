@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
+import com.google.gson.annotations.Expose;
 import com.mozarellabytes.kroy.Screens.GameScreen;
 import com.mozarellabytes.kroy.Utilities.SoundFX;
 
@@ -23,9 +25,6 @@ import java.util.LinkedList;
  * Having 'A' held when within range of a  Fortress will deal damage to it.
  */
 public class FireTruck extends Sprite {
-
-    /** Enables access to functions in GameScreen */
-    private final GameScreen gameScreen;
 
     /** Defines set of pre-defined attributes */
     @Expose

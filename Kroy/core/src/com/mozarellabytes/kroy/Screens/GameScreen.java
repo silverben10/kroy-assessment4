@@ -230,11 +230,6 @@ public class GameScreen implements Screen {
 
             powerUps = new ArrayList<PowerUp>();
             powerUpsToRemove = new ArrayList<PowerUp>();
-            powerUps.add(new PowerUp(this, PowerUpType.Mirror));
-            powerUps.add(new PowerUp(this, PowerUpType.Immunity));
-            powerUps.add(new PowerUp(this, PowerUpType.Repair));
-            powerUps.add(new PowerUp(this, PowerUpType.Speed));
-            powerUps.add(new PowerUp(this, PowerUpType.Damage));
 
             mirrorTrucks = new ArrayList<>();
 
@@ -321,11 +316,7 @@ public class GameScreen implements Screen {
             patrols.add(new Patrol(this, PatrolType.Station));
 
             powerUps = new ArrayList<PowerUp>();
-            powerUps.add(new PowerUp(this, PowerUpType.Mirror));
-            powerUps.add(new PowerUp(this, PowerUpType.Immunity));
-            powerUps.add(new PowerUp(this, PowerUpType.Repair));
-            powerUps.add(new PowerUp(this, PowerUpType.Speed));
-            powerUps.add(new PowerUp(this, PowerUpType.Damage));
+            powerUpsToRemove = new ArrayList<PowerUp>();
 
             deadEntities = new ArrayList<>(7);
 
@@ -519,7 +510,7 @@ public class GameScreen implements Screen {
                     powerUp.setFireTruck(truck);
                     powerUp.setActive();
                     if(powerUp.type == PowerUpType.Mirror){
-                        FireTruck mirrorTruck = new FireTruck(this,truck.getTilePosition(),FireTruckType.Mirror);
+                        FireTruck mirrorTruck = new FireTruck(truck.getTilePosition(),FireTruckType.Mirror,  (TiledMapTileLayer) mapLayers.get("collisions"));
                         mirrorTruck.setAP(truck.getAP());
                         mirrorTruck.setSpeed(truck.getSpeed());
                         mirrorTruck.setHP((int) truck.getHP());
