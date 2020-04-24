@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class Fortress {
 
     /*** Fortress health, destroyed on zero */
-//    @Expose
+    @Expose
     private float HP;
 
     /*** Position of the Fortress */
-//    @Expose
+    @Expose
     private final Vector2 position;
 
     /*** Where the Fortress lies on the map */
@@ -29,8 +29,8 @@ public class Fortress {
     private final ArrayList<Bomb> bombs;
 
     /*** Gives Fortress certain stats */
-//    @Expose
-    private final FortressType fortressType;
+    @Expose
+    public final FortressType fortressType;
 
     /**
      * Constructs Fortress at certain position and
@@ -143,6 +143,10 @@ public class Fortress {
 
     public float getHP() {
         return this.HP;
+    }
+
+    public void setHP(float hp) {
+        this.HP = hp;
     }
 
     public void damage(float HP){
