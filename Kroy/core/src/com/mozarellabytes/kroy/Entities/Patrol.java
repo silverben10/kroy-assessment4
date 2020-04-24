@@ -110,7 +110,7 @@ public class Patrol extends Sprite {
 /** Texture for each
      * patrol*/
 
-    private final Texture texture;
+//    private final Texture texture;
 
 
 
@@ -138,7 +138,7 @@ public class Patrol extends Sprite {
         this.timeOfLastAttack = System.currentTimeMillis();
         this.nextTile=position;
         this.previousTile=position;
-        this.texture = type.getTexture();
+//        this.texture = type.getTexture();
 
         definePath();
     }

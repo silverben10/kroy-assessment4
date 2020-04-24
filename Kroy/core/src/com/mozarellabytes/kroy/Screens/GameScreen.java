@@ -1,6 +1,7 @@
 package com.mozarellabytes.kroy.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -10,10 +11,12 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.google.gson.reflect.TypeToken;
 import com.mozarellabytes.kroy.Entities.*;
 import com.mozarellabytes.kroy.GameState;
 import com.mozarellabytes.kroy.Kroy;
 import com.mozarellabytes.kroy.Utilities.*;
+import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
@@ -27,35 +30,56 @@ import java.util.Random;
  */
 public class GameScreen implements Screen {
 
-    /** Instance of our game that allows us the change screens */
+    /**
+     * Instance of our game that allows us the change screens
+     */
     private final Kroy game;
 
-    /** The difficulty level of the game*/
-    private final int fixedGameDifficulty;
 
-    /** Renders our tiled map */
+    /**
+     * The difficulty level of the game
+     */
+    private int fixedGameDifficulty;
+
+    /*
+     * Renders our tiled map
+     */
     private final OrthogonalTiledMapRenderer mapRenderer;
 
-    /** Camera to set the projection for the screen */
+    /**
+     * Camera to set the projection for the screen
+     */
     private final OrthographicCamera camera;
 
-    /** Renders shapes such as the health/reserve
-     * stat bars above entities */
+    /**
+     * Renders shapes such as the health/reserve
+     * stat bars above entities
+     */
     private final ShapeRenderer shapeMapRenderer;
 
-    /** Stores the layers of our tiled map */
+    /**
+     * Stores the layers of our tiled map
+     */
     private final MapLayers mapLayers;
 
-    /** Stores the structures layers, stores the background layer */
+    /**
+     * Stores the structures layers, stores the background layer
+     */
     private final int[] structureLayersIndices, backgroundLayerIndex;
 
-    /** Batch that has dimensions in line with the 40x25 map */
+    /**
+     * Batch that has dimensions in line with the 40x25 map
+     */
     private final Batch mapBatch;
 
-    /** Used for shaking the camera when a bomb hits a truck */
+    /**
+     * Used for shaking the camera when a bomb hits a truck
+     */
     private final CameraShake camShake;
 
-    /** Stores whether the game is running or is paused */
+    /**
+     * Stores whether the game is running or is paused
+     */
     private PlayState state;
 
     /**
@@ -73,40 +97,60 @@ public class GameScreen implements Screen {
      */
     public final GameState gameState;
 
-    /** List of Fortresses currently active on the map */
+    /**
+     * List of Fortresses currently active on the map
+     */
     private final ArrayList<Fortress> fortresses;
 
     private final ArrayList<Patrol> patrols;
 
-    /** List of active PowerUps on the map */
+
+    /**
+     * List of active PowerUps on the map
+     */
     private final ArrayList<PowerUp> powerUps;
 
     /** List of PowerUps to remove from the map */
     private final ArrayList<PowerUp> powerUpsToRemove;
 
-    /** Where the FireEngines' spawn, refill and repair */
+    /**
+     * Where the FireEngines' spawn, refill and repair
+     */
     private final FireStation station;
 
     private ArrayList<FireTruck> mirrorTrucks;
 
-    /** The FireTruck that the user is currently drawing a path for */
+    /**
+     * The FireTruck that the user is currently drawing a path for
+     */
     public FireTruck selectedTruck;
 
-    /** The entity that the user has clicked on to show
-     * the large stats in the top left corner */
+    /**
+     * The entity that the user has clicked on to show
+     * the large stats in the top left corner
+     */
     public Object selectedEntity;
 
-    /** A class keeping track of the current difficulty and the time to the next change */
+    /**
+     * A class keeping track of the current difficulty and the time to the next change
+     */
     private DifficultyControl difficultyControl;
 
-    /** An arraylist of all the entities that have been destroyed */
+    /**
+     * An arraylist of all the entities that have been destroyed
+     */
     private ArrayList<DestroyedEntity> deadEntities;
 
     public FPSLogger fpsCounter;
 
+    private Preferences savedData;
+
     public boolean wasPaused = false;
-    /** Play when the game is being played
-     * Pause when the pause button is clicked */
+
+    /**
+     * Play when the game is being played
+     * Pause when the pause button is clicked
+     */
     public enum PlayState {
         PLAY, PAUSE
     }
@@ -125,7 +169,7 @@ public class GameScreen implements Screen {
      *
      * @param game LibGdx game
      */
-    public GameScreen(Kroy game, int fixedGamedifficulty) {
+    public GameScreen(Kroy game, int loadSlot, int fixedGamedifficulty) {
         this.game = game;
         this.fixedGameDifficulty = fixedGamedifficulty;
         fpsCounter = new FPSLogger();
@@ -156,48 +200,141 @@ public class GameScreen implements Screen {
         backgroundLayerIndex = new int[]{mapLayers.getIndex("background")};
 
         structureLayersIndices = new int[]{mapLayers.getIndex("structures3"),
-                mapLayers.getIndex("structures"),
-                mapLayers.getIndex("structures2"),
-                mapLayers.getIndex("transparentStructures")};
+            mapLayers.getIndex("structures"),
+            mapLayers.getIndex("structures2"),
+            mapLayers.getIndex("transparentStructures")};
 
         station = new FireStation(3, 8);
 
-        spawn(FireTruckType.Emerald);
-        spawn(FireTruckType.Amethyst);
-        spawn(FireTruckType.Sapphire);
-        spawn(FireTruckType.Ruby);
+        if (loadSlot == 0) {
+            spawn(FireTruckType.Emerald);
+            spawn(FireTruckType.Amethyst);
+            spawn(FireTruckType.Sapphire);
+            spawn(FireTruckType.Ruby);
 
-        fortresses = new ArrayList<Fortress>();
-        fortresses.add(new Fortress(12, 24.5f, fixedGamedifficulty, FortressType.Revs));
-        fortresses.add(new Fortress(30.5f, 23.5f, fixedGamedifficulty, FortressType.Walmgate));
-        fortresses.add(new Fortress(14.5f, 5, fixedGamedifficulty, FortressType.Railway));
-        fortresses.add(new Fortress(34, 2.5f, fixedGamedifficulty, FortressType.Clifford));
-        fortresses.add(new Fortress(41.95f, 25.5f, fixedGamedifficulty, FortressType.Minster));
-        fortresses.add(new Fortress(44.5f, 10.5f, fixedGamedifficulty, FortressType.Shambles));
+            fortresses = new ArrayList<Fortress>();
+            fortresses.add(new Fortress(12, 24.5f, fixedGamedifficulty, FortressType.Revs));
+            fortresses.add(new Fortress(30.5f, 23.5f, fixedGamedifficulty, FortressType.Walmgate));
+            fortresses.add(new Fortress(14.5f, 5, fixedGamedifficulty, FortressType.Railway));
+            fortresses.add(new Fortress(34, 2.5f, fixedGamedifficulty, FortressType.Clifford));
+            fortresses.add(new Fortress(41.95f, 25.5f, fixedGamedifficulty, FortressType.Minster));
+            fortresses.add(new Fortress(44.5f, 10.5f, fixedGamedifficulty, FortressType.Shambles));
 
-        patrols = new ArrayList<Patrol>();
-        patrols.add(new Patrol(this,PatrolType.Blue));
-        patrols.add(new Patrol(this,PatrolType.Green));
-        patrols.add(new Patrol(this,PatrolType.Red));
-        patrols.add(new Patrol(this,PatrolType.Violet));
-        patrols.add(new Patrol(this,PatrolType.Yellow));
-        patrols.add(new Patrol(this,PatrolType.Station));
+            patrols = new ArrayList<Patrol>();
+            patrols.add(new Patrol(this, PatrolType.Blue));
+            patrols.add(new Patrol(this, PatrolType.Green));
+            patrols.add(new Patrol(this, PatrolType.Red));
+            patrols.add(new Patrol(this, PatrolType.Violet));
+            patrols.add(new Patrol(this, PatrolType.Yellow));
+            patrols.add(new Patrol(this, PatrolType.Station));
 
-        mirrorTrucks = new ArrayList<>();
+            powerUps = new ArrayList<PowerUp>();
+            powerUpsToRemove = new ArrayList<PowerUp>();
+            powerUps.add(new PowerUp(this, PowerUpType.Mirror));
+            powerUps.add(new PowerUp(this, PowerUpType.Immunity));
+            powerUps.add(new PowerUp(this, PowerUpType.Repair));
+            powerUps.add(new PowerUp(this, PowerUpType.Speed));
+            powerUps.add(new PowerUp(this, PowerUpType.Damage));
 
-        powerUps = new ArrayList<PowerUp>();
-        powerUpsToRemove = new ArrayList<PowerUp>();
-
-        deadEntities = new ArrayList<>(7);
-
-        explosions = new ArrayList<>();
-        explosionsToRemove = new ArrayList<>();
+            mirrorTrucks = new ArrayList<>();
 
 
-        // sets the origin point to which all of the polygon's local vertices are relative to.
-        for (FireTruck truck : station.getTrucks()) {
-            truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+
+            deadEntities = new ArrayList<>(7);
+
+            explosions = new ArrayList<>();
+            explosionsToRemove = new ArrayList<>();
+
+            // sets the origin point to which all of the polygon's local vertices are relative to.
+            for (FireTruck truck : station.getTrucks()) {
+                truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+            }
+        } else {
+            savedData = SaveManager.loadGameData(loadSlot);
+
+            Gson gson = new Gson();
+
+            this.fixedGameDifficulty = savedData.getInteger("gameDifficulty");
+
+            /* Deserialise the fireTruckList from the saved data, spawning the fire trucks at their saved locations
+               and health/water levels.
+            */
+            ArrayList<FireTruck> trucks = gson.fromJson(savedData.getString("fireTruckList"),
+                new TypeToken<ArrayList<FireTruck>>() {
+                }.getType());
+
+            System.out.println(trucks);
+
+            for (int i = 0; i < trucks.size(); i++) {
+                FireTruck truck = trucks.get(i);
+                Vector2 pos = truck.getPosition();
+                spawn(truck.type, pos);
+
+                station.getTruck(i).setHP((int) truck.getHP());
+                station.getTruck(i).setReserve(truck.getReserve());
+            }
+
+            System.out.println(station.getTrucks());
+
+            ArrayList<Fortress> fortressList = gson.fromJson(savedData.getString("fortressesList"),
+                new TypeToken<ArrayList<Fortress>>() {
+                }.getType());
+
+            System.out.println(fortressList);
+
+            fortresses = new ArrayList<Fortress>();
+
+            for (int i = 0; i < fortressList.size(); i++) {
+                Fortress fortress = fortressList.get(i);
+                System.out.println(fortress);
+                Vector2 pos = fortress.getPosition();
+                System.out.println(pos);
+                System.out.println(fortress.getFortressType());
+
+                fortresses.add(new Fortress(pos.x, pos.y, fixedGameDifficulty, fortress.fortressType));
+                System.out.println(fortresses);
+                fortresses.get(i).setHP(fortress.getHP());
+            }
+
+            getDifficultyControl().setCurrentDifficulty(Integer.parseInt(savedData.getString("currentDifficulty")));
+
+            if (savedData.getString("hasShownDanceTutorial").equals("true")) {
+                gameState.setDanceTutorialShown();
+            }
+
+            float fireStationHP = savedData.getFloat("fireStationHP");
+            station.setHP(fireStationHP);
+
+            if (station.getHP() <= 0) {
+                gameState.setStationDestroyed();
+            }
+
+            for (int i = 0; i < savedData.getInteger("fortressesDestroyed"); i++) {
+                gameState.addFortress();
+            }
+
+            patrols = new ArrayList<Patrol>();
+            patrols.add(new Patrol(this, PatrolType.Blue));
+            patrols.add(new Patrol(this, PatrolType.Green));
+            patrols.add(new Patrol(this, PatrolType.Violet));
+            patrols.add(new Patrol(this, PatrolType.Yellow));
+            patrols.add(new Patrol(this, PatrolType.Station));
+
+            powerUps = new ArrayList<PowerUp>();
+            powerUps.add(new PowerUp(this, PowerUpType.Mirror));
+            powerUps.add(new PowerUp(this, PowerUpType.Immunity));
+            powerUps.add(new PowerUp(this, PowerUpType.Repair));
+            powerUps.add(new PowerUp(this, PowerUpType.Speed));
+            powerUps.add(new PowerUp(this, PowerUpType.Damage));
+
+            deadEntities = new ArrayList<>(7);
+
+            // sets the origin point to which all of the polygon's local vertices are relative to.
+            for (FireTruck truck : station.getTrucks()) {
+                truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+            }
         }
+
 
         mapBatch = mapRenderer.getBatch();
 
@@ -209,6 +346,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(new GameInputHandler(this, gui));
     }
 
     @Override
@@ -227,9 +365,9 @@ public class GameScreen implements Screen {
             truck.drawSprite(mapBatch);
         }
 
-       if(!gameState.hasStationDestoyed()) {
+        if (!gameState.isStationDestroyed()) {
             station.draw(mapBatch);
-       }
+        }
 
         for (Fortress fortress : this.fortresses) {
             fortress.draw(mapBatch);
@@ -240,31 +378,28 @@ public class GameScreen implements Screen {
             powerUp.drawSprite(mapBatch);
         }
 
-        for (DestroyedEntity deadFortress : deadEntities){
+        for (DestroyedEntity deadFortress : deadEntities) {
+
             deadFortress.draw(mapBatch);
         }
-
-
-
 
         mapBatch.end();
 
         mapRenderer.render(structureLayersIndices);
 
         mapBatch.begin();
-        for (Patrol patrol : this.patrols) {
-            if(patrol.getType().equals(PatrolType.Station)){
-                if(gameState.firstFortressDestroyed()){
+        for (Patrol patrol : patrols) {
+            if (patrol.getType().equals(PatrolType.Station)) {
+                if (gameState.firstFortressDestroyed()) {
                     patrol.drawSprite(mapBatch);
                 }
-            }
-            else{
+            } else {
                 patrol.drawSprite(mapBatch);
             }
         }
 
-        for(Explosion explosion:explosions){
-            if(explosion.drawExplosion(mapBatch)){
+        for (Explosion explosion : explosions) {
+            if (explosion.drawExplosion(mapBatch)) {
                 explosionsToRemove.add(explosion);
             }
         }
@@ -276,19 +411,17 @@ public class GameScreen implements Screen {
         for (FireTruck truck : station.getTrucks()) {
             truck.drawStats(shapeMapRenderer);
         }
-
-        for (Patrol patrol : this.patrols) {
-            if(patrol.getType().equals(PatrolType.Station)){
-                if(gameState.firstFortressDestroyed()){
+        for (Patrol patrol : patrols) {
+            if (patrol.getType().equals(PatrolType.Station)) {
+                if (gameState.firstFortressDestroyed()) {
                     patrol.drawStats(shapeMapRenderer);
                 }
-            }
-            else{
+            } else {
                 patrol.drawStats(shapeMapRenderer);
             }
         }
 
-        if(station.getHP()>0){
+        if (station.getHP() > 0) {
             station.drawStats(shapeMapRenderer);
         }
 
@@ -332,9 +465,7 @@ public class GameScreen implements Screen {
         gui.renderButtons();
 
 
-
         gui.renderDifficultyCounter(difficultyControl);
-
     }
 
     /**
@@ -414,11 +545,11 @@ public class GameScreen implements Screen {
         for (int i = 0; i < station.getTrucks().size(); i++) {
             FireTruck truck = station.getTruck(i);
 
-             if(!truck.path.isEmpty() && wasPaused) {
-                 truck.setMoving(true);
-             }
+            if (!truck.path.isEmpty() && wasPaused) {
+                truck.setMoving(true);
+            }
 
-            if(i == station.getTrucks().size()-1) {
+            if (i == station.getTrucks().size() - 1) {
                 wasPaused = false;
             }
 
@@ -455,7 +586,7 @@ public class GameScreen implements Screen {
             // check if truck is destroyed
             if (truck.getHP() <= 0) {
                 mapBatch.begin();
-                explosions.add(new Explosion(4,4,(int)truck.getPosition().x-1,(int)truck.getPosition().y-1,0.025f));
+                explosions.add(new Explosion(4, 4, (int) truck.getPosition().x - 1, (int) truck.getPosition().y - 1, 0.025f));
                 mapBatch.end();
                 gameState.removeFireTruck();
                 station.destroyTruck(truck);
@@ -466,48 +597,52 @@ public class GameScreen implements Screen {
         }
 
         if (station.getHP() <= 0) {
+
             mapBatch.begin();
-            explosions.add(new Explosion(12,10,(int)station.getPosition().x,(int)station.getPosition().y,0.1f));
+            explosions.add(new Explosion(12, 10, (int) station.getPosition().x, (int) station.getPosition().y, 0.1f));
             mapBatch.end();
-            if(!(gameState.hasStationDestoyed())){
-                gameState.setStationDestoyed();
-                deadEntities.add(station.getDestroyedStation());
+            if (!(gameState.isStationDestroyed())) {
+                gameState.setStationDestroyed();
+
+                if (!(gameState.isStationDestroyed())) {
+                    gameState.setStationDestroyed();
+
+                    deadEntities.add(station.getDestroyedStation());
+                }
+                patrols.remove(PatrolType.Station);
             }
-            patrols.remove(PatrolType.Station);
         }
 
-        for (int i=0;i<this.patrols.size();i++) {
-            Patrol patrol=this.patrols.get(i);
-
+        for (int i = 0; i < this.patrols.size(); i++) {
+            Patrol patrol = this.patrols.get(i);
+            System.out.println("Currently using patrol " + patrol);
             patrol.updateSpray();
 
-            if(patrol.getType().equals(PatrolType.Station)){
-                if((gameState.firstFortressDestroyed())){
-                    if((patrol.getPosition().equals(PatrolType.Station.getPoint4()))){
+            if (patrol.getType().equals(PatrolType.Station)) {
+                if ((gameState.firstFortressDestroyed())) {
+                    if ((patrol.getPosition().equals(PatrolType.Station.getPoint4()))) {
                         patrol.attack(station);
-                    }
-                    else{
+                    } else {
                         patrol.move();
                     }
-                }
-                else{
-                    if(gameState.hasStationDestoyed()){
+                } else {
+                    if (gameState.isStationDestroyed()) {
                         patrols.remove(patrol);
 
                         //patrol.move();
-                        /*if((patrol.getPosition().equals(PatrolType.Station.getPoint1()))){
-                            patrols.remove(patrol);
-                        }*/
+                    /*if((patrol.getPosition().equals(PatrolType.Station.getPoint1()))){
+                        patrols.remove(patrol);
+                    }*/
                     }
                 }
-            }
-            else{
+            } else {
+                System.out.println("Moving patrols!");
                 patrol.move();
             }
             if (patrol.getHP() <= 0) {
                 patrols.remove(patrol);
-                if((patrol.getType().equals(PatrolType.Station))&&(!gameState.hasStationDestoyed())){
-                    patrols.add(new Patrol(this,PatrolType.Station));
+                if ((patrol.getType().equals(PatrolType.Station)) && (!gameState.isStationDestroyed())) {
+                    patrols.add(new Patrol(this, PatrolType.Station));
                 }
             }
         }
@@ -523,7 +658,7 @@ public class GameScreen implements Screen {
             // check if fortress is destroyed
             if (fortress.getHP() <= 0) {
                 mapBatch.begin();
-                explosions.add(new Explosion(12,10,(int)fortress.getPosition().x-5,(int)fortress.getPosition().y-5,0.1f));
+                explosions.add(new Explosion(12, 10, (int) fortress.getPosition().x - 5, (int) fortress.getPosition().y - 5, 0.1f));
                 mapBatch.end();
                 gameState.addFortress();
                 deadEntities.add(fortress.createDestroyedFortress());
@@ -535,7 +670,7 @@ public class GameScreen implements Screen {
 
         }
 
-        if (gameState.getTrucksInAttackRange() > 0 && SoundFX.music_enabled){
+        if (gameState.getTrucksInAttackRange() > 0 && SoundFX.music_enabled) {
             SoundFX.playTruckAttack();
         } else {
             SoundFX.stopTruckAttack();
@@ -583,15 +718,15 @@ public class GameScreen implements Screen {
      * Checks whether the player has clicked on a truck and sets that
      * truck to selected truck and entity
      *
-     * @param position  coordinates of where the user clicked
-     * @return          <code>true</code> if player clicks on a truck
-     *                  <code>false</code> otherwise
+     * @param position coordinates of where the user clicked
+     * @return <code>true</code> if player clicks on a truck
+     * <code>false</code> otherwise
      */
     public boolean checkClick(Vector2 position) {
         for (int i = this.station.getTrucks().size() - 1; i >= 0; i--) {
             FireTruck selectedTruck = this.station.getTruck(i);
             Vector2 truckTile = getTile(selectedTruck.getPosition());
-            if (position.equals(truckTile) &&!selectedTruck.getMoving()) {
+            if (position.equals(truckTile) && !selectedTruck.getMoving()) {
                 this.selectedTruck = this.station.getTruck(i);
                 this.selectedEntity = this.station.getTruck(i);
                 return true;
@@ -603,8 +738,8 @@ public class GameScreen implements Screen {
     /**
      * Gets the coordinates of the tile that the truck is closest to
      *
-     * @param position  coordinates of truck
-     * @return          coordinates of closest tile
+     * @param position coordinates of truck
+     * @return coordinates of closest tile
      */
     private Vector2 getTile(Vector2 position) {
         return new Vector2((float) Math.round((position.x)), (float) Math.round(position.y));
@@ -615,13 +750,13 @@ public class GameScreen implements Screen {
      * truck's trail path and selects the truck as active truck and
      * entity
      *
-     * @param position  the coordinates where the user clicked
-     * @return          <code>true</code> if player clicks on the
-     *                  last tile in a truck's path
-     *                  <code>false</code> otherwise
+     * @param position the coordinates where the user clicked
+     * @return <code>true</code> if player clicks on the
+     * last tile in a truck's path
+     * <code>false</code> otherwise
      */
     public boolean checkTrailClick(Vector2 position) {
-        for (int i=this.station.getTrucks().size()-1; i>=0; i--) {
+        for (int i = this.station.getTrucks().size() - 1; i >= 0; i--) {
             if (!this.station.getTruck(i).path.isEmpty()) {
                 if (position.equals(this.station.getTruck(i).path.last())) {
                     this.selectedTruck = this.station.getTruck(i);
@@ -635,13 +770,13 @@ public class GameScreen implements Screen {
 
     /**
      * Checks whether the tile that the user is trying to add to the
-     *  truck's path is on the road. This uses the custom "road"
+     * truck's path is on the road. This uses the custom "road"
      * boolean property in the collisions layer within the tiled map
      *
      * @param x x coordinate of tile
      * @param y y coordinate of tile
-     * @return  <code>true</code> if the tile is a road
-     *          <code>false</code> otherwise
+     * @return <code>true</code> if the tile is a road
+     * <code>false</code> otherwise
      */
     public boolean isRoad(int x, int y) {
         return ((TiledMapTileLayer) mapLayers.get("collisions")).getCell(x, y).getTile().getProperties().get("road").equals(true);
@@ -664,20 +799,31 @@ public class GameScreen implements Screen {
         game.setScreen(new ControlsScreen(game, this, "game"));
     }
 
-    /** Exits the main game screen and goes to the menu, called when the home
-     * button is clicked */
+    /**
+     * Exits the main game screen and goes to the menu, called when the home
+     * button is clicked.
+     */
     public void toHomeScreen() {
         game.setScreen(new MenuScreen(game));
         SoundFX.sfx_soundtrack.dispose();
     }
 
     /**
+     * Switches from Game to Save screen. Passes a reference to itself so the Save screen
+     * knows where to return to when its exit button is clicked.
+     */
+    public void toSaveScreen() {
+        game.setScreen(new SaveScreen(game, this));
+    }
+
+    /**
      * Starts a dance-off between the given firetruck and the given ET
+     *
      * @param firetruck
      * @param et
      */
     public void doDanceOff(FireTruck firetruck, Patrol et) {
-        if(SoundFX.music_enabled){
+        if (SoundFX.music_enabled) {
             SoundFX.stopMusic();
             SoundFX.playDanceoffMusic();
         }
@@ -686,15 +832,30 @@ public class GameScreen implements Screen {
 
     /**
      * Creates a new FireEngine, plays a sound and adds it gameState to track
+     *
      * @param type Type of truck to be spawned (Ocean, Speed)
      */
     private void spawn(FireTruckType type) {
         SoundFX.sfx_truck_spawn.play();
-        station.spawn(new FireTruck(this, new Vector2(6,8), type));
+        station.spawn(new FireTruck(new Vector2(6, 8), type, (TiledMapTileLayer) mapLayers.get("collisions")));
         gameState.addFireTruck();
     }
 
-    /** Toggles between Play and Pause state when the Pause button is clicked */
+    /**
+     * Creates a new FireEngine at the specified location, plays a sound and adds it to the gameState to track.
+     *
+     * @param type        Type of truck to be spawned (Ocean, Speed)
+     * @param spawnCoords Co-ordinates to spawn the truck at.
+     */
+    private void spawn(FireTruckType type, Vector2 spawnCoords) {
+        SoundFX.sfx_truck_spawn.play();
+        station.spawn(new FireTruck(spawnCoords, type, (TiledMapTileLayer) mapLayers.get("collisions")));
+        gameState.addFireTruck();
+    }
+
+    /**
+     * Toggles between Play and Pause state when the Pause button is clicked
+     */
     public void changeState() {
         if (this.state.equals(PlayState.PLAY)) {
             this.state = PlayState.PAUSE;
@@ -719,9 +880,20 @@ public class GameScreen implements Screen {
         return this.state;
     }
 
-    public int getFixedGameDifficulty() { return  this.fixedGameDifficulty; }
+    public int getFixedGameDifficulty() {
+        return this.fixedGameDifficulty;
+    }
 
-    public void setGUI(GUI gui){ this.gui = gui; }
+    public void setGUI(GUI gui) {
+        this.gui = gui;
+    }
 
+    public ArrayList<DestroyedEntity> getDeadEntities() {
+        return this.deadEntities;
+    }
+
+    public DifficultyControl getDifficultyControl() {
+        return difficultyControl;
+    }
 }
 

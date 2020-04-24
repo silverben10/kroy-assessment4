@@ -11,7 +11,8 @@ public class MenuInputHandler implements InputProcessor {
 
     private final MenuScreen menu;
 
-    /** Constructs the MenuInputHandler
+    /**
+     * Constructs the MenuInputHandler
      *
      * @param menu the menu screen that this input handler is controlling
      */
@@ -19,11 +20,13 @@ public class MenuInputHandler implements InputProcessor {
         this.menu = menu;
     }
 
-    /** Exits the game if 'ESCAPE' key is pressed, goes to control
+    /**
+     * Exits the game if 'ESCAPE' key is pressed, goes to control
      * screen if 'C' is pressed, toggles the sound if 'S' is pressed
      *
      * @param keycode one of the constants in {@link Input.Keys}
-     * @return whether the input was processed */
+     * @return whether the input was processed
+     */
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
@@ -55,84 +58,92 @@ public class MenuInputHandler implements InputProcessor {
         return false;
     }
 
-    /** Checks if the user clicks on the start, controls or sound button.
+    /**
+     * Checks if the user clicks on the start, controls or sound button.
      * It starts the game, shows the controls screen or toggles the sound
      * respectively.
+     *
      * @param screenX The x coordinate, origin is in the upper left corner
      * @param screenY The y coordinate, origin is in the upper left corner
      * @param pointer the pointer for the event.
-     * @param button the button
-     * @return the input was processed */
+     * @param button  the button
+     * @return the input was processed
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-        if(!menu.isDifficultySelect()) {
+        if (!menu.isDifficultySelect()) {
             if (menu.getStartButton().contains(position.x, position.y)) {
                 menu.clickedStartButton();
             } else if (menu.getControlsButton().contains(position.x, position.y)) {
                 menu.clickedControlsButton();
+            } else if (menu.getSoundButton().contains(position.x, position.y)) {
+                menu.clickedSoundButton();
+            } else if (menu.getLoadButton().contains(position.x, position.y)) {
+                menu.clickedLoadButton();
+            } else {
+                if (menu.getEasyButton().contains(position.x, position.y)) {
+                    menu.clickedEasyButton();
+                } else if (menu.getMediumButton().contains(position.x, position.y)) {
+                    menu.clickedMediumButton();
+                } else if (menu.getHardButton().contains(position.x, position.y)) {
+                    menu.clickedHardButton();
+                }
             }
-        }
-        else{
-            if(menu.getEasyButton().contains(position.x, position.y)){
-                menu.clickedEasyButton();
-            }
-            else if(menu.getMediumButton().contains(position.x, position.y)){
-                menu.clickedMediumButton();
-            }
-            else if(menu.getHardButton().contains(position.x, position.y)){
-                menu.clickedHardButton();
-            }
-        }
-        if (menu.getSoundButton().contains(position.x, position.y)) {
-            menu.clickedSoundButton();
+
         }
         return true;
     }
 
-    /** Executes the action according to the button clicked by the user.
+    /**
+     * Executes the action according to the button clicked by the user.
      * i.e. if the user clicks down on the Start button but lifts their
      * click somewhere else, the game will not start.
+     *
      * @param screenX The x coordinate, origin is in the upper left corner
      * @param screenY The y coordinate, origin is in the upper left corner
      * @param pointer the pointer for the event.
-     * @param button the button
-     * @return the input was processed */
+     * @param button  the button
+     * @return the input was processed
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-        if(menu.isDifficultySelect()) {
+
+        if (menu.isDifficultySelect()) {
             if (menu.getEasyButton().contains(position.x, position.y)) {
                 menu.toGame(1);
-            }
-            else if (menu.getMediumButton().contains(position.x, position.y)) {
+            } else if (menu.getMediumButton().contains(position.x, position.y)) {
                 menu.toGame(2);
-            }
-            else if (menu.getHardButton().contains(position.x, position.y)) {
+            } else if (menu.getHardButton().contains(position.x, position.y)) {
                 menu.toGame(4);
             }
+        } else if (menu.getControlsButton().contains(position.x, position.y)) {
+            menu.toControlScreen();
+        } else if (menu.getSoundButton().contains(position.x, position.y)) {
+            menu.changeSound();
+        } else if (menu.getLoadButton().contains(position.x, position.y)) {
+            menu.toLoadScreen();
+        } else if (menu.getStartButton().contains(position.x, position.y)) {
+            menu.toDifficultySelect();
+        } else if (menu.getControlsButton().contains(position.x, position.y)) {
+            menu.toControlScreen();
+        } else if (menu.getSoundButton().contains(position.x, position.y)) {
+            menu.changeSound();
         }
-        else{
-            if (menu.getStartButton().contains(position.x, position.y)) {
-                menu.toDifficultySelect();
-            }
-            else if (menu.getControlsButton().contains(position.x, position.y)) {
-                menu.toControlScreen();
-            } else if (menu.getSoundButton().contains(position.x, position.y)) {
-                menu.changeSound();
-            }
-        }
+
         menu.idleStartButton();
         menu.idleControlsButton();
         menu.idleSoundButton();
         menu.idleEasyButton();
         menu.idleMediumButton();
         menu.idleHardButton();
+        menu.idleLoadButton();
 
         return true;
-    }
+}
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {

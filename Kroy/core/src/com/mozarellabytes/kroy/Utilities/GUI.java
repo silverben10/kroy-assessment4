@@ -81,6 +81,15 @@ public class GUI {
     /** Texture of the soundButton that is rendered to the screen */
     private Texture currentSoundTexture;
 
+    /** Rectangle containing the saveButton's coordinates, height and width */
+    private final Rectangle saveButton;
+    /** Texture of the saveButton when it is not being clicked on */
+    private final Texture saveButtonIdle;
+    /** Texture of the saveButton when it's being clicked */
+    private final Texture saveButtonClicked;
+    /** Texture of the saveButton that is rendered to the screen */
+    private Texture currentSaveTexture;
+
     /** Camera to set the projection for the screen */
     private final OrthographicCamera pauseCamera;
 
@@ -123,9 +132,15 @@ public class GUI {
         soundOffClickedTexture = new Texture(Gdx.files.internal("ui/sound_off_clicked.png"), true);
         soundOffClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
 
+        saveButtonIdle = new Texture(Gdx.files.internal("ui/save_idle.png"), true);
+        saveButtonIdle.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+        saveButtonClicked = new Texture(Gdx.files.internal("ui/save_clicked.png"), true);
+        saveButtonClicked.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+
         currentHomeTexture = homeButtonIdle;
         currentPauseTexture = pauseButtonIdle;
         currentInfoTexture = infoButtonIdle;
+        currentSaveTexture = saveButtonIdle;
 
         if (SoundFX.music_enabled) {
             currentSoundTexture = soundOffIdleTexture;
@@ -137,6 +152,7 @@ public class GUI {
         soundButton = new Rectangle(Gdx.graphics.getWidth() - 70, Gdx.graphics.getHeight() - 33, 30, 30);
         pauseButton = new Rectangle(Gdx.graphics.getWidth() - 107, Gdx.graphics.getHeight() - 33, 30, 30);
         infoButton = new Rectangle(Gdx.graphics.getWidth() - 144, Gdx.graphics.getHeight() - 33, 30, 30);
+        saveButton = new Rectangle(Gdx.graphics.getWidth() - 181, Gdx.graphics.getHeight() - 33, 30, 30);
 
         pauseCamera = new OrthographicCamera();
         pauseCamera.setToOrtho(false, Gdx.graphics.getDisplayMode().width, Gdx.graphics.getDisplayMode().height);
@@ -301,6 +317,7 @@ public class GUI {
         game.batch.draw(currentHomeTexture, homeButton.x, homeButton.y, homeButton.width, homeButton.height);
         game.batch.draw(currentPauseTexture, pauseButton.x, pauseButton.y, pauseButton.width, pauseButton.height);
         game.batch.draw(currentInfoTexture, infoButton.x, infoButton.y, infoButton.width, infoButton.height);
+        game.batch.draw(currentSaveTexture, saveButton.x, saveButton.y, saveButton.width, saveButton.height);
         game.batch.end();
     }
 
@@ -350,6 +367,18 @@ public class GUI {
         }
     }
 
+    /**
+     * Sets the saveButton texture that is rendered to the screen to clicked if it was clicked,
+     * else idle.
+     */
+    public void clickedSaveButton() {
+        if (currentSaveTexture == saveButtonIdle) {
+            currentSaveTexture = saveButtonClicked;
+        } else {
+            currentSaveTexture = saveButtonIdle;
+        }
+    }
+
     /** Sets the homeButton texture that is rendered to the screen */
     public void idleHomeButton() {
         currentHomeTexture = homeButtonIdle;
@@ -373,6 +402,9 @@ public class GUI {
             currentSoundTexture = soundOnIdleTexture;
         }
     }
+
+    /** Sets the saveButton texture that is rendered to the screen. */
+    public void idleSaveButton() { currentSaveTexture = saveButtonIdle; }
 
     /** Toggles the sound, called if 'S' key or the sound button
      * is pressed */
@@ -465,5 +497,7 @@ public class GUI {
     public Rectangle getPauseButton() { return this.pauseButton; }
 
     public Rectangle getInfoButton() { return this.infoButton; }
+
+    public Rectangle getSaveButton() { return this.saveButton; }
 
 }

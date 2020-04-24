@@ -51,6 +51,14 @@ public class DifficultyControl {
         }
     }
 
+    public Integer getCurrentDifficulty() {
+        return this.currentDifficulty;
+    }
+
+    public void setCurrentDifficulty(Integer diff) {
+        this.currentDifficulty = diff;
+    }
+
     /** Returns the current difficulty level as a multiplier to be used
      *
      * @return A float equal to one tenth of the current difficulty level
