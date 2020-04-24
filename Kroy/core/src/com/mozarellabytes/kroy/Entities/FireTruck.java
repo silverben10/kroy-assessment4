@@ -33,11 +33,17 @@ public class FireTruck extends Sprite {
     /** Health points */
     private float HP;
 
+    /** Attack power*/
+    private float AP;
+
     /** Water Reserve */
     private float reserve;
 
     /** Position of FireTruck in tiles */
     private Vector2 position;
+
+    /** Boolean stating if FireTruck is immune to damage */
+    private boolean immune = false;
 
     /** Actual path the truck follows; the fewer item in
      * the path the slower the truck will go */
@@ -95,6 +101,8 @@ public class FireTruck extends Sprite {
     /** Path fireturch actually uses*/
     private Vector2[] newPath;
 
+    private float speed;
+
     private Vector2 previous;
     /**
      * Constructs a new FireTruck at a position and of a certain type
@@ -110,11 +118,13 @@ public class FireTruck extends Sprite {
         this.gameScreen = gameScreen;
         this.type = type;
         this.HP = type.getMaxHP();
+        this.AP = type.getAP();
         this.reserve = type.getMaxReserve();
         this.position = position;
         this.path = new Queue<>();
         this.trailPath = new Queue<>();
         this.moving = false;
+        this.speed = type.getSpeed();
         this.inCollision = false;
         this.spray = new ArrayList<WaterParticle>();
         this.timeOfLastAttack = System.currentTimeMillis();
@@ -178,7 +188,7 @@ public class FireTruck extends Sprite {
             if (!dragOffMap) {
                 if (this.path.size > 0) {
                     Vector2 previous = this.path.last();
-                    int interpolation = (int) (40 / type.getSpeed());
+                    int interpolation = (int) (40 / speed);
                     for (int i = 1; i < interpolation; i++) {
                         this.path.addLast(new Vector2((((previous.x - coordinate.x) * -1) / interpolation) * i + previous.x, (((previous.y - coordinate.y) * -1) / interpolation) * i + previous.y));
                     }
@@ -190,7 +200,7 @@ public class FireTruck extends Sprite {
 
                     dragOffMap = false;
 
-                    int interpolation = (int) (40 / type.getSpeed());
+                    int interpolation = (int) (40 / speed);
                     previous = this.path.last();
 
                     newPath = findPath(coordinate, this.path.last());
@@ -429,7 +439,7 @@ public class FireTruck extends Sprite {
     public void attack(Fortress fortress) {
         if (this.reserve > 0) {
             this.spray.add(new WaterParticle(this, fortress));
-            this.reserve -= Math.min(this.reserve, this.type.getAP());
+            this.reserve -= Math.min(this.reserve, AP);
         }
     }
 
@@ -476,7 +486,7 @@ public class FireTruck extends Sprite {
      * @param particle  the particle which damages the fortress
      */
     private void damage(WaterParticle particle) {
-        particle.getTarget().damage(Math.min(this.type.getAP(), particle.getTarget().getHP()));
+        particle.getTarget().damage(Math.min(AP, particle.getTarget().getHP()));
     }
 
     /**
@@ -490,7 +500,8 @@ public class FireTruck extends Sprite {
         if (SoundFX.music_enabled) {
             SoundFX.sfx_truck_damage.play();
         }
-        this.HP -= Math.min(HP, this.HP);
+        if(!immune)
+            this.HP -= Math.min(HP, this.HP);
     }
 
     /**
@@ -573,10 +584,16 @@ public class FireTruck extends Sprite {
         return this.HP;
     }
 
-    public void setHP(int hp) { this.HP = hp; }
+    public void setHP(int hp) {
+        this.HP = hp;
+    }
 
     public float getReserve() {
         return this.reserve;
+    }
+
+    public void setReserve(float reserve) {
+        this.reserve = reserve;
     }
 
     public FireTruckType getType() {
@@ -617,6 +634,26 @@ public class FireTruck extends Sprite {
 
     public  float getRange(){
         return this.type.getRange();
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getAP(){
+        return AP;
+    }
+
+    public void setAP(float AP) {
+        this.AP = AP;
+    }
+
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+
+    public void setImmune(boolean immunity){
+        immune = immunity;
     }
 }
 

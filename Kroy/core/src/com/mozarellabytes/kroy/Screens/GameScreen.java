@@ -17,6 +17,7 @@ import com.mozarellabytes.kroy.Utilities.*;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The Screen that our game is played in.
@@ -79,6 +80,9 @@ public class GameScreen implements Screen {
 
     /** List of active PowerUps on the map */
     private final ArrayList<PowerUp> powerUps;
+
+    /** List of PowerUps to remove from the map */
+    private final ArrayList<PowerUp> powerUpsToRemove;
 
     /** Where the FireEngines' spawn, refill and repair */
     private final FireStation station;
@@ -179,11 +183,7 @@ public class GameScreen implements Screen {
         patrols.add(new Patrol(this,PatrolType.Station));
 
         powerUps = new ArrayList<PowerUp>();
-        powerUps.add(new PowerUp(this,PowerUpType.Mirror));
-        powerUps.add(new PowerUp(this,PowerUpType.Immunity));
-        powerUps.add(new PowerUp(this,PowerUpType.Repair));
-        powerUps.add(new PowerUp(this,PowerUpType.Speed));
-        powerUps.add(new PowerUp(this,PowerUpType.Damage));
+        powerUpsToRemove = new ArrayList<PowerUp>();
 
         deadEntities = new ArrayList<>(7);
 
@@ -348,6 +348,42 @@ public class GameScreen implements Screen {
         station.checkForCollisions();
 
         gameState.setTrucksInAttackRange(0);
+        int powerUpX = new Random().nextInt(50);
+        int powerUpY = new Random().nextInt(30);
+        if(new Random().nextInt(20) == 1 && isRoad(powerUpX, powerUpY) && !tileHasPowerup(powerUpX,powerUpY)){
+            int randomPowerup = new Random().nextInt(5);
+            switch (randomPowerup) {
+                case 0:
+                    powerUps.add(new PowerUp(PowerUpType.Mirror, powerUpX, powerUpY));
+                    break;
+                case 1:
+                    powerUps.add(new PowerUp(PowerUpType.Immunity, powerUpX, powerUpY));
+                    break;
+                case 2:
+                    powerUps.add(new PowerUp(PowerUpType.Repair, powerUpX, powerUpY));
+                    break;
+                case 3:
+                    powerUps.add(new PowerUp(PowerUpType.Speed, powerUpX, powerUpY));
+                    break;
+                case 4:
+                    powerUps.add(new PowerUp(PowerUpType.Damage, powerUpX, powerUpY));
+                    break;
+            }
+        }
+
+        for(PowerUp powerUp: powerUps){
+            powerUp.update();
+            if(powerUp.getTimeTillDeletion() <= 0){
+                powerUpsToRemove.add(powerUp);
+            }
+            for(FireTruck truck: station.getTrucks()){
+                if(truck.getTilePosition().equals(powerUp.getPosition()) && !powerUp.isActive()){
+                    powerUp.setFireTruck(truck);
+                    powerUp.setActive();
+                }
+            }
+        }
+        powerUps.removeAll(powerUpsToRemove);
 
         for (int i = 0; i < station.getTrucks().size(); i++) {
             FireTruck truck = station.getTruck(i);
@@ -583,6 +619,15 @@ public class GameScreen implements Screen {
      */
     public boolean isRoad(int x, int y) {
         return ((TiledMapTileLayer) mapLayers.get("collisions")).getCell(x, y).getTile().getProperties().get("road").equals(true);
+    }
+
+    public boolean tileHasPowerup(int tileX, int tileY){
+        for(PowerUp powerUp: powerUps){
+            if(powerUp.getSpawnX() == tileX && powerUp.getSpawnY() == tileY){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mozarellabytes.kroy.Entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -7,9 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.Screens.GameScreen;
 
 public class PowerUp extends Sprite {
-
-    /** Enables access to functions in GameScreen */
-    private final GameScreen gameScreen;
 
 
     /** Defines set of pre-defined attributes */
@@ -27,19 +25,41 @@ public class PowerUp extends Sprite {
     /** Float showing time left of powerup effect */
     public float timer;
 
-    public PowerUp(GameScreen gameScreen, PowerUpType type){
+    /** The firetruck that the powerup is affecting */
+    private FireTruck fireTruck;
+
+    /** Float showing time left till a powerup is destroyed if it is not collected */
+    private float timeTillDeletion = 10;
+
+    /** Determines if a powerup is active or not */
+    private boolean active = false;
+
+    /** x position to show where the powerup will spawn*/
+    private final int spawnX;
+
+    /** y position to show where the powerup will spawn*/
+    private final int spawnY;
+
+
+    public PowerUp(PowerUpType type, int spawnX, int spawnY){
         super(type.getPowerUpIcon());
 
         this.type = type;
-        this.gameScreen = gameScreen;
-        this.position = type.getPosition();
+        this.spawnY = spawnY;
+        this.spawnX = spawnX;
+        this.position = new Vector2(spawnX,spawnY);
         this.texture = type.getPowerUpIcon();
         this.name =  type.getName();
         this.timer = type.getTimer();
     }
 
     public void drawSprite(Batch mapBatch){
-        mapBatch.draw(this, this.position.x, this.position.y, 1, 1);
+        if(!active) {
+            mapBatch.draw(this, this.position.x, this.position.y, 1, 1);
+        }
+        else if(this.name.equals("immunity")){
+            mapBatch.draw(this,fireTruck.getPosition().x,fireTruck.getPosition().y,1,1);
+        }
     }
 
     //Hovering animation method
@@ -55,6 +75,52 @@ public class PowerUp extends Sprite {
         }
     }
 
+    public void update(){
+        if(!active){
+            timeTillDeletion -= Gdx.graphics.getDeltaTime();
+        }
+        else{
+            switch (this.name) {
+                case "mirror":
+                    // code for mirror
+                    //begin timer
+                    //spawn mirror fire truck (must be done in gamescreen class)
+                    //when timer ends, destroy
+                    break;
+                case "immunity":
+                    if(timer > 0){
+                        timer -= Gdx.graphics.getDeltaTime();
+                    }
+                    else {
+                        fireTruck.setImmune(false);
+                        timeTillDeletion = 0;
+                    }
+                    break;
+                case "speed":
+                    if(timer > 0){
+                        timer -= Gdx.graphics.getDeltaTime();
+                    }
+                    else {
+                        fireTruck.setSpeed(fireTruck.getSpeed()/2);
+                        timeTillDeletion = 0;
+                    }
+                    break;
+                case "damage":
+                    if(timer > 0){
+                        timer -= Gdx.graphics.getDeltaTime();
+                    }
+                    else {
+                        fireTruck.setAP(fireTruck.getAP()/2);
+                        timeTillDeletion = 0;
+                    }
+                    break;
+                default:
+                    //else code
+                    break;
+            }
+        }
+    }
+
     //Case statement to show all actions for each type of powerup
     public void effect() {
         //effect is called if a powerup is reached
@@ -66,27 +132,37 @@ public class PowerUp extends Sprite {
                 //when timer ends, destroy
                 break;
             case "immunity":
-                //code for immunity
-                //begin timer
-                //add modifier of 0 to prevent enemies injuring fire truck
-                //when timer ends, change modifier to 1
+                fireTruck.setImmune(true);
+                break;
             case "repair":
-                //code for repair and refill
-                //set firetruck's HP and water to max
+                fireTruck.setHP((int) fireTruck.type.getMaxHP());
+                fireTruck.setReserve(fireTruck.type.getMaxReserve());
+                timeTillDeletion = 0;
+                break;
             case "speed":
-                //code for speed boost
-                //begin timer
-                //increase firetruck's speed by some static modifier
-                //when timer ends decrease firetruck's speed by same modifier
+                fireTruck.setSpeed(fireTruck.getSpeed()*2);
+                break;
             case "damage":
-                //code for damage boost
-                //begin timer
-                //increase firetruck's AP by some modifier
-                //when timer ends decrease AP by same modifier
+                fireTruck.setAP(fireTruck.getAP()*2);
+                break;
             default:
                 //else code
+                break;
         }
     }
 
     public Vector2 getPosition() { return position; }
+    public int getSpawnX(){return this.spawnX;}
+    public int getSpawnY(){return this.spawnY;}
+    public float getTimeTillDeletion(){return this.timeTillDeletion;}
+    public void setActive(){
+        active = true;
+        effect();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setFireTruck(FireTruck fireTruck){this.fireTruck = fireTruck;}
 }
