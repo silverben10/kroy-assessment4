@@ -135,6 +135,7 @@ public class FireTruck extends Sprite {
         this.trailPath = new Queue<>();
         this.moving = false;
         this.inCollision = false;
+        this.speed = type.getSpeed();
         this.spray = new ArrayList<WaterParticle>();
         this.timeOfLastAttack = System.currentTimeMillis();
     }
