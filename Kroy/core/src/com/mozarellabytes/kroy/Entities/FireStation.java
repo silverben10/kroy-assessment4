@@ -168,6 +168,10 @@ public class FireStation {
     public float getHP() {
         return this.HP;
     }
+
+    public void setHP(float hp) {
+        this.HP = hp;
+    }
     /**
      * Checks that no more than one truck occupies a tile at a time by checking trucks
      * are not moving towards each other and that a moving truck is not going to go onto

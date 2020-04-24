@@ -44,9 +44,10 @@ public class SaveManager {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         // Was causing errors but fixed by removing unnecessary texture attribute from Patrol class.
         gameData.putString("deadEntitiesList", gson.toJson(gameScreen.getDeadEntities()));
-        gameData.putString("difficultyMultiplier", gson.toJson(gameScreen.getDifficultyControl().getDifficultyMultiplier()));
+        gameData.putString("currentDifficulty", gson.toJson(gameScreen.getDifficultyControl().getCurrentDifficulty()));
         gameData.putString("fortressesList", createFortressArray(gameScreen.getFortresses()).toString());
         gameData.putString("fireTruckList", createFireTruckArray(gameScreen.getStation().getTrucks()).toString());
+        gameData.putFloat("fireStationHP", gameScreen.getStation().getHP());
 
         // 3. Write the data to .JSON file.
         try {
