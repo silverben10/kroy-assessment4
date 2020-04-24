@@ -1,6 +1,7 @@
 package com.mozarellabytes.kroy.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -9,10 +10,12 @@ import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.google.gson.reflect.TypeToken;
 import com.mozarellabytes.kroy.Entities.*;
 import com.mozarellabytes.kroy.GameState;
 import com.mozarellabytes.kroy.Kroy;
 import com.mozarellabytes.kroy.Utilities.*;
+import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
@@ -91,6 +94,8 @@ public class GameScreen implements Screen {
 
     public FPSLogger fpsCounter;
 
+    private Preferences savedData;
+
     public boolean wasPaused = false;
     /** Play when the game is being played
      * Pause when the pause button is clicked */
@@ -103,7 +108,7 @@ public class GameScreen implements Screen {
      *
      * @param game LibGdx game
      */
-    public GameScreen(Kroy game) {
+    public GameScreen(Kroy game, int loadSlot) {
         this.game = game;
         fpsCounter = new FPSLogger();
 
@@ -139,34 +144,106 @@ public class GameScreen implements Screen {
 
         station = new FireStation(3, 8);
 
-        spawn(FireTruckType.Emerald);
-        spawn(FireTruckType.Amethyst);
-        spawn(FireTruckType.Sapphire);
-        spawn(FireTruckType.Ruby);
+        /*  Load the game from the start.
+            This happens when a player starts the game, instead of loading from a save.
+         */
+        if (loadSlot == 0) {
+            spawn(FireTruckType.Emerald);
+            spawn(FireTruckType.Amethyst);
+            spawn(FireTruckType.Sapphire);
+            spawn(FireTruckType.Ruby);
 
-        fortresses = new ArrayList<Fortress>();
-        fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
-        fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
-        fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
-        fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
-        fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
-        fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
+            fortresses = new ArrayList<Fortress>();
+            fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
+            fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
+            fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
+            fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
+            fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
+            fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
 
-        patrols = new ArrayList<Patrol>();
-        patrols.add(new Patrol(this,PatrolType.Blue));
-        patrols.add(new Patrol(this,PatrolType.Green));
-        patrols.add(new Patrol(this,PatrolType.Peach));
-        patrols.add(new Patrol(this,PatrolType.Violet));
-        patrols.add(new Patrol(this,PatrolType.Yellow));
-        patrols.add(new Patrol(this,PatrolType.Station));
+            patrols = new ArrayList<Patrol>();
+            patrols.add(new Patrol(this,PatrolType.Blue));
+            patrols.add(new Patrol(this,PatrolType.Green));
+            patrols.add(new Patrol(this,PatrolType.Peach));
+            patrols.add(new Patrol(this,PatrolType.Violet));
+            patrols.add(new Patrol(this,PatrolType.Yellow));
+            patrols.add(new Patrol(this,PatrolType.Station));
 
-        deadEntities = new ArrayList<>(7);
+            deadEntities = new ArrayList<>(7);
 
 
-        // sets the origin point to which all of the polygon's local vertices are relative to.
-        for (FireTruck truck : station.getTrucks()) {
-            truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+            // sets the origin point to which all of the polygon's local vertices are relative to.
+            for (FireTruck truck : station.getTrucks()) {
+                truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+            }
+        } else {
+            savedData = SaveManager.loadGameData(loadSlot);
+
+            Gson gson = new Gson();
+
+            /* Deserialise the fireTruckList from the saved data, spawning the fire trucks at their saved locations
+               and health/water levels.
+            */
+            ArrayList<FireTruck> trucks = gson.fromJson(savedData.getString("fireTruckList"),
+                new TypeToken<ArrayList<FireTruck>>(){}.getType());
+
+            System.out.println(trucks);
+
+            for (int i = 0; i < trucks.size(); i++) {
+                FireTruck truck = trucks.get(i);
+                Vector2 pos = truck.getPosition();
+                spawn(truck.type, pos);
+
+                station.getTruck(i).setHP((int) truck.getHP());
+                station.getTruck(i).setReserve(truck.getReserve());
+            }
+
+            System.out.println(station.getTrucks());
+
+            ArrayList<Fortress> fortressList = gson.fromJson(savedData.getString("fortressesList"),
+                new TypeToken<ArrayList<Fortress>>(){}.getType());
+
+            System.out.println(fortressList);
+
+            fortresses = new ArrayList<Fortress>();
+
+            for (int i = 0; i < fortressList.size(); i++) {
+                Fortress fortress = fortressList.get(i);
+                System.out.println(fortress);
+                Vector2 pos = fortress.getPosition();
+                System.out.println(pos);
+                System.out.println(fortress.getFortressType());
+
+                fortresses.add(new Fortress(pos.x, pos.y, fortress.fortressType));
+                System.out.println(fortresses);
+                fortresses.get(i).setHP(fortress.getHP());
+            }
+//
+//
+//            fortresses.add(new Fortress(12, 24.5f, FortressType.Revs));
+//            fortresses.add(new Fortress(30.5f, 23.5f, FortressType.Walmgate));
+//            fortresses.add(new Fortress(16.5f, 4.5f, FortressType.Railway));
+//            fortresses.add(new Fortress(32f, 2.5f, FortressType.Clifford));
+//            fortresses.add(new Fortress(41.95f, 24.5f, FortressType.Museum));
+//            fortresses.add(new Fortress(44f, 12f, FortressType.CentralHall));
+
+            patrols = new ArrayList<Patrol>();
+            patrols.add(new Patrol(this,PatrolType.Blue));
+            patrols.add(new Patrol(this,PatrolType.Green));
+            patrols.add(new Patrol(this,PatrolType.Peach));
+            patrols.add(new Patrol(this,PatrolType.Violet));
+            patrols.add(new Patrol(this,PatrolType.Yellow));
+            patrols.add(new Patrol(this,PatrolType.Station));
+
+            deadEntities = new ArrayList<>(7);
+
+
+            // sets the origin point to which all of the polygon's local vertices are relative to.
+            for (FireTruck truck : station.getTrucks()) {
+                truck.setOrigin(Constants.TILE_WxH / 2, Constants.TILE_WxH / 2);
+            }
         }
+
 
         mapBatch = mapRenderer.getBatch();
 
@@ -570,6 +647,17 @@ public class GameScreen implements Screen {
     private void spawn(FireTruckType type) {
         SoundFX.sfx_truck_spawn.play();
         station.spawn(new FireTruck(new Vector2(6,8), type, (TiledMapTileLayer) mapLayers.get("collisions")));
+        gameState.addFireTruck();
+    }
+
+    /**
+     * Creates a new FireEngine at the specified location, plays a sound and adds it to the gameState to track.
+     * @param type Type of truck to be spawned (Ocean, Speed)
+     * @param spawnCoords Co-ordinates to spawn the truck at.
+     */
+    private void spawn(FireTruckType type, Vector2 spawnCoords) {
+        SoundFX.sfx_truck_spawn.play();
+        station.spawn(new FireTruck(spawnCoords, type, (TiledMapTileLayer) mapLayers.get("collisions")));
         gameState.addFireTruck();
     }
 
