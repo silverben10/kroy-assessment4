@@ -579,6 +579,10 @@ public class FireTruck extends Sprite {
         return this.reserve;
     }
 
+    public void setReserve(float reserve) {
+        this.reserve = reserve;
+    }
+
     public FireTruckType getType() {
         return this.type;
     }
