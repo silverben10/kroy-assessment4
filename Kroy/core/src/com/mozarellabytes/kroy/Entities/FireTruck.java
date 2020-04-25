@@ -21,107 +21,160 @@ import java.util.LinkedList;
 /**
  * FireTruck is an entity that the player controls. It navigates the map on the
  * roads defined in the Tiled Map by following a path that the user draws.
- *
- * Having 'A' held when within range of a  Fortress will deal damage to it.
+ * <p>
+ * Having 'A'    held when within range of a  Fortress will deal damage to it.
  */
 public class FireTruck extends Sprite {
 
-    /** Defines set of pre-defined attributes */
+    /**
+     * Defines set of pre-defined attributes
+     */
     @Expose
     public final FireTruckType type;
 
-    /** Defines the tilemap of collision locations on the map. Excluded from serialization (using <code>transient</code>) when saving the game as this data is constant. */
+    /**
+     * Defines the tilemap of collision locations on the map. Excluded from serialization (using <code>transient</code>) when saving the game as this data is constant.
+     */
     private final TiledMapTileLayer collisions;
 
-    /** Health points */
+    /**
+     * Health points
+     */
     @Expose
     private float HP;
 
-    /** The starting HP, used for mirror truck */
+    /**
+     * The starting HP, used for mirror truck
+     */
     private float initialHP;
 
-    /** The starting reserve, used for mirror truck */
+    /**
+     * The starting reserve, used for mirror truck
+     */
     private float initialReserve;
 
-    /** Attack power*/
+    /**
+     * Attack power
+     */
     private float AP;
 
-    /** Water Reserve */
+    /**
+     * Water Reserve
+     */
     @Expose
     private float reserve;
 
-    /** Position of FireTruck in tiles */
-    @Expose (deserialize = false)
+    /**
+     * Position of FireTruck in tiles
+     */
+    @Expose(deserialize = false)
     private Vector2 position;
 
-    /** Boolean stating if FireTruck is immune to damage */
+    /**
+     * Boolean stating if FireTruck is immune to damage
+     */
     private boolean immune = false;
 
-    /** Actual path the truck follows; the fewer item in
-     * the path the slower the truck will go */
+    /**
+     * Actual path the truck follows; the fewer item in
+     * the path the slower the truck will go
+     */
     public final Queue<Vector2> path;
 
-    /** The visual path that users can see when drawing
-     * a firetruck's path */
+    /**
+     * The visual path that users can see when drawing
+     * a firetruck's path
+     */
     public final Queue<Vector2> trailPath;
 
-    /** If the truck is currently moving, determines whether the
+    /**
+     * If the truck is currently moving, determines whether the
      * truck's position should be updated
      *
      * <code>true</code> once the player has drawn a
      * path and has let go of the mouse click
      * <code>false</code> once the truck has got to
-     * the end of the path */
+     * the end of the path
+     */
     private boolean moving;
 
-    /** Whether the truck has an unresolved collision
-     * with another truck */
+    /**
+     * Whether the truck has an unresolved collision
+     * with another truck
+     */
     private boolean inCollision;
 
-    /** Used to check if the truck's image should be
-     * changed to match the direction it is facing */
+    /**
+     * Used to check if the truck's image should be
+     * changed to match the direction it is facing
+     */
     private Vector2 previousTile;
 
-    /** Time since fortress has attacked the truck */
+    /**
+     * Time since fortress has attacked the truck
+     */
     private long timeOfLastAttack;
 
-    /** List of particles that the truck uses to attack
-     * a Fortress */
+    /**
+     * List of particles that the truck uses to attack
+     * a Fortress
+     */
     private final ArrayList<WaterParticle> spray;
 
 
-    /** Whether the mouse has been dragged off a road tile */
+    /**
+     * Whether the mouse has been dragged off a road tile
+     */
     private boolean dragOffMap = false;
-    /** Whether the path finding algorithm has reached the end*/
+    /**
+     * Whether the path finding algorithm has reached the end
+     */
     boolean reachedEnd = false;
-    /** All possible routes from an end tile to a new tile are stored in this */
+    /**
+     * All possible routes from an end tile to a new tile are stored in this
+     */
     Queue<Vector2> positions;
-    /** Current tile */
+    /**
+     * Current tile
+     */
     Vector2 currentPos;
-    /**  Shows all possible movement directions for a firetruck*/
+    /**
+     * Shows all possible movement directions for a firetruck
+     */
     final int[] directionX = {-1, 1, 0, 0};
     final int[] directionY = {0, 0, 1, -1};
 
-    /** True if a tile has been visited when constructing a path, false otherwise */
+    /**
+     * True if a tile has been visited when constructing a path, false otherwise
+     */
     boolean[][] visited;
-    /** Links parents to children in order o find the shortest path */
+    /**
+     * Links parents to children in order o find the shortest path
+     */
     Vector2[] prev;
-    /** the shortest path between 2 points */
+    /**
+     * the shortest path between 2 points
+     */
     LinkedList<Vector2> reconstructedPath;
-    /**Checks if the mouse was dragged off the road multiple times in one instance**/
+    /**
+     * Checks if the mouse was dragged off the road multiple times in one instance
+     **/
     private int counter = 0;
-    /** Path firetruck actually uses*/
+    /**
+     * Path firetruck actually uses
+     */
     private Vector2[] newPath;
 
     private float speed;
 
     private Vector2 previous;
+
     /**
      * Constructs a new FireTruck at a position and of a certain type
      * which have been passed in
      *
-     * @param position      initial location of the truck
-     * @param type          used to have predefined attributes
+     * @param position initial location of the truck
+     * @param type     used to have predefined attributes
      */
     public FireTruck(Vector2 position, FireTruckType type, TiledMapTileLayer collisions) {
         super(type.getLookDown());
@@ -171,7 +224,7 @@ public class FireTruck extends Sprite {
     /**
      * Increases Health Points of the truck
      *
-     * @param HP    increased by this value
+     * @param HP increased by this value
      */
     public void repair(float HP) {
         this.HP += HP;
@@ -190,8 +243,8 @@ public class FireTruck extends Sprite {
      * Called when the player drags mouse on GameScreen Coordinate is checked to see
      * whether it is a valid tile to draw to, then adds it to the paths
      *
-     * @param coordinate    Position on the screen that the user's mouse is being
-     *                      dragged over
+     * @param coordinate Position on the screen that the user's mouse is being
+     *                   dragged over
      */
     public void addTileToPath(Vector2 coordinate) {
         if (isValidDraw(coordinate)) {
@@ -208,51 +261,49 @@ public class FireTruck extends Sprite {
             } else {
                 //dragged off map
 
-                    dragOffMap = false;
+                dragOffMap = false;
 
-                    int interpolation = (int) (40 / speed);
+                int interpolation = (int) (40 / speed);
+                previous = this.path.last();
+
+                newPath = findPath(coordinate, this.path.last());
+
+                if (counter >= 2) {
+                    try {
+                        resetPath();
+                        newPath = findPath(coordinate, this.getPosition());
+                        previous = this.getPosition();
+                    } catch (Exception e) {
+
+                    }
+
+                }
+
+                for (int i = 0; i < newPath.length; i++) {
+
+                    for (int j = 1; j < interpolation; j++) {
+                        this.path.addLast(new Vector2((((previous.x - newPath[i].x) * -1) / interpolation) * j + previous.x, (((previous.y - newPath[i].y) * -1) / interpolation) * j + previous.y));
+
+                    }
+
+                    this.trailPath.addLast(new Vector2(newPath[i]));
+                    this.path.addLast(new Vector2(newPath[i]));
                     previous = this.path.last();
 
-                    newPath = findPath(coordinate, this.path.last());
-
-                    if(counter >= 2) {
-                        try {
-                            resetPath();
-                            newPath = findPath(coordinate, this.getPosition());
-                            previous = this.getPosition();
-                        } catch(Exception e) {
-
-                        }
-
-                    } else {
-
-                    }
-
-                    for (int i = 0; i < newPath.length; i++) {
-
-                        for(int j = 1; j < interpolation; j++) {
-                            this.path.addLast(new Vector2((((previous.x - newPath[i].x) * -1) / interpolation) * j + previous.x, (((previous.y - newPath[i].y) * -1) / interpolation) * j + previous.y));
-
-                        }
-
-                        this.trailPath.addLast(new Vector2(newPath[i]));
-                        this.path.addLast(new Vector2(newPath[i]));
-                        previous = this.path.last();
-
-                    }
                 }
             }
         }
+    }
 
 
     /**
      * Used when drawing the path to check whether the next tile to be added to the path is
      * valid
      *
-     * @param coordinate    Position on the screen that the user's mouse is being dragged over
-     * @return              <code>true</code> if the coordinate is a valid tile to be added to
-     *                      the paths
-     *                      <code>false</code> otherwise
+     * @param coordinate Position on the screen that the user's mouse is being dragged over
+     * @return <code>true</code> if the coordinate is a valid tile to be added to
+     * the paths
+     * <code>false</code> otherwise
      */
     private boolean isValidDraw(Vector2 coordinate) {
         if (coordinate.y < 28) {
@@ -261,7 +312,7 @@ public class FireTruck extends Sprite {
                     return this.getPosition().equals(coordinate);
                 } else {
                     if (!this.path.last().equals(coordinate)) {
-                        if((int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) >= 2) {
+                        if ((int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) >= 2) {
                             dragOffMap = true;
                             counter++;
                             return (int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) >= 2;
@@ -276,12 +327,12 @@ public class FireTruck extends Sprite {
         }
         return false;
     }
+
     /**
      * Finds a path between two points
      *
-     * @param endPos    Position on the screen that the user's mouse is on
-     * @param startPos    Position of last tile in the path queue
-     *
+     * @param endPos   Position on the screen that the user's mouse is on
+     * @param startPos Position of last tile in the path queue
      * @return An Vector2 array containing all points in the shortest path between the start and end point
      */
     private Vector2[] findPath(Vector2 endPos, Vector2 startPos) {
@@ -296,8 +347,8 @@ public class FireTruck extends Sprite {
         prev = new Vector2[1392];
 
 
-        for(int i=0; i<48; i++){
-            for(int j=0; j<29; j++){
+        for (int i = 0; i < 48; i++) {
+            for (int j = 0; j < 29; j++) {
                 visited[i][j] = false;
             }
         }
@@ -312,7 +363,7 @@ public class FireTruck extends Sprite {
 
             currentPos = positions.removeLast();
 
-            if(currentPos.x == goal.x && currentPos.y == goal.y) {
+            if (currentPos.x == goal.x && currentPos.y == goal.y) {
                 reachedEnd = true;
                 break;
             }
@@ -326,76 +377,75 @@ public class FireTruck extends Sprite {
 
 
     }
+
     /**
      * Searches area around a tile and checks if it is a valid place to move
      *
-     * @param currentPos    Position of current tile on the positions queue
-
+     * @param currentPos Position of current tile on the positions queue
      */
     private void exploreNeighbours(Vector2 currentPos) {
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             Vector2 newPos = new Vector2();
             newPos.x = currentPos.x + directionX[i];
             newPos.y = currentPos.y + directionY[i];
 
 
-            if(newPos.x < 0 || newPos.y < 0) {
+            if (newPos.x < 0 || newPos.y < 0) {
                 continue;
             }
-            if(newPos.x > 47 || newPos.y > 28) {
+            if (newPos.x > 47 || newPos.y > 28) {
                 continue;
             }
             boolean isRoad = (collisions.getCell(Math.round(newPos.x), Math.round(newPos.y)).getTile().getProperties().get("road").equals(true));
-            if(!isRoad) {
+            if (!isRoad) {
                 continue;
             }
-            if(visited[(int)newPos.x][(int)newPos.y]) {
+            if (visited[(int) newPos.x][(int) newPos.y]) {
                 continue;
             }
-
 
 
             positions.addFirst(newPos);
 
-            visited[(int)newPos.x] [(int)newPos.y] = true;
+            visited[(int) newPos.x][(int) newPos.y] = true;
 
             prev[convertVector2ToIntPositionInMap(newPos)] = currentPos;
         }
     }
+
     /**
      * Maps a parent position to it's child (An adjacent tile)
      *
-     * @param pos    The current position being queued
-     *
+     * @param pos The current position being queued
      * @return An int representing the Vector2 as a point on the map
      */
     private int convertVector2ToIntPositionInMap(Vector2 pos) {
         return ((int) (pos.x * 29 + pos.y));
     }
+
     /**
      * Reverses an array.
      *
-     * @param a    The shortest path array, so it goes from start to finish rather then finish to start in order
+     * @param a The shortest path array, so it goes from start to finish rather then finish to start in order
      */
-    private void reverse(Vector2[] a)
-    {
+    private void reverse(Vector2[] a) {
         Collections.reverse(Arrays.asList(a));
     }
+
     /**
      * Returns the shortest path using the mapped coordinates
      *
-     * @param endPos    The shortest path array, so it goes from start to finish rather then finish to start in order
-     *
+     * @param endPos The shortest path array, so it goes from start to finish rather then finish to start in order
      * @return A array containing the Vector2 positions of the shortest path between two points
      */
     private Vector2[] shortestPath(Vector2 endPos, Vector2 startPos) {
         reconstructedPath = new LinkedList<>();
-        for(Vector2 at = endPos; at != null; at = prev[convertVector2ToIntPositionInMap(at)]) {
+        for (Vector2 at = endPos; at != null; at = prev[convertVector2ToIntPositionInMap(at)]) {
 
-            if(at == startPos) {
-                if(!this.trailPath.isEmpty())
-                continue;
+            if (at == startPos) {
+                if (!this.trailPath.isEmpty())
+                    continue;
             }
             reconstructedPath.add(at);
         }
@@ -403,18 +453,18 @@ public class FireTruck extends Sprite {
         Object[] objectArray = reconstructedPath.toArray();
         Vector2[] path = new Vector2[objectArray.length];
 
-        for(int i=0;i<objectArray.length;i++) {
+        for (int i = 0; i < objectArray.length; i++) {
             path[i] = (Vector2) objectArray[i];
         }
 
         reverse(path);
-        return  path;
+        return path;
     }
 
     /**
      * Changes the direction of the truck depending on the previous tile and the next tile
      *
-     * @param nextTile  first tile in the queue (next to be followed)
+     * @param nextTile first tile in the queue (next to be followed)
      */
     private void changeSprite(Vector2 nextTile) {
         if (previousTile != null) {
@@ -453,11 +503,11 @@ public class FireTruck extends Sprite {
 
     /**
      * Called every tick to check if a Fortress is within the range of
-     *  the truck
+     * the truck
      *
-     * @param fortress  Fortress' position being checked
-     * @return          <code>true</code> if Fortress is within range
-     *                  <code>false </code> otherwise
+     * @param fortress Fortress' position being checked
+     * @return <code>true</code> if Fortress is within range
+     * <code>false </code> otherwise
      */
     public boolean fortressInRange(Vector2 fortress) {
         return this.getVisualPosition().dst(fortress) <= this.type.getRange();
@@ -468,7 +518,7 @@ public class FireTruck extends Sprite {
      */
     public void updateSpray() {
         if (this.spray != null) {
-            for (int i=0; i < this.spray.size(); i++) {
+            for (int i = 0; i < this.spray.size(); i++) {
                 WaterParticle particle = this.spray.get(i);
                 particle.updatePosition();
                 if (particle.isHit()) {
@@ -482,7 +532,7 @@ public class FireTruck extends Sprite {
     /**
      * Remove the WaterParticle from the spray when it hits the Fortress
      *
-     * @param particle  The particle to be removed from spray
+     * @param particle The particle to be removed from spray
      */
     private void removeParticle(WaterParticle particle) {
         this.spray.remove(particle);
@@ -491,7 +541,7 @@ public class FireTruck extends Sprite {
     /**
      * Damages the Fortress depending on the truck's AP
      *
-     * @param particle  the particle which damages the fortress
+     * @param particle the particle which damages the fortress
      */
     private void damage(WaterParticle particle) {
         particle.getTarget().damage(Math.min(AP, particle.getTarget().getHP()));
@@ -501,21 +551,21 @@ public class FireTruck extends Sprite {
      * Damage inflicted on truck by a fortress, called when a bomb hits a truck it plays
      * a sound and decreases the fire trucks HP by the amount of the fortresses AP
      *
-     * @param HP    amount of HP being taken away dependant
-     *              on the AP of the attacking Fortress
+     * @param HP amount of HP being taken away dependant
+     *           on the AP of the attacking Fortress
      */
     public void fortressDamage(float HP) {
         if (SoundFX.music_enabled) {
             SoundFX.sfx_truck_damage.play();
         }
-        if(!immune)
+        if (!immune)
             this.HP -= Math.min(HP, this.HP);
     }
 
     /**
-     *  Draws the visual, colourful path that the truck will follow
+     * Draws the visual, colourful path that the truck will follow
      *
-     * @param mapBatch  Batch that the path is being drawn to (map dependant)
+     * @param mapBatch Batch that the path is being drawn to (map dependant)
      */
     public void drawPath(Batch mapBatch) {
         if (!this.trailPath.isEmpty()) {
@@ -533,17 +583,16 @@ public class FireTruck extends Sprite {
     /**
      * Draws the mini health/reserve indicators relative to the truck
      *
-     * @param shapeMapRenderer  Renderer that the stats are being drawn to (map  dependant)
+     * @param shapeMapRenderer Renderer that the stats are being drawn to (map  dependant)
      */
     public void drawStats(ShapeRenderer shapeMapRenderer) {
         shapeMapRenderer.rect(this.getPosition().x + 0.2f, this.getPosition().y + 1.3f, 0.6f, 0.8f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
         shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);
-        if(type != FireTruckType.Mirror) {
+        if (type != FireTruckType.Mirror) {
             shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.type.getMaxReserve() * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);
             shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
             shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);
-        }
-        else{
+        } else {
             shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.initialReserve * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);
             shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
             shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.initialHP * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);
@@ -557,8 +606,8 @@ public class FireTruck extends Sprite {
     /**
      * Draws the FireTruck sprite
      *
-     * @param mapBatch  Batch that the truck is being
-     *                  drawn to (map dependant)
+     * @param mapBatch Batch that the truck is being
+     *                 drawn to (map dependant)
      */
     public void drawSprite(Batch mapBatch) {
         mapBatch.draw(this, this.position.x, this.position.y, 1, 1);
@@ -576,7 +625,8 @@ public class FireTruck extends Sprite {
 
     /**
      * Sets time of last attack to unix timestamp provided
-     * @param timestamp  timestamp set as time of last attack
+     *
+     * @param timestamp timestamp set as time of last attack
      */
     public void setTimeOfLastAttack(long timestamp) {
         this.timeOfLastAttack = timestamp;
@@ -623,6 +673,7 @@ public class FireTruck extends Sprite {
     public Vector2 getPosition() {
         return this.position;
     }
+
     /**
      * Gets rounded truck position
      * Used for patrol collision
@@ -648,7 +699,7 @@ public class FireTruck extends Sprite {
         return this.moving;
     }
 
-    public  float getRange(){
+    public float getRange() {
         return this.type.getRange();
     }
 
@@ -656,7 +707,7 @@ public class FireTruck extends Sprite {
         return speed;
     }
 
-    public float getAP(){
+    public float getAP() {
         return AP;
     }
 
@@ -664,11 +715,11 @@ public class FireTruck extends Sprite {
         this.AP = AP;
     }
 
-    public void setSpeed(float speed){
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
-    public void setImmune(boolean immunity){
+    public void setImmune(boolean immunity) {
         immune = immunity;
     }
 

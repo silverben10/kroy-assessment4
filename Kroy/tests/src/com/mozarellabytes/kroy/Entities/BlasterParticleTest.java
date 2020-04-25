@@ -17,8 +17,6 @@ public class BlasterParticleTest {
     @Mock
     GameScreen gameScreenMock;
 
-
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
