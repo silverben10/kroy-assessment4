@@ -184,6 +184,75 @@ public class FortressTest {
         assertFalse(withinRange);
     }
 
-    // TODO: Add range tests for Shambles, Minster and Railway
+    @Test
+    public void attackTruckFromShamblesFortressBeforeBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Shambles); // range = 8
+        FireTruck fireTruck = new FireTruck(new Vector2(17, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
 
+    @Test
+    public void attackTruckFromShamblesFortressOnBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Shambles); // range = 8
+        FireTruck fireTruck = new FireTruck(new Vector2(18, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromShamblesFortressAfterBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Shambles); // range = 8
+        FireTruck fireTruck = new FireTruck(new Vector2(19, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertFalse(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromMinsterFortressBeforeBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Minster); // range = 9
+        FireTruck fireTruck = new FireTruck(new Vector2(18, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromMinsterFortressOnBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Minster); // range = 9
+        FireTruck fireTruck = new FireTruck(new Vector2(19, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromMinsterFortressAfterBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Minster); // range = 9
+        FireTruck fireTruck = new FireTruck(new Vector2(20, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertFalse(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromRailwayFortressBeforeBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Railway); // range = 5
+        FireTruck fireTruck = new FireTruck(new Vector2(14, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromRailwayFortressOnBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Railway); // range = 5
+        FireTruck fireTruck = new FireTruck(new Vector2(15, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertTrue(withinRange);
+    }
+
+    @Test
+    public void attackTruckFromRailwayFortressAfterBoundaryTest() {
+        Fortress fortress = new Fortress(10, 10, 0, Railway); // range = 5
+        FireTruck fireTruck = new FireTruck(new Vector2(16, 10), FireTruckType.Ruby, collisionsMock);
+        boolean withinRange = fortress.withinRange(fireTruck.getPosition());
+        assertFalse(withinRange);
+    }
 }
