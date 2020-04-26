@@ -3,6 +3,7 @@ package com.mozarellabytes.kroy.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -142,6 +143,8 @@ public class LoadScreen implements Screen {
     }
 
     public void toGameScreen(int gameDifficulty, int loadSlot) {
+        SoundFX.stopMusic();
+        SoundFX.playGameMusic();
         this.game.setScreen(new GameScreen(game, gameDifficulty, loadSlot));
     }
 
