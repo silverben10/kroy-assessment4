@@ -18,7 +18,7 @@ public enum FortressType {
      * name, delay between firing bombs, attack range, maximum health points,
      * attack points, width, height and sprite.
      */
-    Revs ("Revolution", 2500, 7, 100, 5, 9, 3,
+    Revs ("Revolution", 2500, 7, 100, 5, 6, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_dead.png"))),
