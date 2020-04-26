@@ -738,5 +738,9 @@ public class FireTruck extends Sprite {
     public float getInitialReserve() {
         return initialReserve;
     }
+
+    public boolean isImmune() {
+        return this.immune;
+    }
 }
 

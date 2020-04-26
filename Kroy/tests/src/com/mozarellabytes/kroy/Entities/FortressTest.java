@@ -401,19 +401,19 @@ public class FortressTest {
         fortress1.getBombs().get(0).damageTruck();
 
         float truckHP1 = fireTruck.getHP();
-        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+        fireTruck.setHP((int) fireTruck.type.getMaxHP());
 
         fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
         fortress2.getBombs().get(0).damageTruck();
 
         float truckHP2 = fireTruck.getHP();
-        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+        fireTruck.setHP((int) fireTruck.type.getMaxHP());
 
         fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
         fortress3.getBombs().get(0).damageTruck();
 
         float truckHP3 = fireTruck.getHP();
-        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+        fireTruck.setHP((int) fireTruck.type.getMaxHP());
 
         assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
     }

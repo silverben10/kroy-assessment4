@@ -29,9 +29,6 @@ public class FireStationTest {
     @Mock
     TiledMapTileLayer collisionsMock;
 
-    TiledMap map = new TmxMapLoader().load("maps/YorkMap.tmx");
-    TiledMapTileLayer collisions = (TiledMapTileLayer) map.getLayers().get("collisions");
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -103,8 +100,8 @@ public class FireStationTest {
 
     @Test
     public void trucksCannotOccupySameTileTest() {
-        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 13), FireTruckType.Ruby, collisions);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(13, 13), FireTruckType.Sapphire, collisions);
+        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 13), FireTruckType.Ruby, collisionsMock);
+        FireTruck fireTruck2 = new FireTruck(new Vector2(13, 13), FireTruckType.Sapphire, collisionsMock);
 
         FireStation station = new FireStation(0,0);
         station.spawn(fireTruck1);
@@ -132,8 +129,8 @@ public class FireStationTest {
         Mockito.doReturn(true).when(gameScreenMock).isRoad(11,13);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(11,14);
 
-        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 11), FireTruckType.Ruby, collisions);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(11, 14), FireTruckType.Sapphire, collisions);
+        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 11), FireTruckType.Ruby, collisionsMock);
+        FireTruck fireTruck2 = new FireTruck(new Vector2(11, 14), FireTruckType.Sapphire, collisionsMock);
 
         FireStation station = new FireStation(0,0);
         station.spawn(fireTruck1);
