@@ -69,4 +69,58 @@ public class PowerUpTest {
         assertEquals(fireTruck.getAP(), originalDamage * 2, 0.0);
     }
 
+    @Test
+    public void powerUpImmunityEndsTest() {
+        PowerUp powerUp = new PowerUp(PowerUpType.Immunity, 0, 0);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 0), FireTruckType.Ruby, collisionsMock);
+
+        powerUp.setFireTruck(fireTruck);
+        powerUp.setActive();
+
+        assertTrue(powerUp.isActive());
+
+        powerUp.timer = 0;
+        powerUp.update();
+
+        assertFalse(fireTruck.isImmune());
+    }
+
+    @Test
+    public void powerUpSpeedEndsTest() {
+        PowerUp powerUp = new PowerUp(PowerUpType.Speed, 0, 0);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 0), FireTruckType.Ruby, collisionsMock);
+
+        float originalSpeed = fireTruck.getSpeed();
+
+        powerUp.setFireTruck(fireTruck);
+        powerUp.setActive();
+
+        assertTrue(powerUp.isActive());
+        assertEquals(fireTruck.getSpeed(), originalSpeed * 2, 0.0);
+
+        powerUp.timer = 0;
+        powerUp.update();
+
+        assertEquals(fireTruck.getSpeed(), originalSpeed, 0.0);
+    }
+
+    @Test
+    public void powerUpDamageEndsTest() {
+        PowerUp powerUp = new PowerUp(PowerUpType.Damage, 0, 0);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 0), FireTruckType.Ruby, collisionsMock);
+
+        float originalDamage = fireTruck.getAP();
+
+        powerUp.setFireTruck(fireTruck);
+        powerUp.setActive();
+
+        assertTrue(powerUp.isActive());
+        assertEquals(fireTruck.getAP(), originalDamage * 2, 0.0);
+
+        powerUp.timer = 0;
+        powerUp.update();
+
+        assertEquals(fireTruck.getAP(), originalDamage, 0.0);
+    }
+
 }

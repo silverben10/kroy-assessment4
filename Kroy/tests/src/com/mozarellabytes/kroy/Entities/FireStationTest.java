@@ -29,6 +29,9 @@ public class FireStationTest {
     @Mock
     TiledMapTileLayer collisionsMock;
 
+    TiledMap map = new TmxMapLoader().load("maps/YorkMap.tmx");
+    TiledMapTileLayer collisions = (TiledMapTileLayer) map.getLayers().get("collisions");
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -100,8 +103,8 @@ public class FireStationTest {
 
     @Test
     public void trucksCannotOccupySameTileTest() {
-        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 13), FireTruckType.Ruby, collisionsMock);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(13, 13), FireTruckType.Sapphire, collisionsMock);
+        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 13), FireTruckType.Ruby, collisions);
+        FireTruck fireTruck2 = new FireTruck(new Vector2(13, 13), FireTruckType.Sapphire, collisions);
 
         FireStation station = new FireStation(0,0);
         station.spawn(fireTruck1);
@@ -109,11 +112,9 @@ public class FireStationTest {
 
         fireTruck1.setMoving(true);
         fireTruck1.addTileToPath(new Vector2(11, 13));
-        System.out.println(fireTruck1.getPath());
         fireTruck1.addTileToPath(new Vector2(12, 13));
-        System.out.println(fireTruck1.getPath());
         fireTruck1.addTileToPath(new Vector2(13, 13));
-        System.out.println(fireTruck1.getPath());
+
         for (int i=0; i<100; i++) {
             station.checkForCollisions();
             fireTruck1.move();
@@ -129,8 +130,8 @@ public class FireStationTest {
         Mockito.doReturn(true).when(gameScreenMock).isRoad(11,13);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(11,14);
 
-        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 11), FireTruckType.Ruby, collisionsMock);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(11, 14), FireTruckType.Sapphire, collisionsMock);
+        FireTruck fireTruck1 = new FireTruck(new Vector2(11, 11), FireTruckType.Ruby, collisions);
+        FireTruck fireTruck2 = new FireTruck(new Vector2(11, 14), FireTruckType.Sapphire, collisions);
 
         FireStation station = new FireStation(0,0);
         station.spawn(fireTruck1);
@@ -147,6 +148,7 @@ public class FireStationTest {
         fireTruck2.addTileToPath(new Vector2(11, 13));
         fireTruck2.addTileToPath(new Vector2(11, 12));
         fireTruck2.addTileToPath(new Vector2(11, 11));
+
         for (int i=0; i<100; i++) {
             station.checkForCollisions();
             fireTruck1.move();
