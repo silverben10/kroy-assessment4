@@ -4,12 +4,9 @@ package com.mozarellabytes.kroy.Entities;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.GdxTestRunner;
-import com.mozarellabytes.kroy.Screens.GameScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.stubbing.Answer;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,9 +17,6 @@ import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class FortressTest {
-
-    @Mock
-    GameScreen gameScreenMock;
 
     @Mock
     TiledMapTileLayer collisionsMock;
@@ -254,5 +248,173 @@ public class FortressTest {
         FireTruck fireTruck = new FireTruck(new Vector2(16, 10), FireTruckType.Ruby, collisionsMock);
         boolean withinRange = fortress.withinRange(fireTruck.getPosition());
         assertFalse(withinRange);
+    }
+
+    @Test
+    public void differentDamageFromRevsFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Revs);
+        Fortress fortress2 = new Fortress(0,0, 2, Revs);
+        Fortress fortress3 = new Fortress(0,0, 4, Revs);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
+    }
+
+    @Test
+    public void differentDamageFromWalmgateFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Walmgate);
+        Fortress fortress2 = new Fortress(0,0, 2, Walmgate);
+        Fortress fortress3 = new Fortress(0,0, 4, Walmgate);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
+    }
+
+    @Test
+    public void differentDamageFromCliffordFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Clifford);
+        Fortress fortress2 = new Fortress(0,0, 2, Clifford);
+        Fortress fortress3 = new Fortress(0,0, 4, Clifford);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
+    }
+
+    @Test
+    public void differentDamageFromShamblesFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Shambles);
+        Fortress fortress2 = new Fortress(0,0, 2, Shambles);
+        Fortress fortress3 = new Fortress(0,0, 4, Shambles);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
+    }
+
+    @Test
+    public void differentDamageFromMinsterFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Minster);
+        Fortress fortress2 = new Fortress(0,0, 2, Minster);
+        Fortress fortress3 = new Fortress(0,0, 4, Minster);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
+    }
+
+    @Test
+    public void differentDamageFromRailwayFortressForEachDifficulty() {
+        Fortress fortress1 = new Fortress(0,0, 1, Railway);
+        Fortress fortress2 = new Fortress(0,0, 2, Railway);
+        Fortress fortress3 = new Fortress(0,0, 4, Railway);
+        FireTruck fireTruck = new FireTruck(new Vector2(0, 1), FireTruckType.Ruby, collisionsMock);
+
+        fortress1.getBombs().add(new Bomb(fortress1, fireTruck, false, 1));
+        fortress1.getBombs().get(0).damageTruck();
+
+        float truckHP1 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP1); // Restore truck to original health.
+
+        fortress2.getBombs().add(new Bomb(fortress1, fireTruck, false, 2));
+        fortress2.getBombs().get(0).damageTruck();
+
+        float truckHP2 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP2); // Restore truck to original health.
+
+        fortress3.getBombs().add(new Bomb(fortress1, fireTruck, false, 4));
+        fortress3.getBombs().get(0).damageTruck();
+
+        float truckHP3 = fireTruck.getHP();
+        fireTruck.repair(FireTruckType.Ruby.getMaxHP() - truckHP3); // Restore truck to original health.
+
+        assertTrue(allDifferentValues(truckHP1, truckHP2, truckHP3));
     }
 }
