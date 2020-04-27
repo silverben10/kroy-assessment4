@@ -221,14 +221,14 @@ public class GameScreen implements Screen {
             fortresses.add(new Fortress(44.5f, 10.5f, fixedGamedifficulty, FortressType.Shambles));
 
             patrols = new ArrayList<Patrol>();
-            /*
+            
             patrols.add(new Patrol(this, PatrolType.Blue));
             patrols.add(new Patrol(this, PatrolType.Green));
             patrols.add(new Patrol(this, PatrolType.Red));
             patrols.add(new Patrol(this, PatrolType.Violet));
             patrols.add(new Patrol(this, PatrolType.Yellow));
             patrols.add(new Patrol(this, PatrolType.Station));
-            */
+
 
             powerUps = new ArrayList<PowerUp>();
             powerUpsToRemove = new ArrayList<PowerUp>();
