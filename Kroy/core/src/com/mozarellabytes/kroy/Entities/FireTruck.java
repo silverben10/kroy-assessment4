@@ -255,7 +255,9 @@ public class FireTruck extends Sprite {
      *                      <code>false</code> otherwise
      */
     private boolean isValidDraw(Vector2 coordinate) {
-        if (coordinate.y < 28) {
+        if (coordinate.y < 29 && coordinate.x < 50) {
+            System.out.println("X:"+coordinate.x);
+            System.out.println("Y:"+coordinate.y);
             if (collisions.getCell(Math.round(coordinate.x), Math.round(coordinate.y)).getTile().getProperties().get("road").equals(true)) {
                 if (this.path.isEmpty()) {
                     return this.getPosition().equals(coordinate);
@@ -292,12 +294,12 @@ public class FireTruck extends Sprite {
         Vector2 goal = endPos;
 
 
-        visited = new boolean[48][29];
-        prev = new Vector2[1392];
+        visited = new boolean[50][30];
+        prev = new Vector2[1500];
 
 
-        for(int i=0; i<48; i++){
-            for(int j=0; j<29; j++){
+        for(int i=0; i<50; i++){
+            for(int j=0; j<30; j++){
                 visited[i][j] = false;
             }
         }
@@ -343,7 +345,7 @@ public class FireTruck extends Sprite {
             if(newPos.x < 0 || newPos.y < 0) {
                 continue;
             }
-            if(newPos.x > 47 || newPos.y > 28) {
+            if(newPos.x > 49 || newPos.y > 29) {
                 continue;
             }
             boolean isRoad = (collisions.getCell(Math.round(newPos.x), Math.round(newPos.y)).getTile().getProperties().get("road").equals(true));
@@ -371,7 +373,7 @@ public class FireTruck extends Sprite {
      * @return An int representing the Vector2 as a point on the map
      */
     private int convertVector2ToIntPositionInMap(Vector2 pos) {
-        return ((int) (pos.x * 29 + pos.y));
+        return ((int) (pos.x * 30 + pos.y));
     }
     /**
      * Reverses an array.
