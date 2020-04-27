@@ -64,7 +64,7 @@ public class FireStationTest {
         float HPBeforeRepair = station.getTruck(0).getHP();
         station.restoreTrucks();
         float HPAfterRepair = station.getTruck(0).getHP();
-        assertFalse(HPAfterRepair > HPBeforeRepair);
+        assertEquals(HPAfterRepair, HPBeforeRepair, 0.0);
     }
 
     @Test
