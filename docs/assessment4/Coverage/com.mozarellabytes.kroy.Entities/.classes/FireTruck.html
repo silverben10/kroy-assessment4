@@ -1,0 +1,829 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FireTruck</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.mozarellabytes.kroy.Entities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FireTruck (com.mozarellabytes.kroy.Entities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FireTruck</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61.2%
+  </span>
+  <span class="absValue">
+    (30/ 49)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50.7%
+  </span>
+  <span class="absValue">
+    (114/ 225)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.mozarellabytes.kroy.Entities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.badlogic.gdx.Gdx;
+<i>4</i>&nbsp;import com.badlogic.gdx.graphics.Color;
+<i>5</i>&nbsp;import com.badlogic.gdx.graphics.Texture;
+<i>6</i>&nbsp;import com.badlogic.gdx.graphics.g2d.Batch;
+<i>7</i>&nbsp;import com.badlogic.gdx.graphics.g2d.Sprite;
+<i>8</i>&nbsp;import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+<i>9</i>&nbsp;import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+<i>10</i>&nbsp;import com.badlogic.gdx.math.Vector2;
+<i>11</i>&nbsp;import com.badlogic.gdx.utils.Queue;
+<i>12</i>&nbsp;import com.google.gson.annotations.Expose;
+<i>13</i>&nbsp;import com.mozarellabytes.kroy.Screens.GameScreen;
+<i>14</i>&nbsp;import com.mozarellabytes.kroy.Utilities.SoundFX;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;import java.util.ArrayList;
+<i>17</i>&nbsp;import java.util.Arrays;
+<i>18</i>&nbsp;import java.util.Collections;
+<i>19</i>&nbsp;import java.util.LinkedList;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;/**
+<i>22</i>&nbsp; * FireTruck is an entity that the player controls. It navigates the map on the
+<i>23</i>&nbsp; * roads defined in the Tiled Map by following a path that the user draws.
+<i>24</i>&nbsp; * &lt;p&gt;
+<i>25</i>&nbsp; * Having &#39;A&#39;    held when within range of a  Fortress will deal damage to it.
+<i>26</i>&nbsp; */
+<i>27</i>&nbsp;public class FireTruck extends Sprite {
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Defines set of pre-defined attributes
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    @Expose
+<i>33</i>&nbsp;    public final FireTruckType type;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Defines the tilemap of collision locations on the map. Excluded from serialization (using &lt;code&gt;transient&lt;/code&gt;) when saving the game as this data is constant.
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    private final TiledMapTileLayer collisions;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * Health points
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    @Expose
+<i>44</i>&nbsp;    private float HP;
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * The starting HP, used for mirror truck
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    private float initialHP;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * The starting reserve, used for mirror truck
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    private float initialReserve;
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     * Attack power
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    private float AP;
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * Water Reserve
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    @Expose
+<i>65</i>&nbsp;    private float reserve;
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    /**
+<i>68</i>&nbsp;     * Position of FireTruck in tiles
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    @Expose(deserialize = false)
+<i>71</i>&nbsp;    private Vector2 position;
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**
+<i>74</i>&nbsp;     * Boolean stating if FireTruck is immune to damage
+<i>75</i>&nbsp;     */
+<b class="fc"><i>76</i>&nbsp;    private boolean immune = false;</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /**
+<i>79</i>&nbsp;     * Actual path the truck follows; the fewer item in
+<i>80</i>&nbsp;     * the path the slower the truck will go
+<i>81</i>&nbsp;     */
+<i>82</i>&nbsp;    public final Queue&lt;Vector2&gt; path;
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * The visual path that users can see when drawing
+<i>86</i>&nbsp;     * a firetruck&#39;s path
+<i>87</i>&nbsp;     */
+<i>88</i>&nbsp;    public final Queue&lt;Vector2&gt; trailPath;
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * If the truck is currently moving, determines whether the
+<i>92</i>&nbsp;     * truck&#39;s position should be updated
+<i>93</i>&nbsp;     *
+<i>94</i>&nbsp;     * &lt;code&gt;true&lt;/code&gt; once the player has drawn a
+<i>95</i>&nbsp;     * path and has let go of the mouse click
+<i>96</i>&nbsp;     * &lt;code&gt;false&lt;/code&gt; once the truck has got to
+<i>97</i>&nbsp;     * the end of the path
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    private boolean moving;
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;    /**
+<i>102</i>&nbsp;     * Whether the truck has an unresolved collision
+<i>103</i>&nbsp;     * with another truck
+<i>104</i>&nbsp;     */
+<i>105</i>&nbsp;    private boolean inCollision;
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    /**
+<i>108</i>&nbsp;     * Used to check if the truck&#39;s image should be
+<i>109</i>&nbsp;     * changed to match the direction it is facing
+<i>110</i>&nbsp;     */
+<i>111</i>&nbsp;    private Vector2 previousTile;
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    /**
+<i>114</i>&nbsp;     * Time since fortress has attacked the truck
+<i>115</i>&nbsp;     */
+<i>116</i>&nbsp;    private long timeOfLastAttack;
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    /**
+<i>119</i>&nbsp;     * List of particles that the truck uses to attack
+<i>120</i>&nbsp;     * a Fortress
+<i>121</i>&nbsp;     */
+<i>122</i>&nbsp;    private final ArrayList&lt;WaterParticle&gt; spray;
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;    /**
+<i>126</i>&nbsp;     * Whether the mouse has been dragged off a road tile
+<i>127</i>&nbsp;     */
+<b class="fc"><i>128</i>&nbsp;    private boolean dragOffMap = false;</b>
+<i>129</i>&nbsp;    /**
+<i>130</i>&nbsp;     * Whether the path finding algorithm has reached the end
+<i>131</i>&nbsp;     */
+<b class="fc"><i>132</i>&nbsp;    boolean reachedEnd = false;</b>
+<i>133</i>&nbsp;    /**
+<i>134</i>&nbsp;     * All possible routes from an end tile to a new tile are stored in this
+<i>135</i>&nbsp;     */
+<i>136</i>&nbsp;    Queue&lt;Vector2&gt; positions;
+<i>137</i>&nbsp;    /**
+<i>138</i>&nbsp;     * Current tile
+<i>139</i>&nbsp;     */
+<i>140</i>&nbsp;    Vector2 currentPos;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * Shows all possible movement directions for a firetruck
+<i>143</i>&nbsp;     */
+<b class="fc"><i>144</i>&nbsp;    final int[] directionX = {-1, 1, 0, 0};</b>
+<b class="fc"><i>145</i>&nbsp;    final int[] directionY = {0, 0, 1, -1};</b>
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    /**
+<i>148</i>&nbsp;     * True if a tile has been visited when constructing a path, false otherwise
+<i>149</i>&nbsp;     */
+<i>150</i>&nbsp;    boolean[][] visited;
+<i>151</i>&nbsp;    /**
+<i>152</i>&nbsp;     * Links parents to children in order o find the shortest path
+<i>153</i>&nbsp;     */
+<i>154</i>&nbsp;    Vector2[] prev;
+<i>155</i>&nbsp;    /**
+<i>156</i>&nbsp;     * the shortest path between 2 points
+<i>157</i>&nbsp;     */
+<i>158</i>&nbsp;    LinkedList&lt;Vector2&gt; reconstructedPath;
+<i>159</i>&nbsp;    /**
+<i>160</i>&nbsp;     * Checks if the mouse was dragged off the road multiple times in one instance
+<i>161</i>&nbsp;     **/
+<b class="fc"><i>162</i>&nbsp;    private int counter = 0;</b>
+<i>163</i>&nbsp;    /**
+<i>164</i>&nbsp;     * Path firetruck actually uses
+<i>165</i>&nbsp;     */
+<i>166</i>&nbsp;    private Vector2[] newPath;
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    private float speed;
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    private Vector2 previous;
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;    /**
+<i>173</i>&nbsp;     * Constructs a new FireTruck at a position and of a certain type
+<i>174</i>&nbsp;     * which have been passed in
+<i>175</i>&nbsp;     *
+<i>176</i>&nbsp;     * @param position initial location of the truck
+<i>177</i>&nbsp;     * @param type     used to have predefined attributes
+<i>178</i>&nbsp;     */
+<i>179</i>&nbsp;    public FireTruck(Vector2 position, FireTruckType type, TiledMapTileLayer collisions) {
+<b class="fc"><i>180</i>&nbsp;        super(type.getLookDown());</b>
+<b class="fc"><i>181</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>182</i>&nbsp;        this.collisions = collisions;</b>
+<b class="fc"><i>183</i>&nbsp;        this.HP = type.getMaxHP();</b>
+<b class="fc"><i>184</i>&nbsp;        this.AP = type.getAP();</b>
+<b class="fc"><i>185</i>&nbsp;        this.reserve = type.getMaxReserve();</b>
+<b class="fc"><i>186</i>&nbsp;        this.position = position;</b>
+<b class="fc"><i>187</i>&nbsp;        this.path = new Queue&lt;&gt;();</b>
+<b class="fc"><i>188</i>&nbsp;        this.trailPath = new Queue&lt;&gt;();</b>
+<b class="fc"><i>189</i>&nbsp;        this.moving = false;</b>
+<b class="fc"><i>190</i>&nbsp;        this.inCollision = false;</b>
+<b class="fc"><i>191</i>&nbsp;        this.speed = type.getSpeed();</b>
+<b class="fc"><i>192</i>&nbsp;        this.spray = new ArrayList&lt;WaterParticle&gt;();</b>
+<b class="fc"><i>193</i>&nbsp;        this.timeOfLastAttack = System.currentTimeMillis();</b>
+<b class="fc"><i>194</i>&nbsp;    }</b>
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    /**
+<i>197</i>&nbsp;     * Called every tick and updates the paths to simulate the truck moving along the
+<i>198</i>&nbsp;     * path
+<i>199</i>&nbsp;     */
+<i>200</i>&nbsp;    public void move() {
+<b class="fc"><i>201</i>&nbsp;        if (moving) {</b>
+<b class="fc"><i>202</i>&nbsp;            counter = 0;</b>
+<b class="fc"><i>203</i>&nbsp;            if (this.path.size &gt; 0) {</b>
+<b class="fc"><i>204</i>&nbsp;                Vector2 nextTile = path.first();</b>
+<b class="fc"><i>205</i>&nbsp;                this.position = nextTile;</b>
+<i>206</i>&nbsp;
+<b class="fc"><i>207</i>&nbsp;                if (!this.trailPath.isEmpty() &amp;&amp; (int) this.position.x == this.trailPath.first().x &amp;&amp; (int) this.position.y == this.trailPath.first().y) {</b>
+<b class="fc"><i>208</i>&nbsp;                    this.trailPath.removeFirst();</b>
+<i>209</i>&nbsp;                }
+<b class="fc"><i>210</i>&nbsp;                if (!this.inCollision) {</b>
+<b class="fc"><i>211</i>&nbsp;                    changeSprite(nextTile);</b>
+<i>212</i>&nbsp;                }
+<b class="fc"><i>213</i>&nbsp;                previousTile = nextTile;</b>
+<b class="fc"><i>214</i>&nbsp;                path.removeFirst();</b>
+<b class="fc"><i>215</i>&nbsp;            } else {</b>
+<b class="fc"><i>216</i>&nbsp;                moving = false;</b>
+<i>217</i>&nbsp;            }
+<b class="fc"><i>218</i>&nbsp;            if (this.path.isEmpty() &amp;&amp; inCollision) {</b>
+<b class="nc"><i>219</i>&nbsp;                inCollision = false;</b>
+<i>220</i>&nbsp;            }
+<i>221</i>&nbsp;        }
+<b class="fc"><i>222</i>&nbsp;    }</b>
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * Increases Health Points of the truck
+<i>226</i>&nbsp;     *
+<i>227</i>&nbsp;     * @param HP increased by this value
+<i>228</i>&nbsp;     */
+<i>229</i>&nbsp;    public void repair(float HP) {
+<b class="fc"><i>230</i>&nbsp;        this.HP += HP;</b>
+<b class="fc"><i>231</i>&nbsp;    }</b>
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    /**
+<i>234</i>&nbsp;     * Increases the Reserve of the truck
+<i>235</i>&nbsp;     *
+<i>236</i>&nbsp;     * @param reserve increased by this value
+<i>237</i>&nbsp;     */
+<i>238</i>&nbsp;    public void refill(float reserve) {
+<b class="fc"><i>239</i>&nbsp;        this.reserve += reserve;</b>
+<b class="fc"><i>240</i>&nbsp;    }</b>
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;    /**
+<i>243</i>&nbsp;     * Called when the player drags mouse on GameScreen Coordinate is checked to see
+<i>244</i>&nbsp;     * whether it is a valid tile to draw to, then adds it to the paths
+<i>245</i>&nbsp;     *
+<i>246</i>&nbsp;     * @param coordinate Position on the screen that the user&#39;s mouse is being
+<i>247</i>&nbsp;     *                   dragged over
+<i>248</i>&nbsp;     */
+<i>249</i>&nbsp;    public void addTileToPath(Vector2 coordinate) {
+<b class="fc"><i>250</i>&nbsp;        if (isValidDraw(coordinate)) {</b>
+<b class="fc"><i>251</i>&nbsp;            if (!dragOffMap) {</b>
+<b class="fc"><i>252</i>&nbsp;                if (this.path.size &gt; 0) {</b>
+<b class="fc"><i>253</i>&nbsp;                    Vector2 previous = this.path.last();</b>
+<b class="fc"><i>254</i>&nbsp;                    int interpolation = (int) (40 / speed);</b>
+<b class="fc"><i>255</i>&nbsp;                    for (int i = 1; i &lt; interpolation; i++) {</b>
+<b class="fc"><i>256</i>&nbsp;                        this.path.addLast(new Vector2((((previous.x - coordinate.x) * -1) / interpolation) * i + previous.x, (((previous.y - coordinate.y) * -1) / interpolation) * i + previous.y));</b>
+<i>257</i>&nbsp;                    }
+<i>258</i>&nbsp;                }
+<b class="fc"><i>259</i>&nbsp;                this.trailPath.addLast(new Vector2(((int) coordinate.x), ((int) coordinate.y)));</b>
+<b class="fc"><i>260</i>&nbsp;                this.path.addLast(new Vector2(((int) coordinate.x), ((int) coordinate.y)));</b>
+<i>261</i>&nbsp;            } else {
+<i>262</i>&nbsp;                //dragged off map
+<i>263</i>&nbsp;
+<b class="nc"><i>264</i>&nbsp;                dragOffMap = false;</b>
+<i>265</i>&nbsp;
+<b class="nc"><i>266</i>&nbsp;                int interpolation = (int) (40 / speed);</b>
+<b class="nc"><i>267</i>&nbsp;                previous = this.path.last();</b>
+<i>268</i>&nbsp;
+<b class="nc"><i>269</i>&nbsp;                newPath = findPath(coordinate, this.path.last());</b>
+<i>270</i>&nbsp;
+<b class="nc"><i>271</i>&nbsp;                if (counter &gt;= 2) {</b>
+<i>272</i>&nbsp;                    try {
+<b class="nc"><i>273</i>&nbsp;                        resetPath();</b>
+<b class="nc"><i>274</i>&nbsp;                        newPath = findPath(coordinate, this.getPosition());</b>
+<b class="nc"><i>275</i>&nbsp;                        previous = this.getPosition();</b>
+<b class="nc"><i>276</i>&nbsp;                    } catch (Exception e) {</b>
+<i>277</i>&nbsp;
+<b class="nc"><i>278</i>&nbsp;                    }</b>
+<i>279</i>&nbsp;
+<i>280</i>&nbsp;                }
+<i>281</i>&nbsp;
+<b class="nc"><i>282</i>&nbsp;                for (int i = 0; i &lt; newPath.length; i++) {</b>
+<i>283</i>&nbsp;
+<b class="nc"><i>284</i>&nbsp;                    for (int j = 1; j &lt; interpolation; j++) {</b>
+<b class="nc"><i>285</i>&nbsp;                        this.path.addLast(new Vector2((((previous.x - newPath[i].x) * -1) / interpolation) * j + previous.x, (((previous.y - newPath[i].y) * -1) / interpolation) * j + previous.y));</b>
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;                    }
+<i>288</i>&nbsp;
+<b class="nc"><i>289</i>&nbsp;                    this.trailPath.addLast(new Vector2(newPath[i]));</b>
+<b class="nc"><i>290</i>&nbsp;                    this.path.addLast(new Vector2(newPath[i]));</b>
+<b class="nc"><i>291</i>&nbsp;                    previous = this.path.last();</b>
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;                }
+<i>294</i>&nbsp;            }
+<i>295</i>&nbsp;        }
+<b class="fc"><i>296</i>&nbsp;    }</b>
+<i>297</i>&nbsp;
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;    /**
+<i>300</i>&nbsp;     * Used when drawing the path to check whether the next tile to be added to the path is
+<i>301</i>&nbsp;     * valid
+<i>302</i>&nbsp;     *
+<i>303</i>&nbsp;     * @param coordinate Position on the screen that the user&#39;s mouse is being dragged over
+<i>304</i>&nbsp;     * @return &lt;code&gt;true&lt;/code&gt; if the coordinate is a valid tile to be added to
+<i>305</i>&nbsp;     * the paths
+<i>306</i>&nbsp;     * &lt;code&gt;false&lt;/code&gt; otherwise
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    private boolean isValidDraw(Vector2 coordinate) {
+<b class="fc"><i>309</i>&nbsp;        if (coordinate.y &lt; 28) {</b>
+<b class="fc"><i>310</i>&nbsp;            if (collisions.getCell(Math.round(coordinate.x), Math.round(coordinate.y)).getTile().getProperties().get(&quot;road&quot;).equals(true)) {</b>
+<b class="fc"><i>311</i>&nbsp;                if (this.path.isEmpty()) {</b>
+<b class="fc"><i>312</i>&nbsp;                    return this.getPosition().equals(coordinate);</b>
+<i>313</i>&nbsp;                } else {
+<b class="fc"><i>314</i>&nbsp;                    if (!this.path.last().equals(coordinate)) {</b>
+<b class="fc"><i>315</i>&nbsp;                        if ((int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) &gt;= 2) {</b>
+<b class="nc"><i>316</i>&nbsp;                            dragOffMap = true;</b>
+<b class="nc"><i>317</i>&nbsp;                            counter++;</b>
+<b class="nc"><i>318</i>&nbsp;                            return (int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) &gt;= 2;</b>
+<i>319</i>&nbsp;                        } else {
+<b class="fc"><i>320</i>&nbsp;                            dragOffMap = false;</b>
+<b class="fc"><i>321</i>&nbsp;                            return (int) Math.abs(this.path.last().x - coordinate.x) + (int) Math.abs(this.path.last().y - coordinate.y) &lt;= 1;</b>
+<i>322</i>&nbsp;                        }
+<i>323</i>&nbsp;
+<i>324</i>&nbsp;                    }
+<i>325</i>&nbsp;                }
+<i>326</i>&nbsp;            }
+<i>327</i>&nbsp;        }
+<b class="fc"><i>328</i>&nbsp;        return false;</b>
+<i>329</i>&nbsp;    }
+<i>330</i>&nbsp;
+<i>331</i>&nbsp;    /**
+<i>332</i>&nbsp;     * Finds a path between two points
+<i>333</i>&nbsp;     *
+<i>334</i>&nbsp;     * @param endPos   Position on the screen that the user&#39;s mouse is on
+<i>335</i>&nbsp;     * @param startPos Position of last tile in the path queue
+<i>336</i>&nbsp;     * @return An Vector2 array containing all points in the shortest path between the start and end point
+<i>337</i>&nbsp;     */
+<i>338</i>&nbsp;    private Vector2[] findPath(Vector2 endPos, Vector2 startPos) {
+<b class="nc"><i>339</i>&nbsp;        positions = new Queue&lt;&gt;();</b>
+<i>340</i>&nbsp;
+<i>341</i>&nbsp;
+<b class="nc"><i>342</i>&nbsp;        Vector2 start = startPos;</b>
+<b class="nc"><i>343</i>&nbsp;        Vector2 goal = endPos;</b>
+<i>344</i>&nbsp;
+<i>345</i>&nbsp;
+<b class="nc"><i>346</i>&nbsp;        visited = new boolean[48][29];</b>
+<b class="nc"><i>347</i>&nbsp;        prev = new Vector2[1392];</b>
+<i>348</i>&nbsp;
+<i>349</i>&nbsp;
+<b class="nc"><i>350</i>&nbsp;        for (int i = 0; i &lt; 48; i++) {</b>
+<b class="nc"><i>351</i>&nbsp;            for (int j = 0; j &lt; 29; j++) {</b>
+<b class="nc"><i>352</i>&nbsp;                visited[i][j] = false;</b>
+<i>353</i>&nbsp;            }
+<i>354</i>&nbsp;        }
+<i>355</i>&nbsp;
+<b class="nc"><i>356</i>&nbsp;        positions.addLast(start);</b>
+<i>357</i>&nbsp;
+<b class="nc"><i>358</i>&nbsp;        visited[(int) start.x][(int) start.y] = true;</b>
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;
+<b class="nc"><i>361</i>&nbsp;        while (!positions.isEmpty()) {</b>
+<i>362</i>&nbsp;
+<i>363</i>&nbsp;
+<b class="nc"><i>364</i>&nbsp;            currentPos = positions.removeLast();</b>
+<i>365</i>&nbsp;
+<b class="nc"><i>366</i>&nbsp;            if (currentPos.x == goal.x &amp;&amp; currentPos.y == goal.y) {</b>
+<b class="nc"><i>367</i>&nbsp;                reachedEnd = true;</b>
+<b class="nc"><i>368</i>&nbsp;                break;</b>
+<i>369</i>&nbsp;            }
+<i>370</i>&nbsp;
+<b class="nc"><i>371</i>&nbsp;            exploreNeighbours(currentPos);</b>
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;        }
+<i>375</i>&nbsp;
+<b class="nc"><i>376</i>&nbsp;        return shortestPath(goal, start);</b>
+<i>377</i>&nbsp;
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;    }
+<i>380</i>&nbsp;
+<i>381</i>&nbsp;    /**
+<i>382</i>&nbsp;     * Searches area around a tile and checks if it is a valid place to move
+<i>383</i>&nbsp;     *
+<i>384</i>&nbsp;     * @param currentPos Position of current tile on the positions queue
+<i>385</i>&nbsp;     */
+<i>386</i>&nbsp;    private void exploreNeighbours(Vector2 currentPos) {
+<i>387</i>&nbsp;
+<b class="nc"><i>388</i>&nbsp;        for (int i = 0; i &lt; 4; i++) {</b>
+<b class="nc"><i>389</i>&nbsp;            Vector2 newPos = new Vector2();</b>
+<b class="nc"><i>390</i>&nbsp;            newPos.x = currentPos.x + directionX[i];</b>
+<b class="nc"><i>391</i>&nbsp;            newPos.y = currentPos.y + directionY[i];</b>
+<i>392</i>&nbsp;
+<i>393</i>&nbsp;
+<b class="nc"><i>394</i>&nbsp;            if (newPos.x &lt; 0 || newPos.y &lt; 0) {</b>
+<b class="nc"><i>395</i>&nbsp;                continue;</b>
+<i>396</i>&nbsp;            }
+<b class="nc"><i>397</i>&nbsp;            if (newPos.x &gt; 47 || newPos.y &gt; 28) {</b>
+<b class="nc"><i>398</i>&nbsp;                continue;</b>
+<i>399</i>&nbsp;            }
+<b class="nc"><i>400</i>&nbsp;            boolean isRoad = (collisions.getCell(Math.round(newPos.x), Math.round(newPos.y)).getTile().getProperties().get(&quot;road&quot;).equals(true));</b>
+<b class="nc"><i>401</i>&nbsp;            if (!isRoad) {</b>
+<b class="nc"><i>402</i>&nbsp;                continue;</b>
+<i>403</i>&nbsp;            }
+<b class="nc"><i>404</i>&nbsp;            if (visited[(int) newPos.x][(int) newPos.y]) {</b>
+<b class="nc"><i>405</i>&nbsp;                continue;</b>
+<i>406</i>&nbsp;            }
+<i>407</i>&nbsp;
+<i>408</i>&nbsp;
+<b class="nc"><i>409</i>&nbsp;            positions.addFirst(newPos);</b>
+<i>410</i>&nbsp;
+<b class="nc"><i>411</i>&nbsp;            visited[(int) newPos.x][(int) newPos.y] = true;</b>
+<i>412</i>&nbsp;
+<b class="nc"><i>413</i>&nbsp;            prev[convertVector2ToIntPositionInMap(newPos)] = currentPos;</b>
+<i>414</i>&nbsp;        }
+<b class="nc"><i>415</i>&nbsp;    }</b>
+<i>416</i>&nbsp;
+<i>417</i>&nbsp;    /**
+<i>418</i>&nbsp;     * Maps a parent position to it&#39;s child (An adjacent tile)
+<i>419</i>&nbsp;     *
+<i>420</i>&nbsp;     * @param pos The current position being queued
+<i>421</i>&nbsp;     * @return An int representing the Vector2 as a point on the map
+<i>422</i>&nbsp;     */
+<i>423</i>&nbsp;    private int convertVector2ToIntPositionInMap(Vector2 pos) {
+<b class="nc"><i>424</i>&nbsp;        return ((int) (pos.x * 29 + pos.y));</b>
+<i>425</i>&nbsp;    }
+<i>426</i>&nbsp;
+<i>427</i>&nbsp;    /**
+<i>428</i>&nbsp;     * Reverses an array.
+<i>429</i>&nbsp;     *
+<i>430</i>&nbsp;     * @param a The shortest path array, so it goes from start to finish rather then finish to start in order
+<i>431</i>&nbsp;     */
+<i>432</i>&nbsp;    private void reverse(Vector2[] a) {
+<b class="nc"><i>433</i>&nbsp;        Collections.reverse(Arrays.asList(a));</b>
+<b class="nc"><i>434</i>&nbsp;    }</b>
+<i>435</i>&nbsp;
+<i>436</i>&nbsp;    /**
+<i>437</i>&nbsp;     * Returns the shortest path using the mapped coordinates
+<i>438</i>&nbsp;     *
+<i>439</i>&nbsp;     * @param endPos The shortest path array, so it goes from start to finish rather then finish to start in order
+<i>440</i>&nbsp;     * @return A array containing the Vector2 positions of the shortest path between two points
+<i>441</i>&nbsp;     */
+<i>442</i>&nbsp;    private Vector2[] shortestPath(Vector2 endPos, Vector2 startPos) {
+<b class="nc"><i>443</i>&nbsp;        reconstructedPath = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i>444</i>&nbsp;        for (Vector2 at = endPos; at != null; at = prev[convertVector2ToIntPositionInMap(at)]) {</b>
+<i>445</i>&nbsp;
+<b class="nc"><i>446</i>&nbsp;            if (at == startPos) {</b>
+<b class="nc"><i>447</i>&nbsp;                if (!this.trailPath.isEmpty())</b>
+<b class="nc"><i>448</i>&nbsp;                    continue;</b>
+<i>449</i>&nbsp;            }
+<b class="nc"><i>450</i>&nbsp;            reconstructedPath.add(at);</b>
+<i>451</i>&nbsp;        }
+<i>452</i>&nbsp;
+<b class="nc"><i>453</i>&nbsp;        Object[] objectArray = reconstructedPath.toArray();</b>
+<b class="nc"><i>454</i>&nbsp;        Vector2[] path = new Vector2[objectArray.length];</b>
+<i>455</i>&nbsp;
+<b class="nc"><i>456</i>&nbsp;        for (int i = 0; i &lt; objectArray.length; i++) {</b>
+<b class="nc"><i>457</i>&nbsp;            path[i] = (Vector2) objectArray[i];</b>
+<i>458</i>&nbsp;        }
+<i>459</i>&nbsp;
+<b class="nc"><i>460</i>&nbsp;        reverse(path);</b>
+<b class="nc"><i>461</i>&nbsp;        return path;</b>
+<i>462</i>&nbsp;    }
+<i>463</i>&nbsp;
+<i>464</i>&nbsp;    /**
+<i>465</i>&nbsp;     * Changes the direction of the truck depending on the previous tile and the next tile
+<i>466</i>&nbsp;     *
+<i>467</i>&nbsp;     * @param nextTile first tile in the queue (next to be followed)
+<i>468</i>&nbsp;     */
+<i>469</i>&nbsp;    private void changeSprite(Vector2 nextTile) {
+<b class="fc"><i>470</i>&nbsp;        if (previousTile != null) {</b>
+<b class="fc"><i>471</i>&nbsp;            if (nextTile.x &gt; previousTile.x) {</b>
+<b class="fc"><i>472</i>&nbsp;                setTexture(this.type.getLookRight());</b>
+<b class="fc"><i>473</i>&nbsp;            } else if (nextTile.x &lt; previousTile.x) {</b>
+<b class="nc"><i>474</i>&nbsp;                setTexture(this.type.getLookLeft());</b>
+<b class="fc"><i>475</i>&nbsp;            } else if (nextTile.y &gt; previousTile.y) {</b>
+<b class="fc"><i>476</i>&nbsp;                setTexture(this.type.getLookUp());</b>
+<b class="fc"><i>477</i>&nbsp;            } else if (nextTile.y &lt; previousTile.y) {</b>
+<b class="nc"><i>478</i>&nbsp;                setTexture(this.type.getLookDown());</b>
+<i>479</i>&nbsp;            }
+<i>480</i>&nbsp;        }
+<b class="fc"><i>481</i>&nbsp;    }</b>
+<i>482</i>&nbsp;
+<i>483</i>&nbsp;    /**
+<i>484</i>&nbsp;     * Clears the two paths
+<i>485</i>&nbsp;     */
+<i>486</i>&nbsp;    public void resetPath() {
+<b class="fc"><i>487</i>&nbsp;        this.path.clear();</b>
+<b class="fc"><i>488</i>&nbsp;        this.trailPath.clear();</b>
+<b class="fc"><i>489</i>&nbsp;    }</b>
+<i>490</i>&nbsp;
+<i>491</i>&nbsp;    /**
+<i>492</i>&nbsp;     * Deals damage to Fortress by generating a WaterParticle and adding
+<i>493</i>&nbsp;     * it to the spray
+<i>494</i>&nbsp;     *
+<i>495</i>&nbsp;     * @param fortress Fortress being attacked
+<i>496</i>&nbsp;     */
+<i>497</i>&nbsp;    public void attack(Fortress fortress) {
+<b class="fc"><i>498</i>&nbsp;        if (this.reserve &gt; 0) {</b>
+<b class="fc"><i>499</i>&nbsp;            this.spray.add(new WaterParticle(this, fortress));</b>
+<b class="fc"><i>500</i>&nbsp;            this.reserve -= Math.min(this.reserve, AP);</b>
+<i>501</i>&nbsp;        }
+<b class="fc"><i>502</i>&nbsp;    }</b>
+<i>503</i>&nbsp;
+<i>504</i>&nbsp;    /**
+<i>505</i>&nbsp;     * Called every tick to check if a Fortress is within the range of
+<i>506</i>&nbsp;     * the truck
+<i>507</i>&nbsp;     *
+<i>508</i>&nbsp;     * @param fortress Fortress&#39; position being checked
+<i>509</i>&nbsp;     * @return &lt;code&gt;true&lt;/code&gt; if Fortress is within range
+<i>510</i>&nbsp;     * &lt;code&gt;false &lt;/code&gt; otherwise
+<i>511</i>&nbsp;     */
+<i>512</i>&nbsp;    public boolean fortressInRange(Vector2 fortress) {
+<b class="fc"><i>513</i>&nbsp;        return this.getVisualPosition().dst(fortress) &lt;= this.type.getRange();</b>
+<i>514</i>&nbsp;    }
+<i>515</i>&nbsp;
+<i>516</i>&nbsp;    /**
+<i>517</i>&nbsp;     * Updates the position of each WaterParticle
+<i>518</i>&nbsp;     */
+<i>519</i>&nbsp;    public void updateSpray() {
+<b class="fc"><i>520</i>&nbsp;        if (this.spray != null) {</b>
+<b class="fc"><i>521</i>&nbsp;            for (int i = 0; i &lt; this.spray.size(); i++) {</b>
+<b class="fc"><i>522</i>&nbsp;                WaterParticle particle = this.spray.get(i);</b>
+<b class="fc"><i>523</i>&nbsp;                particle.updatePosition();</b>
+<b class="fc"><i>524</i>&nbsp;                if (particle.isHit()) {</b>
+<b class="fc"><i>525</i>&nbsp;                    this.damage(particle);</b>
+<b class="fc"><i>526</i>&nbsp;                    this.removeParticle(particle);</b>
+<i>527</i>&nbsp;                }
+<i>528</i>&nbsp;            }
+<i>529</i>&nbsp;        }
+<b class="fc"><i>530</i>&nbsp;    }</b>
+<i>531</i>&nbsp;
+<i>532</i>&nbsp;    /**
+<i>533</i>&nbsp;     * Remove the WaterParticle from the spray when it hits the Fortress
+<i>534</i>&nbsp;     *
+<i>535</i>&nbsp;     * @param particle The particle to be removed from spray
+<i>536</i>&nbsp;     */
+<i>537</i>&nbsp;    private void removeParticle(WaterParticle particle) {
+<b class="fc"><i>538</i>&nbsp;        this.spray.remove(particle);</b>
+<b class="fc"><i>539</i>&nbsp;    }</b>
+<i>540</i>&nbsp;
+<i>541</i>&nbsp;    /**
+<i>542</i>&nbsp;     * Damages the Fortress depending on the truck&#39;s AP
+<i>543</i>&nbsp;     *
+<i>544</i>&nbsp;     * @param particle the particle which damages the fortress
+<i>545</i>&nbsp;     */
+<i>546</i>&nbsp;    private void damage(WaterParticle particle) {
+<b class="fc"><i>547</i>&nbsp;        particle.getTarget().damage(Math.min(AP, particle.getTarget().getHP()));</b>
+<b class="fc"><i>548</i>&nbsp;    }</b>
+<i>549</i>&nbsp;
+<i>550</i>&nbsp;    /**
+<i>551</i>&nbsp;     * Damage inflicted on truck by a fortress, called when a bomb hits a truck it plays
+<i>552</i>&nbsp;     * a sound and decreases the fire trucks HP by the amount of the fortresses AP
+<i>553</i>&nbsp;     *
+<i>554</i>&nbsp;     * @param HP amount of HP being taken away dependant
+<i>555</i>&nbsp;     *           on the AP of the attacking Fortress
+<i>556</i>&nbsp;     */
+<i>557</i>&nbsp;    public void fortressDamage(float HP) {
+<b class="fc"><i>558</i>&nbsp;        if (SoundFX.music_enabled) {</b>
+<b class="nc"><i>559</i>&nbsp;            SoundFX.sfx_truck_damage.play();</b>
+<i>560</i>&nbsp;        }
+<b class="fc"><i>561</i>&nbsp;        if (!immune)</b>
+<b class="fc"><i>562</i>&nbsp;            this.HP -= Math.min(HP, this.HP);</b>
+<b class="fc"><i>563</i>&nbsp;    }</b>
+<i>564</i>&nbsp;
+<i>565</i>&nbsp;    /**
+<i>566</i>&nbsp;     * Draws the visual, colourful path that the truck will follow
+<i>567</i>&nbsp;     *
+<i>568</i>&nbsp;     * @param mapBatch Batch that the path is being drawn to (map dependant)
+<i>569</i>&nbsp;     */
+<i>570</i>&nbsp;    public void drawPath(Batch mapBatch) {
+<b class="nc"><i>571</i>&nbsp;        if (!this.trailPath.isEmpty()) {</b>
+<b class="nc"><i>572</i>&nbsp;            mapBatch.setColor(this.type.getTrailColour());</b>
+<b class="nc"><i>573</i>&nbsp;            for (Vector2 tile : this.trailPath) {</b>
+<b class="nc"><i>574</i>&nbsp;                if (tile.equals(this.trailPath.last())) {</b>
+<b class="nc"><i>575</i>&nbsp;                    mapBatch.draw(this.type.getTrailImageEnd(), tile.x, tile.y, 1, 1);</b>
+<i>576</i>&nbsp;                }
+<b class="nc"><i>577</i>&nbsp;                mapBatch.draw(this.type.getTrailImage(), tile.x, tile.y, 1, 1);</b>
+<b class="nc"><i>578</i>&nbsp;            }</b>
+<b class="nc"><i>579</i>&nbsp;            mapBatch.setColor(Color.WHITE);</b>
+<i>580</i>&nbsp;        }
+<b class="nc"><i>581</i>&nbsp;    }</b>
+<i>582</i>&nbsp;
+<i>583</i>&nbsp;    /**
+<i>584</i>&nbsp;     * Draws the mini health/reserve indicators relative to the truck
+<i>585</i>&nbsp;     *
+<i>586</i>&nbsp;     * @param shapeMapRenderer Renderer that the stats are being drawn to (map  dependant)
+<i>587</i>&nbsp;     */
+<i>588</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
+<b class="nc"><i>589</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.2f, this.getPosition().y + 1.3f, 0.6f, 0.8f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
+<b class="nc"><i>590</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);</b>
+<b class="nc"><i>591</i>&nbsp;        if (type != FireTruckType.Mirror) {</b>
+<b class="nc"><i>592</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.type.getMaxReserve() * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);</b>
+<b class="nc"><i>593</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
+<b class="nc"><i>594</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
+<i>595</i>&nbsp;        } else {
+<b class="nc"><i>596</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.266f, this.getPosition().y + 1.4f, 0.2f, this.getReserve() / this.initialReserve * 0.6f, Color.CYAN, Color.CYAN, Color.CYAN, Color.CYAN);</b>
+<b class="nc"><i>597</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
+<b class="nc"><i>598</i>&nbsp;            shapeMapRenderer.rect(this.getPosition().x + 0.533f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.initialHP * 0.6f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
+<i>599</i>&nbsp;        }
+<i>600</i>&nbsp;
+<b class="nc"><i>601</i>&nbsp;        for (WaterParticle particle : this.getSpray()) {</b>
+<b class="nc"><i>602</i>&nbsp;            shapeMapRenderer.rect(particle.getPosition().x, particle.getPosition().y, particle.getSize(), particle.getSize(), particle.getColour(), particle.getColour(), particle.getColour(), particle.getColour());</b>
+<b class="nc"><i>603</i>&nbsp;        }</b>
+<b class="nc"><i>604</i>&nbsp;    }</b>
+<i>605</i>&nbsp;
+<i>606</i>&nbsp;    /**
+<i>607</i>&nbsp;     * Draws the FireTruck sprite
+<i>608</i>&nbsp;     *
+<i>609</i>&nbsp;     * @param mapBatch Batch that the truck is being
+<i>610</i>&nbsp;     *                 drawn to (map dependant)
+<i>611</i>&nbsp;     */
+<i>612</i>&nbsp;    public void drawSprite(Batch mapBatch) {
+<b class="nc"><i>613</i>&nbsp;        mapBatch.draw(this, this.position.x, this.position.y, 1, 1);</b>
+<b class="nc"><i>614</i>&nbsp;    }</b>
+<i>615</i>&nbsp;
+<i>616</i>&nbsp;    /**
+<i>617</i>&nbsp;     * Helper method that returns where the truck is visually to the player. This is used when
+<i>618</i>&nbsp;     * checking the range when attacking the Fortress and getting attacked by the Fortress
+<i>619</i>&nbsp;     *
+<i>620</i>&nbsp;     * @return a vector where the truck is visually
+<i>621</i>&nbsp;     */
+<i>622</i>&nbsp;    public Vector2 getVisualPosition() {
+<b class="fc"><i>623</i>&nbsp;        return new Vector2(this.position.x + 0.5f, this.position.y + 0.5f);</b>
+<i>624</i>&nbsp;    }
+<i>625</i>&nbsp;
+<i>626</i>&nbsp;    /**
+<i>627</i>&nbsp;     * Sets time of last attack to unix timestamp provided
+<i>628</i>&nbsp;     *
+<i>629</i>&nbsp;     * @param timestamp timestamp set as time of last attack
+<i>630</i>&nbsp;     */
+<i>631</i>&nbsp;    public void setTimeOfLastAttack(long timestamp) {
+<b class="fc"><i>632</i>&nbsp;        this.timeOfLastAttack = timestamp;</b>
+<b class="fc"><i>633</i>&nbsp;    }</b>
+<i>634</i>&nbsp;
+<i>635</i>&nbsp;    /*
+<i>636</i>&nbsp;    public void setAttacking(boolean b) {
+<i>637</i>&nbsp;        this.attacking = b;
+<i>638</i>&nbsp;    }
+<i>639</i>&nbsp;     */
+<i>640</i>&nbsp;
+<i>641</i>&nbsp;    public void setMoving(boolean t) {
+<b class="fc"><i>642</i>&nbsp;        this.moving = t;</b>
+<b class="fc"><i>643</i>&nbsp;    }</b>
+<i>644</i>&nbsp;
+<i>645</i>&nbsp;    public long getTimeOfLastAttack() {
+<b class="fc"><i>646</i>&nbsp;        return timeOfLastAttack;</b>
+<i>647</i>&nbsp;    }
+<i>648</i>&nbsp;
+<i>649</i>&nbsp;    public float getHP() {
+<b class="fc"><i>650</i>&nbsp;        return this.HP;</b>
+<i>651</i>&nbsp;    }
+<i>652</i>&nbsp;
+<i>653</i>&nbsp;    public void setHP(int hp) {
+<b class="fc"><i>654</i>&nbsp;        this.HP = hp;</b>
+<b class="fc"><i>655</i>&nbsp;    }</b>
+<i>656</i>&nbsp;
+<i>657</i>&nbsp;    public float getReserve() {
+<b class="fc"><i>658</i>&nbsp;        return this.reserve;</b>
+<i>659</i>&nbsp;    }
+<i>660</i>&nbsp;
+<i>661</i>&nbsp;    public void setReserve(float reserve) {
+<b class="fc"><i>662</i>&nbsp;        this.reserve = reserve;</b>
+<b class="fc"><i>663</i>&nbsp;    }</b>
+<i>664</i>&nbsp;
+<i>665</i>&nbsp;    public FireTruckType getType() {
+<b class="fc"><i>666</i>&nbsp;        return this.type;</b>
+<i>667</i>&nbsp;    }
+<i>668</i>&nbsp;
+<i>669</i>&nbsp;    public void setCollision() {
+<b class="nc"><i>670</i>&nbsp;        this.inCollision = true;</b>
+<b class="nc"><i>671</i>&nbsp;    }</b>
+<i>672</i>&nbsp;
+<i>673</i>&nbsp;    public Vector2 getPosition() {
+<b class="fc"><i>674</i>&nbsp;        return this.position;</b>
+<i>675</i>&nbsp;    }
+<i>676</i>&nbsp;
+<i>677</i>&nbsp;    /**
+<i>678</i>&nbsp;     * Gets rounded truck position
+<i>679</i>&nbsp;     * Used for patrol collision
+<i>680</i>&nbsp;     */
+<i>681</i>&nbsp;    public Vector2 getTilePosition() {
+<b class="nc"><i>682</i>&nbsp;        Vector2 absPos = new Vector2(Math.round(this.position.x), Math.round(this.position.y));</b>
+<b class="nc"><i>683</i>&nbsp;        return absPos;</b>
+<i>684</i>&nbsp;    }
+<i>685</i>&nbsp;
+<i>686</i>&nbsp;    public Queue&lt;Vector2&gt; getTrailPath() {
+<b class="nc"><i>687</i>&nbsp;        return this.trailPath;</b>
+<i>688</i>&nbsp;    }
+<i>689</i>&nbsp;
+<i>690</i>&nbsp;    public Queue&lt;Vector2&gt; getPath() {
+<b class="nc"><i>691</i>&nbsp;        return this.path;</b>
+<i>692</i>&nbsp;    }
+<i>693</i>&nbsp;
+<i>694</i>&nbsp;    private ArrayList&lt;WaterParticle&gt; getSpray() {
+<b class="nc"><i>695</i>&nbsp;        return this.spray;</b>
+<i>696</i>&nbsp;    }
+<i>697</i>&nbsp;
+<i>698</i>&nbsp;    public boolean getMoving() {
+<b class="nc"><i>699</i>&nbsp;        return this.moving;</b>
+<i>700</i>&nbsp;    }
+<i>701</i>&nbsp;
+<i>702</i>&nbsp;    public float getRange() {
+<b class="nc"><i>703</i>&nbsp;        return this.type.getRange();</b>
+<i>704</i>&nbsp;    }
+<i>705</i>&nbsp;
+<i>706</i>&nbsp;    public float getSpeed() {
+<b class="fc"><i>707</i>&nbsp;        return speed;</b>
+<i>708</i>&nbsp;    }
+<i>709</i>&nbsp;
+<i>710</i>&nbsp;    public float getAP() {
+<b class="fc"><i>711</i>&nbsp;        return AP;</b>
+<i>712</i>&nbsp;    }
+<i>713</i>&nbsp;
+<i>714</i>&nbsp;    public void setAP(float AP) {
+<b class="fc"><i>715</i>&nbsp;        this.AP = AP;</b>
+<b class="fc"><i>716</i>&nbsp;    }</b>
+<i>717</i>&nbsp;
+<i>718</i>&nbsp;    public void setSpeed(float speed) {
+<b class="fc"><i>719</i>&nbsp;        this.speed = speed;</b>
+<b class="fc"><i>720</i>&nbsp;    }</b>
+<i>721</i>&nbsp;
+<i>722</i>&nbsp;    public void setImmune(boolean immunity) {
+<b class="fc"><i>723</i>&nbsp;        immune = immunity;</b>
+<b class="fc"><i>724</i>&nbsp;    }</b>
+<i>725</i>&nbsp;
+<i>726</i>&nbsp;    public void setInitialHP(float initialHP) {
+<b class="nc"><i>727</i>&nbsp;        this.initialHP = initialHP;</b>
+<b class="nc"><i>728</i>&nbsp;    }</b>
+<i>729</i>&nbsp;
+<i>730</i>&nbsp;    public float getInitialHP() {
+<b class="nc"><i>731</i>&nbsp;        return initialHP;</b>
+<i>732</i>&nbsp;    }
+<i>733</i>&nbsp;
+<i>734</i>&nbsp;    public void setInitialReserve(float initialReserve) {
+<b class="nc"><i>735</i>&nbsp;        this.initialReserve = initialReserve;</b>
+<b class="nc"><i>736</i>&nbsp;    }</b>
+<i>737</i>&nbsp;
+<i>738</i>&nbsp;    public float getInitialReserve() {
+<b class="nc"><i>739</i>&nbsp;        return initialReserve;</b>
+<i>740</i>&nbsp;    }
+<i>741</i>&nbsp;
+<i>742</i>&nbsp;    public boolean isImmune() {
+<b class="fc"><i>743</i>&nbsp;        return this.immune;</b>
+<i>744</i>&nbsp;    }
+<i>745</i>&nbsp;}
+<i>746</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-27 15:22</div>
+</div>
+</body>
+</html>
