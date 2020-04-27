@@ -823,7 +823,8 @@ public class GameScreen implements Screen {
      * @param type Type of truck to be spawned (Ocean, Speed)
      */
     private void spawn(FireTruckType type) {
-        SoundFX.sfx_truck_spawn.play();
+        if(SoundFX.music_enabled)
+            SoundFX.sfx_truck_spawn.play();
         station.spawn(new FireTruck(new Vector2(6, 8), type, (TiledMapTileLayer) mapLayers.get("collisions")));
         gameState.addFireTruck();
     }
@@ -835,7 +836,8 @@ public class GameScreen implements Screen {
      * @param spawnCoords Co-ordinates to spawn the truck at.
      */
     private void spawn(FireTruckType type, Vector2 spawnCoords) {
-        SoundFX.sfx_truck_spawn.play();
+        if(SoundFX.music_enabled)
+            SoundFX.sfx_truck_spawn.play();
         station.spawn(new FireTruck(spawnCoords, type, (TiledMapTileLayer) mapLayers.get("collisions")));
         gameState.addFireTruck();
     }
