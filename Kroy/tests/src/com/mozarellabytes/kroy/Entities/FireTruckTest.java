@@ -43,11 +43,16 @@ public class FireTruckTest {
 
     @Test
     public void differentSpeedTest() {
-        assertNotEquals(Sapphire.getSpeed(), Ruby.getSpeed());
+        assertTrue(allDifferentValues(
+                Ruby.getSpeed(),
+                Sapphire.getSpeed(),
+                Amethyst.getSpeed(),
+                Emerald.getSpeed()
+        ));
     }
 
     @Test
-    public void speedTruckShouldMove3TilesIn25FramesTest() {
+    public void rubyTruckShouldMove3TilesIn25FramesTest() {
         FireTruck fireTruck = new FireTruck(new Vector2(10,10), Ruby, collisionsMock);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,10);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,11);
@@ -69,7 +74,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void oceanTruckShouldNotMove3TilesIn25FramesTest() {
+    public void sapphireTruckShouldNotMove3TilesIn25FramesTest() {
         FireTruck fireTruck = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,10);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,11);
@@ -91,7 +96,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void oceanTruckShouldMove3TilesIn50FramesTest() {
+    public void sapphireTruckShouldMove3TilesIn50FramesTest() {
         FireTruck fireTruck = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,10);
         Mockito.doReturn(true).when(gameScreenMock).isRoad(10,11);
@@ -108,6 +113,54 @@ public class FireTruckTest {
         for (int i=0; i<50; i++) {
             fireTruck.move();
         }
+        Vector2 expectedPosition = new Vector2(11, 11);
+        assertEquals(expectedPosition, fireTruck.getPosition());
+    }
+
+    @Test
+    public void amethystTruckShouldMove3TilesIn60FramesTest() {
+        FireTruck fireTruck = new FireTruck(new Vector2(10,10), Amethyst, collisionsMock);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(10,10);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(10,11);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(11,11);
+
+        Mockito.when(collisionsMock.getCell(10, 10).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+        Mockito.when(collisionsMock.getCell(10, 11).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+        Mockito.when(collisionsMock.getCell(11, 11).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+
+        fireTruck.setMoving(true);
+        fireTruck.addTileToPath(new Vector2(10,10));
+        fireTruck.addTileToPath(new Vector2(10,11));
+        fireTruck.addTileToPath(new Vector2(11,11));
+
+        for (int i=0; i<60; i++) {
+            fireTruck.move();
+        }
+
+        Vector2 expectedPosition = new Vector2(11, 11);
+        assertEquals(expectedPosition, fireTruck.getPosition());
+    }
+
+    @Test
+    public void emeraldTruckShouldMove3TilesIn25FramesTest() {
+        FireTruck fireTruck = new FireTruck(new Vector2(10,10), Emerald, collisionsMock);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(10,10);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(10,11);
+        Mockito.doReturn(true).when(gameScreenMock).isRoad(11,11);
+
+        Mockito.when(collisionsMock.getCell(10, 10).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+        Mockito.when(collisionsMock.getCell(10, 11).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+        Mockito.when(collisionsMock.getCell(11, 11).getTile().getProperties().get("road").equals("true")).thenReturn(true);
+
+        fireTruck.setMoving(true);
+        fireTruck.addTileToPath(new Vector2(10,10));
+        fireTruck.addTileToPath(new Vector2(10,11));
+        fireTruck.addTileToPath(new Vector2(11,11));
+
+        for (int i=0; i<25; i++) {
+            fireTruck.move();
+        }
+
         Vector2 expectedPosition = new Vector2(11, 11);
         assertEquals(expectedPosition, fireTruck.getPosition());
     }
