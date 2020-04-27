@@ -110,8 +110,9 @@ public class MenuInputHandler implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
-
-        if (menu.isDifficultySelect()) {
+        if (menu.getSoundButton().contains(position.x, position.y)) {
+            menu.changeSound();
+        } else if (menu.isDifficultySelect()) {
             if (menu.getEasyButton().contains(position.x, position.y)) {
                 menu.toGame(1);
             } else if (menu.getMediumButton().contains(position.x, position.y)) {
@@ -125,8 +126,6 @@ public class MenuInputHandler implements InputProcessor {
             }
         } else if (menu.getControlsButton().contains(position.x, position.y)) {
             menu.toControlScreen();
-        } else if (menu.getSoundButton().contains(position.x, position.y)) {
-            menu.changeSound();
         } else if (menu.getLoadButton().contains(position.x, position.y)) {
             menu.toLoadScreen();
         } else if (menu.getStartButton().contains(position.x, position.y)) {

@@ -329,12 +329,12 @@ public class MenuScreen implements Screen {
             game.batch.draw(currentStartTexture, startButton.x, startButton.y, startButton.width, startButton.height);
             game.batch.draw(currentControlsTexture, controlsButton.x, controlsButton.y, controlsButton.width, controlsButton.height);
             game.batch.draw(currentLoadTexture, loadButton.x, loadButton.y, loadButton.width, loadButton.height);
-            game.batch.draw(currentSoundTexture, soundButton.x, soundButton.y, soundButton.width, soundButton.height);
         } else {
             game.batch.draw(currentEasyTexture, easyButton.x, easyButton.y, easyButton.width, easyButton.height);
             game.batch.draw(currentMediumTexture, mediumButton.x, mediumButton.y, mediumButton.width, mediumButton.height);
             game.batch.draw(currentHardTexture, hardButton.x, hardButton.y, hardButton.width, hardButton.height);
         }
+        game.batch.draw(currentSoundTexture, soundButton.x, soundButton.y, soundButton.width, soundButton.height);
 
         game.batch.end();
     }
