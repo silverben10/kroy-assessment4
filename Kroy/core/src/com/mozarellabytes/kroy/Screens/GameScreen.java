@@ -395,6 +395,8 @@ public class GameScreen implements Screen {
             }
         }
 
+        explosions.removeAll(explosionsToRemove);
+
         mapBatch.end();
 
         shapeMapRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -587,19 +589,12 @@ public class GameScreen implements Screen {
             }
         }
 
+        //#Assessment4
         if (station.getHP() <= 0) {
-
-            mapBatch.begin();
-            explosions.add(new Explosion(12, 10, (int) station.getPosition().x, (int) station.getPosition().y, 0.1f));
-            mapBatch.end();
             if (!(gameState.isStationDestroyed())) {
+                explosions.add(new Explosion(12, 10, (int) station.getPosition().x - 3, (int) station.getPosition().y - 4, 0.1f));
                 gameState.setStationDestroyed();
-
-                if (!(gameState.isStationDestroyed())) {
-                    gameState.setStationDestroyed();
-
-                    deadEntities.add(station.getDestroyedStation());
-                }
+                deadEntities.add(station.getDestroyedStation());
                 patrols.remove(PatrolType.Station);
             }
         }
