@@ -82,16 +82,15 @@ public class MenuInputHandler implements InputProcessor {
                 menu.clickedSoundButton();
             } else if (menu.getLoadButton().contains(position.x, position.y)) {
                 menu.clickedLoadButton();
-            } else {
-                if (menu.getEasyButton().contains(position.x, position.y)) {
-                    menu.clickedEasyButton();
-                } else if (menu.getMediumButton().contains(position.x, position.y)) {
-                    menu.clickedMediumButton();
-                } else if (menu.getHardButton().contains(position.x, position.y)) {
-                    menu.clickedHardButton();
-                }
             }
-
+        } else {
+            if (menu.getEasyButton().contains(position.x, position.y)) {
+                menu.clickedEasyButton();
+            } else if (menu.getMediumButton().contains(position.x, position.y)) {
+                menu.clickedMediumButton();
+            } else if (menu.getHardButton().contains(position.x, position.y)) {
+                menu.clickedHardButton();
+            }
         }
         return true;
     }
@@ -119,6 +118,10 @@ public class MenuInputHandler implements InputProcessor {
                 menu.toGame(2);
             } else if (menu.getHardButton().contains(position.x, position.y)) {
                 menu.toGame(4);
+            } else{
+                menu.idleEasyButton();
+                menu.idleMediumButton();
+                menu.idleHardButton();
             }
         } else if (menu.getControlsButton().contains(position.x, position.y)) {
             menu.toControlScreen();
@@ -133,15 +136,12 @@ public class MenuInputHandler implements InputProcessor {
         } else if (menu.getSoundButton().contains(position.x, position.y)) {
             menu.changeSound();
         }
-
-        menu.idleStartButton();
-        menu.idleControlsButton();
-        menu.idleSoundButton();
-        menu.idleEasyButton();
-        menu.idleMediumButton();
-        menu.idleHardButton();
-        menu.idleLoadButton();
-
+        else {
+            menu.idleStartButton();
+            menu.idleControlsButton();
+            menu.idleSoundButton();
+            menu.idleLoadButton();
+        }
         return true;
 }
 

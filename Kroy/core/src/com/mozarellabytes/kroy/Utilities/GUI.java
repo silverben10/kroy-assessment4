@@ -143,9 +143,9 @@ public class GUI {
         currentSaveTexture = saveButtonIdle;
 
         if (SoundFX.music_enabled) {
-            currentSoundTexture = soundOffIdleTexture;
-        } else {
             currentSoundTexture = soundOnIdleTexture;
+        } else {
+            currentSoundTexture = soundOffIdleTexture;
         }
 
         homeButton = new Rectangle(Gdx.graphics.getWidth() - 33, Gdx.graphics.getHeight() - 33, 30, 30);
@@ -344,9 +344,9 @@ public class GUI {
      * soundOnClickedTexture while the soundButton is being clicked on */
     public void clickedSoundButton() {
         if (SoundFX.music_enabled){
-            currentSoundTexture = soundOffClickedTexture;
-        } else {
             currentSoundTexture = soundOnClickedTexture;
+        } else {
+            currentSoundTexture = soundOffClickedTexture;
         }
     }
 
@@ -397,9 +397,9 @@ public class GUI {
     /** Sets the soundButton texture that is rendered to the screen */
     public void idleSoundButton() {
         if (SoundFX.music_enabled){
-            currentSoundTexture = soundOffIdleTexture;
-        } else {
             currentSoundTexture = soundOnIdleTexture;
+        } else {
+            currentSoundTexture = soundOffIdleTexture;
         }
     }
 
@@ -410,10 +410,10 @@ public class GUI {
      * is pressed */
     public void changeSound() {
         if (SoundFX.music_enabled){
-            currentSoundTexture = soundOnIdleTexture;
+            currentSoundTexture = soundOffIdleTexture;
             SoundFX.stopMusic();
         } else {
-            currentSoundTexture = soundOffIdleTexture;
+            currentSoundTexture = soundOnIdleTexture;
             SoundFX.playGameMusic();
         }
     }

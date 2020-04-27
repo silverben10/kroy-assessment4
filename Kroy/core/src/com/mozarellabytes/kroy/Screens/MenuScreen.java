@@ -245,9 +245,9 @@ public class MenuScreen implements Screen {
         if (SoundFX.music_enabled) {
             SoundFX.sfx_menu.setLooping(true);
             SoundFX.sfx_menu.play();
-            currentSoundTexture = soundOffIdleTexture;
-        } else {
             currentSoundTexture = soundOnIdleTexture;
+        } else {
+            currentSoundTexture = soundOffIdleTexture;
         }
 
         currentStartTexture = startIdleTexture;
@@ -392,6 +392,7 @@ public class MenuScreen implements Screen {
      * @param difficulty An integer representing the games difficulty setting
      */
     public void toGame(int difficulty) {
+        SoundFX.stopMusic();
         game.setScreen(new GameScreen(game, 0, difficulty));
     }
 
@@ -461,9 +462,9 @@ public class MenuScreen implements Screen {
      */
     public void clickedSoundButton() {
         if (SoundFX.music_enabled) {
-            currentSoundTexture = soundOffClickedTexture;
-        } else {
             currentSoundTexture = soundOnClickedTexture;
+        } else {
+            currentSoundTexture = soundOffClickedTexture;
         }
     }
 
@@ -481,10 +482,10 @@ public class MenuScreen implements Screen {
      */
     public void changeSound() {
         if (SoundFX.music_enabled) {
-            currentSoundTexture = soundOnIdleTexture;
+            currentSoundTexture = soundOffIdleTexture;
             SoundFX.stopMusic();
         } else {
-            currentSoundTexture = soundOffIdleTexture;
+            currentSoundTexture = soundOnIdleTexture;
             SoundFX.playMenuMusic();
         }
     }
@@ -530,9 +531,9 @@ public class MenuScreen implements Screen {
      */
     public void idleSoundButton() {
         if (SoundFX.music_enabled) {
-            currentSoundTexture = soundOffIdleTexture;
-        } else {
             currentSoundTexture = soundOnIdleTexture;
+        } else {
+            currentSoundTexture = soundOffIdleTexture;
         }
     }
 
