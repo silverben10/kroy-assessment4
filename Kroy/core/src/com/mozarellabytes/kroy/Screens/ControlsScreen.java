@@ -139,6 +139,8 @@ public class ControlsScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
+        SoundFX.stopTruckAttack();
+
         drawBackgroundImage();
         drawFilledBackgroundBox();
 

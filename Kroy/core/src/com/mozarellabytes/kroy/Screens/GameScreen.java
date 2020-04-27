@@ -811,7 +811,6 @@ public class GameScreen implements Screen {
      */
     public void doDanceOff(FireTruck firetruck, Patrol et) {
         if (SoundFX.music_enabled) {
-            SoundFX.stopTruckAttack();
             SoundFX.stopMusic();
             SoundFX.playDanceoffMusic();
         }

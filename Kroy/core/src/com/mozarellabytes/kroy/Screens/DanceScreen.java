@@ -67,6 +67,7 @@ public class DanceScreen implements Screen, BeatListener {
 
     public DanceScreen(Kroy game, Screen previousScreen, FireTruck firetruck, Patrol patrol) {
         this.game = game;
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getDisplayMode().width, Gdx.graphics.getDisplayMode().height);
         this.previousScreen = previousScreen;
@@ -126,6 +127,8 @@ public class DanceScreen implements Screen, BeatListener {
     @Override
     public void render(float delta)
     {
+
+        SoundFX.stopTruckAttack();
 
         danceMan.update(delta);
 
