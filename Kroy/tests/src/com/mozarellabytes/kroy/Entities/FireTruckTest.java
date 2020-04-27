@@ -14,6 +14,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.mozarellabytes.kroy.Entities.FireTruckType.*;
 import static org.junit.Assert.*;
 
@@ -29,6 +34,12 @@ public class FireTruckTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    private boolean allDifferentValues(Object... args) {
+        Set<Object> set = new HashSet<Object>(Arrays.asList(args));
+
+        return set.size() == args.length;
+    }
 
     @Test
     public void differentSpeedTest() {
@@ -103,12 +114,41 @@ public class FireTruckTest {
 
     @Test
     public void differentMaxVolumeTest() {
-        assertNotEquals(Sapphire.getMaxReserve(), Ruby.getMaxReserve());
+        assertTrue(allDifferentValues(
+                Ruby.getMaxReserve(),
+                Sapphire.getMaxReserve(),
+                Amethyst.getMaxReserve(),
+                Emerald.getMaxReserve()
+        ));
     }
 
     @Test
     public void differentAPTest() {
-        assertNotEquals(Sapphire.getAP(), Ruby.getAP());
+        assertTrue(allDifferentValues(
+                Ruby.getAP(),
+                Sapphire.getAP(),
+                Amethyst.getAP(),
+                Emerald.getAP()
+        ));
+    }
+
+    public void differentRangeTest() {
+        assertTrue(allDifferentValues(
+                Ruby.getRange(),
+                Sapphire.getRange(),
+                Amethyst.getRange(),
+                Emerald.getRange()
+        ));
+    }
+
+    @Test
+    public void differentMaxHPTest() {
+        assertTrue(allDifferentValues(
+                Ruby.getMaxHP(),
+                Sapphire.getMaxHP(),
+                Amethyst.getMaxHP(),
+                Emerald.getMaxHP()
+        ));
     }
 
     @Test
@@ -144,11 +184,6 @@ public class FireTruckTest {
     }
 
     @Test
-    public void differentMaxHPTest() {
-        assertNotEquals(Ruby.getMaxHP(), Sapphire.getMaxHP());
-    }
-
-    @Test
     public void checkTrucksRepairToDifferentLevels() {
         FireTruck fireTruck1 = new FireTruck(new Vector2(9,10), Ruby, collisionsMock);
         FireTruck fireTruck2 = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
@@ -170,11 +205,6 @@ public class FireTruckTest {
 
         assertTrue(checkHealth0IsSame && checkOceanTruckIsFullyRepaired && checkSpeedTruckIsNotFullyRepaired);
 
-    }
-
-    @Test
-    public void differentRangeTest() {
-        assertNotEquals(Sapphire.getRange(), Ruby.getRange());
     }
 
     @Test
