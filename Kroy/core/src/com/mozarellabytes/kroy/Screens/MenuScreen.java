@@ -392,7 +392,7 @@ public class MenuScreen implements Screen {
      * @param difficulty An integer representing the games difficulty setting
      */
     public void toGame(int difficulty) {
-        SoundFX.stopMusic();
+        SoundFX.sfx_menu.stop();
         game.setScreen(new GameScreen(game, 0, difficulty));
     }
 
