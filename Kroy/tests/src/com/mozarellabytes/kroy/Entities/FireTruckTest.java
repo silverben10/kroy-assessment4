@@ -257,11 +257,6 @@ public class FireTruckTest {
             fireStation.restoreTrucks();
         }
 
-        System.out.println(emeraldTruck.getHP());
-        System.out.println(sapphireTruck.getHP());
-        System.out.println(rubyTruck.getHP());
-        System.out.println(amethystTruck.getHP());
-
         assertTrue(
                 emeraldTruck.getHP() < sapphireTruck.getHP() &&
                         sapphireTruck.getHP() < rubyTruck.getHP() &&

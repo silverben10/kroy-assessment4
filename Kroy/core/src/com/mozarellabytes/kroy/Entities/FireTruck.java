@@ -257,8 +257,6 @@ public class FireTruck extends Sprite {
      */
     private boolean isValidDraw(Vector2 coordinate) {
         if (coordinate.y < 29 && coordinate.x < 50) {
-            System.out.println("X:"+coordinate.x);
-            System.out.println("Y:"+coordinate.y);
             if (collisions.getCell(Math.round(coordinate.x), Math.round(coordinate.y)).getTile().getProperties().get("road").equals(true)) {
                 if (this.path.isEmpty()) {
                     return this.getPosition().equals(coordinate);
