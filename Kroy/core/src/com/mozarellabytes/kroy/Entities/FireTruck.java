@@ -675,6 +675,10 @@ public class FireTruck extends Sprite {
         immune = immunity;
     }
 
+    public boolean isImmune() {
+        return this.immune;
+    }
+
     public void setInitialHP(float initialHP) {
         this.initialHP = initialHP;
     }
