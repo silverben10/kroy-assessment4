@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    67.1%
+    69.4%
   </span>
   <span class="absValue">
-    (57/ 85)
+    (59/ 85)
   </span>
 </td>
 </tr>
@@ -142,8 +142,8 @@
 <b class="fc"><i>68</i>&nbsp;        this.w=5;</b>
 <b class="fc"><i>69</i>&nbsp;        this.h=3;</b>
 <b class="fc"><i>70</i>&nbsp;        this.spawnTile = new Vector2(x+3, y);</b>
-<b class="fc"><i>71</i>&nbsp;        this.bayTile1 = new Vector2(x+1, y);</b>
-<b class="fc"><i>72</i>&nbsp;        this.bayTile2 = new Vector2(x+2, y);</b>
+<b class="fc"><i>71</i>&nbsp;        this.bayTile1 = new Vector2(x+1,y);</b>
+<b class="fc"><i>72</i>&nbsp;        this.bayTile2 = new Vector2(x+2,y);</b>
 <b class="fc"><i>73</i>&nbsp;        this.texture = new Texture(Gdx.files.internal(&quot;sprites/station/station.png&quot;));</b>
 <b class="fc"><i>74</i>&nbsp;        this.deadTexture = new Texture(Gdx.files.internal(&quot;sprites/fortress/fortress_revs_dead.png&quot;)); // change me pls</b>
 <b class="fc"><i>75</i>&nbsp;        this.trucks = new ArrayList&lt;FireTruck&gt;();</b>
@@ -164,7 +164,7 @@
 <i>90</i>&nbsp;     */
 <i>91</i>&nbsp;    public void spawn(FireTruck truck) {
 <b class="fc"><i>92</i>&nbsp;        if (SoundFX.music_enabled) {</b>
-<b class="nc"><i>93</i>&nbsp;            SoundFX.sfx_truck_spawn.play();</b>
+<b class="fc"><i>93</i>&nbsp;            SoundFX.sfx_truck_spawn.play();</b>
 <i>94</i>&nbsp;        }
 <b class="fc"><i>95</i>&nbsp;        this.trucks.add(truck);</b>
 <b class="fc"><i>96</i>&nbsp;    }</b>
@@ -176,174 +176,180 @@
 <b class="nc"><i>102</i>&nbsp;        this.patrols.add(patrol);</b>
 <b class="nc"><i>103</i>&nbsp;    }</b>
 <i>104</i>&nbsp;
-<i>105</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
-<b class="nc"><i>106</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.26f, this.getPosition().y + 2.9f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
-<b class="nc"><i>107</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.38f, this.getPosition().y + 3f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
-<b class="nc"><i>108</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.38f, this.getPosition().y + 3f, 0.36f, this.getHP() / 100 * 1f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
-<b class="nc"><i>109</i>&nbsp;    }</b>
-<i>110</i>&nbsp;
-<i>111</i>&nbsp;    /**
-<i>112</i>&nbsp;     * Calls the repair and refill methods. When a truck is within the station
-<i>113</i>&nbsp;     * (the trucks position is the same as one of the station&#39;s bay tiles) the
-<i>114</i>&nbsp;     * truck will repair and refill at the same time.
-<i>115</i>&nbsp;     */
-<i>116</i>&nbsp;    public void restoreTrucks() {
-<b class="fc"><i>117</i>&nbsp;        for (FireTruck truck : this.trucks) {</b>
-<b class="fc"><i>118</i>&nbsp;            if (this.HP &gt; 0) {</b>
-<b class="fc"><i>119</i>&nbsp;                if (truck.getPosition().equals(this.bayTile1) || truck.getPosition().equals(this.bayTile2)) {</b>
-<b class="fc"><i>120</i>&nbsp;                    repair(truck);</b>
-<b class="fc"><i>121</i>&nbsp;                    refill(truck);</b>
-<i>122</i>&nbsp;                }
-<i>123</i>&nbsp;             }
-<b class="fc"><i>124</i>&nbsp;        }</b>
-<b class="fc"><i>125</i>&nbsp;    }</b>
-<i>126</i>&nbsp;
-<i>127</i>&nbsp;
-<i>128</i>&nbsp;    /**
-<i>129</i>&nbsp;     * Increments the truck&#39;s HP until the truck&#39;s HP equals the truck&#39;s maximum
-<i>130</i>&nbsp;     * HP
-<i>131</i>&nbsp;     * @param truck truck that is being refilled
-<i>132</i>&nbsp;     */
-<i>133</i>&nbsp;    private void refill(FireTruck truck) {
-<b class="fc"><i>134</i>&nbsp;        if (truck.getReserve() &lt; truck.type.getMaxReserve()) {</b>
-<b class="fc"><i>135</i>&nbsp;            truck.refill(Math.min(0.6f, truck.getType().getMaxReserve() - truck.getReserve()));</b>
-<i>136</i>&nbsp;        }
-<b class="fc"><i>137</i>&nbsp;    }</b>
-<i>138</i>&nbsp;
-<i>139</i>&nbsp;    /**
-<i>140</i>&nbsp;     * Increments the truck&#39;s reserve until the truck&#39;s reserve equals the
-<i>141</i>&nbsp;     * truck&#39;s maximum reserve
-<i>142</i>&nbsp;     * @param truck truck that is being repaired
-<i>143</i>&nbsp;     */
-<i>144</i>&nbsp;    private void repair(FireTruck truck) {
-<b class="fc"><i>145</i>&nbsp;        if (truck.getHP() &lt; truck.type.getMaxHP()) {</b>
-<b class="fc"><i>146</i>&nbsp;            truck.repair(Math.min(0.4f, truck.getType().getMaxHP() - truck.getHP()));</b>
-<i>147</i>&nbsp;        }
-<b class="fc"><i>148</i>&nbsp;    }</b>
-<i>149</i>&nbsp;
-<i>150</i>&nbsp;    /**
-<i>151</i>&nbsp;     * Called when a truck&#39;s HP reaches 0, it removes the truck from the
-<i>152</i>&nbsp;     * array list of active trucks and the game screen.
-<i>153</i>&nbsp;     *
-<i>154</i>&nbsp;     * @param truck truck that is being removed from the arrayList of active trucks
-<i>155</i>&nbsp;     */
-<i>156</i>&nbsp;    public void destroyTruck(FireTruck truck) {
-<b class="nc"><i>157</i>&nbsp;        this.trucks.remove(truck);</b>
-<b class="nc"><i>158</i>&nbsp;    }</b>
-<i>159</i>&nbsp;
-<i>160</i>&nbsp;    public void destroyPatrol(Patrol patrol) {
-<b class="nc"><i>161</i>&nbsp;        this.patrols.remove(patrol);</b>
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Draws the bars above the fire station
+<i>107</i>&nbsp;     * @param shapeMapRenderer the shapemaprenderer that will render the bars
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
+<b class="nc"><i>110</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.26f, this.getPosition().y + 2.9f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
+<b class="nc"><i>111</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.38f, this.getPosition().y + 3f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
+<b class="nc"><i>112</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 2.38f, this.getPosition().y + 3f, 0.36f, this.getHP() / 100 * 1f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
+<b class="nc"><i>113</i>&nbsp;    }</b>
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    /**
+<i>116</i>&nbsp;     * Calls the repair and refill methods. When a truck is within the station
+<i>117</i>&nbsp;     * (the trucks position is the same as one of the station&#39;s bay tiles) the
+<i>118</i>&nbsp;     * truck will repair and refill at the same time.
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public void restoreTrucks() {
+<b class="fc"><i>121</i>&nbsp;        for (FireTruck truck : this.trucks) {</b>
+<b class="fc"><i>122</i>&nbsp;            if (this.HP &gt; 0) {</b>
+<b class="fc"><i>123</i>&nbsp;                if (truck.getPosition().equals(this.bayTile1) || truck.getPosition().equals(this.bayTile2)) {</b>
+<b class="fc"><i>124</i>&nbsp;                    repair(truck);</b>
+<b class="fc"><i>125</i>&nbsp;                    refill(truck);</b>
+<i>126</i>&nbsp;                }
+<i>127</i>&nbsp;             }
+<b class="fc"><i>128</i>&nbsp;        }</b>
+<b class="fc"><i>129</i>&nbsp;    }</b>
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * Increments the truck&#39;s HP until the truck&#39;s HP equals the truck&#39;s maximum
+<i>134</i>&nbsp;     * HP
+<i>135</i>&nbsp;     * @param truck truck that is being refilled
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    private void refill(FireTruck truck) {
+<b class="fc"><i>138</i>&nbsp;        if (truck.getReserve() &lt; truck.type.getMaxReserve()) {</b>
+<b class="fc"><i>139</i>&nbsp;            truck.refill(Math.min(0.6f, truck.getType().getMaxReserve() - truck.getReserve()));</b>
+<i>140</i>&nbsp;        }
+<b class="fc"><i>141</i>&nbsp;    }</b>
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    /**
+<i>144</i>&nbsp;     * Increments the truck&#39;s reserve until the truck&#39;s reserve equals the
+<i>145</i>&nbsp;     * truck&#39;s maximum reserve
+<i>146</i>&nbsp;     * @param truck truck that is being repaired
+<i>147</i>&nbsp;     */
+<i>148</i>&nbsp;    private void repair(FireTruck truck) {
+<b class="fc"><i>149</i>&nbsp;        if (truck.getHP() &lt; truck.type.getMaxHP()) {</b>
+<b class="fc"><i>150</i>&nbsp;            truck.repair(Math.min(0.4f, truck.getType().getMaxHP() - truck.getHP()));</b>
+<i>151</i>&nbsp;        }
+<b class="fc"><i>152</i>&nbsp;    }</b>
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;    /**
+<i>155</i>&nbsp;     * Called when a truck&#39;s HP reaches 0, it removes the truck from the
+<i>156</i>&nbsp;     * array list of active trucks and the game screen.
+<i>157</i>&nbsp;     *
+<i>158</i>&nbsp;     * @param truck truck that is being removed from the arrayList of active trucks
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    public void destroyTruck(FireTruck truck) {
+<b class="nc"><i>161</i>&nbsp;        this.trucks.remove(truck);</b>
 <b class="nc"><i>162</i>&nbsp;    }</b>
 <i>163</i>&nbsp;
-<i>164</i>&nbsp;
-<i>165</i>&nbsp;    public void damage(float HP){
-<b class="nc"><i>166</i>&nbsp;        this.HP -= HP;</b>
-<b class="nc"><i>167</i>&nbsp;    }</b>
+<i>164</i>&nbsp;    public void destroyPatrol(Patrol patrol) {
+<b class="nc"><i>165</i>&nbsp;        this.patrols.remove(patrol);</b>
+<b class="nc"><i>166</i>&nbsp;    }</b>
+<i>167</i>&nbsp;
 <i>168</i>&nbsp;
-<i>169</i>&nbsp;    public float getHP() {
-<b class="nc"><i>170</i>&nbsp;        return this.HP;</b>
-<i>171</i>&nbsp;    }
+<i>169</i>&nbsp;    public void damage(float HP){
+<b class="nc"><i>170</i>&nbsp;        this.HP -= HP;</b>
+<b class="nc"><i>171</i>&nbsp;    }</b>
 <i>172</i>&nbsp;
-<i>173</i>&nbsp;    public void setHP(float hp) {
-<b class="nc"><i>174</i>&nbsp;        this.HP = hp;</b>
-<b class="nc"><i>175</i>&nbsp;    }</b>
-<i>176</i>&nbsp;    /**
-<i>177</i>&nbsp;     * Checks that no more than one truck occupies a tile at a time by checking trucks
-<i>178</i>&nbsp;     * are not moving towards each other and that a moving truck is not going to go onto
-<i>179</i>&nbsp;     * the same tile as a stationary truck. If two trucks are going to collide reset
-<i>180</i>&nbsp;     * trucks is called.
-<i>181</i>&nbsp;     */
-<i>182</i>&nbsp;    public void checkForCollisions() {
-<b class="fc"><i>183</i>&nbsp;        for (FireTruck truck : trucks) {</b>
-<b class="fc"><i>184</i>&nbsp;            for (FireTruck truck2 : trucks) {</b>
-<b class="fc"><i>185</i>&nbsp;                if (!(truck.equals(truck2)) &amp;&amp; truck.type != FireTruckType.Mirror &amp;&amp; truck2.type != FireTruckType.Mirror) {</b>
-<b class="fc"><i>186</i>&nbsp;                    if (!truck.trailPath.isEmpty() &amp;&amp; !truck.getPosition().equals(truck2.getPosition())) {</b>
-<b class="fc"><i>187</i>&nbsp;                        Vector2 truck2tile = new Vector2(Math.round(truck2.getPosition().x), Math.round(truck2.getPosition().y));</b>
-<b class="fc"><i>188</i>&nbsp;                        Vector2 truckstile = new Vector2((float)Math.floor(truck2.getPosition().x),(float) Math.floor(truck2.getPosition().y));</b>
-<b class="fc"><i>189</i>&nbsp;                        if (!truck2.trailPath.isEmpty() &amp;&amp; truck.trailPath.first().equals(truck2.trailPath.first())) {</b>
-<b class="nc"><i>190</i>&nbsp;                            truck.setCollision();</b>
-<b class="nc"><i>191</i>&nbsp;                            truck2.setCollision();</b>
-<b class="nc"><i>192</i>&nbsp;                            resetTruck(truck, truck2);</b>
-<b class="fc"><i>193</i>&nbsp;                        } else if (truck.trailPath.first().equals(truck2tile)) {</b>
-<b class="fc"><i>194</i>&nbsp;                            resetTruck(truck, truck2);</b>
-<b class="fc"><i>195</i>&nbsp;                            truck.trailPath.clear();</b>
-<b class="fc"><i>196</i>&nbsp;                            truck2.trailPath.clear();</b>
-<b class="fc"><i>197</i>&nbsp;                        } else if (truck.trailPath.first().equals(truckstile)) {</b>
-<b class="nc"><i>198</i>&nbsp;                            resetTruck(truck, truck2);</b>
-<i>199</i>&nbsp;                        }
-<i>200</i>&nbsp;                    }
-<i>201</i>&nbsp;                }
-<b class="fc"><i>202</i>&nbsp;            }</b>
-<i>203</i>&nbsp;            /*for (Patrol patrol : this.patrols) {
-<i>204</i>&nbsp;                Vector2 patroltile = new Vector2(Math.round(patrol.getPosition().x), Math.round(patrol.getPosition().y));
-<i>205</i>&nbsp;                Vector2 truckstile = new Vector2((float)Math.floor(truck.getPosition().x),(float) Math.floor(truck.getPosition().y));
-<i>206</i>&nbsp;                if (truckstile.equals(patroltile)) {
-<i>207</i>&nbsp;                    patrol.setAttacking(true);
-<i>208</i>&nbsp;                }
-<i>209</i>&nbsp;            }*/
-<b class="fc"><i>210</i>&nbsp;        }</b>
-<b class="fc"><i>211</i>&nbsp;    }</b>
-<i>212</i>&nbsp;
-<i>213</i>&nbsp;    /** Resets two trucks - is called when both trucks are moving towards each other
-<i>214</i>&nbsp;     * It removes their paths so they halt on the tile of the collision. It then adds
-<i>215</i>&nbsp;     * the nearest tile to their path, the trucks move to this tile so that after the
-<i>216</i>&nbsp;     * collision the trucks are positioned at the centre of adjacent tiles.
-<i>217</i>&nbsp;     *
-<i>218</i>&nbsp;     * @param truck one truck involved in the collision
-<i>219</i>&nbsp;     * @param truck2 the second truck involved in the collision
-<i>220</i>&nbsp;     */
-<i>221</i>&nbsp;    private void resetTruck(FireTruck truck, FireTruck truck2) {
-<b class="fc"><i>222</i>&nbsp;        if (SoundFX.music_enabled) {</b>
-<b class="nc"><i>223</i>&nbsp;            SoundFX.sfx_horn.play();</b>
-<i>224</i>&nbsp;        }
-<i>225</i>&nbsp;
-<b class="fc"><i>226</i>&nbsp;        Vector2 hold = truck.trailPath.first();</b>
-<i>227</i>&nbsp;
-<b class="fc"><i>228</i>&nbsp;        truck.resetPath();</b>
-<b class="fc"><i>229</i>&nbsp;        truck.addTileToPath(truck.getPosition());</b>
-<b class="fc"><i>230</i>&nbsp;        truck.addTileToPath(new Vector2 ((float)Math.floor(truck.getX()),(float)Math.floor(truck.getY())));</b>
-<i>231</i>&nbsp;
-<b class="fc"><i>232</i>&nbsp;        truck2.resetPath();</b>
-<b class="fc"><i>233</i>&nbsp;        truck2.addTileToPath(truck2.getPosition());</b>
-<b class="fc"><i>234</i>&nbsp;        truck2.addTileToPath(hold);</b>
-<b class="fc"><i>235</i>&nbsp;    }</b>
+<i>173</i>&nbsp;    public float getHP() {
+<b class="nc"><i>174</i>&nbsp;        return this.HP;</b>
+<i>175</i>&nbsp;    }
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    public void setHP(float hp) {
+<b class="nc"><i>178</i>&nbsp;        this.HP = hp;</b>
+<b class="nc"><i>179</i>&nbsp;    }</b>
+<i>180</i>&nbsp;    /**
+<i>181</i>&nbsp;     * Checks that no more than one truck occupies a tile at a time by checking trucks
+<i>182</i>&nbsp;     * are not moving towards each other and that a moving truck is not going to go onto
+<i>183</i>&nbsp;     * the same tile as a stationary truck. If two trucks are going to collide reset
+<i>184</i>&nbsp;     * trucks is called.
+<i>185</i>&nbsp;     */
+<i>186</i>&nbsp;    public void checkForCollisions() {
+<b class="fc"><i>187</i>&nbsp;        for (FireTruck truck : trucks) {</b>
+<b class="fc"><i>188</i>&nbsp;            for (FireTruck truck2 : trucks) {</b>
+<i>189</i>&nbsp;                //#Assessment 4 modified condition to allow for mirror trucks to pass through trucks and fixed a bug
+<b class="fc"><i>190</i>&nbsp;                if (!(truck.equals(truck2)) &amp;&amp; truck.type != FireTruckType.Mirror &amp;&amp; truck2.type != FireTruckType.Mirror) {</b>
+<b class="fc"><i>191</i>&nbsp;                    if (!truck.trailPath.isEmpty() &amp;&amp; !truck.getPosition().equals(truck2.getPosition())) {</b>
+<b class="fc"><i>192</i>&nbsp;                        Vector2 truck2tile = new Vector2(Math.round(truck2.getPosition().x), Math.round(truck2.getPosition().y));</b>
+<b class="fc"><i>193</i>&nbsp;                        Vector2 truckstile = new Vector2((float)Math.floor(truck2.getPosition().x),(float) Math.floor(truck2.getPosition().y));</b>
+<b class="fc"><i>194</i>&nbsp;                        if (!truck2.trailPath.isEmpty() &amp;&amp; truck.trailPath.first().equals(truck2.trailPath.first())) {</b>
+<b class="nc"><i>195</i>&nbsp;                            truck.setCollision();</b>
+<b class="nc"><i>196</i>&nbsp;                            truck2.setCollision();</b>
+<b class="nc"><i>197</i>&nbsp;                            resetTruck(truck, truck2);</b>
+<b class="fc"><i>198</i>&nbsp;                        } else if (truck.trailPath.first().equals(truck2tile)) {</b>
+<b class="fc"><i>199</i>&nbsp;                            resetTruck(truck, truck2);</b>
+<b class="fc"><i>200</i>&nbsp;                            truck.trailPath.clear();</b>
+<b class="fc"><i>201</i>&nbsp;                            truck2.trailPath.clear();</b>
+<b class="fc"><i>202</i>&nbsp;                        } else if (truck.trailPath.first().equals(truckstile)) {</b>
+<b class="nc"><i>203</i>&nbsp;                            resetTruck(truck, truck2);</b>
+<i>204</i>&nbsp;                        }
+<i>205</i>&nbsp;                    }
+<i>206</i>&nbsp;                }
+<b class="fc"><i>207</i>&nbsp;            }</b>
+<i>208</i>&nbsp;            /*for (Patrol patrol : this.patrols) {
+<i>209</i>&nbsp;                Vector2 patroltile = new Vector2(Math.round(patrol.getPosition().x), Math.round(patrol.getPosition().y));
+<i>210</i>&nbsp;                Vector2 truckstile = new Vector2((float)Math.floor(truck.getPosition().x),(float) Math.floor(truck.getPosition().y));
+<i>211</i>&nbsp;                if (truckstile.equals(patroltile)) {
+<i>212</i>&nbsp;                    patrol.setAttacking(true);
+<i>213</i>&nbsp;                }
+<i>214</i>&nbsp;            }*/
+<b class="fc"><i>215</i>&nbsp;        }</b>
+<b class="fc"><i>216</i>&nbsp;    }</b>
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;    /** Resets two trucks - is called when both trucks are moving towards each other
+<i>219</i>&nbsp;     * It removes their paths so they halt on the tile of the collision. It then adds
+<i>220</i>&nbsp;     * the nearest tile to their path, the trucks move to this tile so that after the
+<i>221</i>&nbsp;     * collision the trucks are positioned at the centre of adjacent tiles.
+<i>222</i>&nbsp;     *
+<i>223</i>&nbsp;     * @param truck one truck involved in the collision
+<i>224</i>&nbsp;     * @param truck2 the second truck involved in the collision
+<i>225</i>&nbsp;     */
+<i>226</i>&nbsp;    private void resetTruck(FireTruck truck, FireTruck truck2) {
+<b class="fc"><i>227</i>&nbsp;        if (SoundFX.music_enabled) {</b>
+<b class="fc"><i>228</i>&nbsp;            SoundFX.sfx_horn.play();</b>
+<i>229</i>&nbsp;        }
+<i>230</i>&nbsp;
+<b class="fc"><i>231</i>&nbsp;        Vector2 hold = truck.trailPath.first();</b>
+<i>232</i>&nbsp;
+<b class="fc"><i>233</i>&nbsp;        truck.resetPath();</b>
+<b class="fc"><i>234</i>&nbsp;        truck.addTileToPath(truck.getPosition());</b>
+<b class="fc"><i>235</i>&nbsp;        truck.addTileToPath(new Vector2 ((float)Math.floor(truck.getX()),(float)Math.floor(truck.getY())));</b>
 <i>236</i>&nbsp;
-<i>237</i>&nbsp;
-<i>238</i>&nbsp;    /** Draws the firetruck to the gameScreen
-<i>239</i>&nbsp;     * @param mapBatch batch being used to render to the gameScreen */
-<i>240</i>&nbsp;    public void draw(Batch mapBatch) {
-<b class="nc"><i>241</i>&nbsp;        mapBatch.draw(this.texture, this.x, this.y, 5, 3);</b>
-<b class="nc"><i>242</i>&nbsp;    }</b>
-<i>243</i>&nbsp;    public DestroyedEntity getDestroyedStation(){
-<b class="nc"><i>244</i>&nbsp;        return new DestroyedEntity(this.deadTexture, this.x, this.y, 5, 3);</b>
-<i>245</i>&nbsp;    }
-<i>246</i>&nbsp;
-<i>247</i>&nbsp;    public ArrayList&lt;FireTruck&gt; getTrucks() {
-<b class="nc"><i>248</i>&nbsp;        return this.trucks;</b>
-<i>249</i>&nbsp;    }
-<i>250</i>&nbsp;
-<i>251</i>&nbsp;    public ArrayList&lt;Patrol&gt; getPatrol() {
-<b class="nc"><i>252</i>&nbsp;        return this.patrols;</b>
-<i>253</i>&nbsp;    }
-<i>254</i>&nbsp;
-<i>255</i>&nbsp;    public FireTruck getTruck(int i) {
-<b class="fc"><i>256</i>&nbsp;        return this.trucks.get(i);</b>
-<i>257</i>&nbsp;    }
-<i>258</i>&nbsp;
-<i>259</i>&nbsp;    public Vector2 getPosition() {
-<b class="fc"><i>260</i>&nbsp;        return new Vector2(this.x,this.y);</b>
-<i>261</i>&nbsp;    }
-<i>262</i>&nbsp;
-<i>263</i>&nbsp;    /*public Patrols getPatrol(int i) {
-<i>264</i>&nbsp;        return this.patrols.get(i);
-<i>265</i>&nbsp;    }*/
-<i>266</i>&nbsp;}
+<b class="fc"><i>237</i>&nbsp;        truck2.resetPath();</b>
+<b class="fc"><i>238</i>&nbsp;        truck2.addTileToPath(truck2.getPosition());</b>
+<b class="fc"><i>239</i>&nbsp;        truck2.addTileToPath(hold);</b>
+<b class="fc"><i>240</i>&nbsp;    }</b>
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    /** Draws the firetruck to the gameScreen
+<i>244</i>&nbsp;     * @param mapBatch batch being used to render to the gameScreen */
+<i>245</i>&nbsp;    public void draw(Batch mapBatch) {
+<b class="nc"><i>246</i>&nbsp;        mapBatch.draw(this.texture, this.x, this.y, 5, 3);</b>
+<b class="nc"><i>247</i>&nbsp;    }</b>
+<i>248</i>&nbsp;    public DestroyedEntity getDestroyedStation(){
+<b class="nc"><i>249</i>&nbsp;        return new DestroyedEntity(this.deadTexture, this.x, this.y, 5, 3);</b>
+<i>250</i>&nbsp;    }
+<i>251</i>&nbsp;
+<i>252</i>&nbsp;    public ArrayList&lt;FireTruck&gt; getTrucks() {
+<b class="nc"><i>253</i>&nbsp;        return this.trucks;</b>
+<i>254</i>&nbsp;    }
+<i>255</i>&nbsp;
+<i>256</i>&nbsp;    public ArrayList&lt;Patrol&gt; getPatrol() {
+<b class="nc"><i>257</i>&nbsp;        return this.patrols;</b>
+<i>258</i>&nbsp;    }
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;    public FireTruck getTruck(int i) {
+<b class="fc"><i>261</i>&nbsp;        return this.trucks.get(i);</b>
+<i>262</i>&nbsp;    }
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;    public Vector2 getPosition() {
+<b class="fc"><i>265</i>&nbsp;        return new Vector2(this.x,this.y);</b>
+<i>266</i>&nbsp;    }
+<i>267</i>&nbsp;
+<i>268</i>&nbsp;
+<i>269</i>&nbsp;    /*public Patrols getPatrol(int i) {
+<i>270</i>&nbsp;        return this.patrols.get(i);
+<i>271</i>&nbsp;    }*/
+<i>272</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

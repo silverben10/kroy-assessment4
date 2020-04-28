@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    66.7%
+    68.9%
   </span>
   <span class="absValue">
-    (30/ 45)
+    (31/ 45)
   </span>
 </td>
 </tr>
@@ -106,154 +106,163 @@
 <i>32</i>&nbsp;    @Expose
 <i>33</i>&nbsp;    public final FortressType fortressType;
 <i>34</i>&nbsp;
-<i>35</i>&nbsp;    /** Difficulty selected by the user at the start of the game */
-<i>36</i>&nbsp;    private final int fixedGameDifficulty;
-<i>37</i>&nbsp;
-<i>38</i>&nbsp;    /**
-<i>39</i>&nbsp;     * Constructs Fortress at certain position and
-<i>40</i>&nbsp;     * of a certain type
-<i>41</i>&nbsp;     *
-<i>42</i>&nbsp;     * @param x     x coordinate of Fortress (lower left point)
-<i>43</i>&nbsp;     * @param y     y coordinate of Fortress (lower left point)
-<i>44</i>&nbsp;     * @param type  Type of Fortress to give certain stats
-<i>45</i>&nbsp;     */
-<b class="fc"><i>46</i>&nbsp;    public Fortress(float x, float y, int fixedGameDifficulty, FortressType type) {</b>
-<b class="fc"><i>47</i>&nbsp;        this.fixedGameDifficulty = fixedGameDifficulty;</b>
-<b class="fc"><i>48</i>&nbsp;        this.fortressType = type;</b>
-<b class="fc"><i>49</i>&nbsp;        this.position = new Vector2(x, y);</b>
-<b class="fc"><i>50</i>&nbsp;        this.HP = type.getMaxHP(fixedGameDifficulty);</b>
-<b class="fc"><i>51</i>&nbsp;        this.bombs = new ArrayList&lt;Bomb&gt;();</b>
-<b class="fc"><i>52</i>&nbsp;        this.area = new Rectangle(this.position.x - (float) this.fortressType.getW()/2, this.position.y - (float) this.fortressType.getH()/2,</b>
-<b class="fc"><i>53</i>&nbsp;                this.fortressType.getW(), this.fortressType.getH());</b>
-<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>35</i>&nbsp;    //#Assessment 4 implemented difficulty selection
+<i>36</i>&nbsp;    /** Difficulty selected by the user at the start of the game */
+<i>37</i>&nbsp;    private final int fixedGameDifficulty;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * Constructs Fortress at certain position and
+<i>42</i>&nbsp;     * of a certain type
+<i>43</i>&nbsp;     *
+<i>44</i>&nbsp;     * @param x     x coordinate of Fortress (lower left point)
+<i>45</i>&nbsp;     * @param y     y coordinate of Fortress (lower left point)
+<i>46</i>&nbsp;     * @param type  Type of Fortress to give certain stats
+<i>47</i>&nbsp;     */
+<b class="fc"><i>48</i>&nbsp;    public Fortress(float x, float y, int fixedGameDifficulty, FortressType type) {</b>
+<b class="fc"><i>49</i>&nbsp;        this.fixedGameDifficulty = fixedGameDifficulty;</b>
+<b class="fc"><i>50</i>&nbsp;        this.fortressType = type;</b>
+<b class="fc"><i>51</i>&nbsp;        this.position = new Vector2(x, y);</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;        //#Assessment 4 implemented difficulty selection
+<b class="fc"><i>54</i>&nbsp;        this.HP = type.getMaxHP(fixedGameDifficulty);</b>
 <i>55</i>&nbsp;
-<i>56</i>&nbsp;    /**
-<i>57</i>&nbsp;     * Checks if the truck&#39;s position is within the attack range of the fortress
-<i>58</i>&nbsp;     *
-<i>59</i>&nbsp;     * @param targetPos the truck position being checked
-<i>60</i>&nbsp;     * @return          &lt;code&gt;true&lt;/code&gt; if truck within range of fortress
-<i>61</i>&nbsp;     *                  &lt;code&gt;false&lt;/code&gt; otherwise
-<i>62</i>&nbsp;     */
-<i>63</i>&nbsp;    public boolean withinRange(Vector2 targetPos) {
-<b class="fc"><i>64</i>&nbsp;        return targetPos.dst(this.position) &lt;= fortressType.getRange();</b>
-<i>65</i>&nbsp;    }
-<i>66</i>&nbsp;
-<i>67</i>&nbsp;    /**
-<i>68</i>&nbsp;     * Generates bombs to attack the FireTruck with
-<i>69</i>&nbsp;     * @param target        FireTruck being attacked
-<i>70</i>&nbsp;     * @param randomTarget  whether the bomb hits every time or
-<i>71</i>&nbsp;     *                      there is a chance it misses
-<i>72</i>&nbsp;     */
-<i>73</i>&nbsp;    public void attack(FireTruck target, boolean randomTarget, float difficultyMultiplier) {
-<b class="fc"><i>74</i>&nbsp;        if (target.getTimeOfLastAttack() + fortressType.getDelay() &lt; System.currentTimeMillis()) {</b>
-<b class="fc"><i>75</i>&nbsp;            this.bombs.add(new Bomb(this, target, randomTarget, difficultyMultiplier*fixedGameDifficulty));</b>
-<b class="fc"><i>76</i>&nbsp;            target.setTimeOfLastAttack(System.currentTimeMillis());</b>
-<b class="fc"><i>77</i>&nbsp;            if (SoundFX.music_enabled) {</b>
-<b class="nc"><i>78</i>&nbsp;                SoundFX.sfx_fortress_attack.play();</b>
-<i>79</i>&nbsp;            }
-<i>80</i>&nbsp;        }
-<b class="fc"><i>81</i>&nbsp;    }</b>
+<b class="fc"><i>56</i>&nbsp;        this.bombs = new ArrayList&lt;Bomb&gt;();</b>
+<b class="fc"><i>57</i>&nbsp;        this.area = new Rectangle(this.position.x - (float) this.fortressType.getW()/2, this.position.y - (float) this.fortressType.getH()/2,</b>
+<b class="fc"><i>58</i>&nbsp;                this.fortressType.getW(), this.fortressType.getH());</b>
+<b class="fc"><i>59</i>&nbsp;    }</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * Checks if the truck&#39;s position is within the attack range of the fortress
+<i>63</i>&nbsp;     *
+<i>64</i>&nbsp;     * @param targetPos the truck position being checked
+<i>65</i>&nbsp;     * @return          &lt;code&gt;true&lt;/code&gt; if truck within range of fortress
+<i>66</i>&nbsp;     *                  &lt;code&gt;false&lt;/code&gt; otherwise
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    public boolean withinRange(Vector2 targetPos) {
+<b class="fc"><i>69</i>&nbsp;        return targetPos.dst(this.position) &lt;= fortressType.getRange();</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Generates bombs to attack the FireTruck with
+<i>74</i>&nbsp;     * @param target        FireTruck being attacked
+<i>75</i>&nbsp;     * @param randomTarget  whether the bomb hits every time or
+<i>76</i>&nbsp;     *                      there is a chance it misses
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    public void attack(FireTruck target, boolean randomTarget, float difficultyMultiplier) {
+<b class="fc"><i>79</i>&nbsp;        if (target.getTimeOfLastAttack() + fortressType.getDelay() &lt; System.currentTimeMillis()) {</b>
+<i>80</i>&nbsp;            //#Assessment 4 implemented difficulty selection
+<b class="fc"><i>81</i>&nbsp;            this.bombs.add(new Bomb(this, target, randomTarget, difficultyMultiplier*fixedGameDifficulty));</b>
 <i>82</i>&nbsp;
-<i>83</i>&nbsp;    /**
-<i>84</i>&nbsp;     * Updates the position of all the bombs and checks whether
-<i>85</i>&nbsp;     * they have hit their target. If they have, it should deal
-<i>86</i>&nbsp;     * damage to the truck, remove the bomb and shake the screen
-<i>87</i>&nbsp;     * @return  &lt;code&gt;true&lt;/code&gt; if bomb hits a truck
-<i>88</i>&nbsp;     *          &lt;code&gt;false&lt;/code&gt; if bomb does nt hit a true
-<i>89</i>&nbsp;     */
-<i>90</i>&nbsp;    public boolean updateBombs() {
-<b class="fc"><i>91</i>&nbsp;        for (int i = 0; i &lt; this.getBombs().size(); i++) {</b>
-<b class="fc"><i>92</i>&nbsp;            Bomb bomb = this.getBombs().get(i);</b>
-<b class="fc"><i>93</i>&nbsp;            bomb.updatePosition();</b>
-<b class="fc"><i>94</i>&nbsp;            if (bomb.checkHit()) {</b>
-<b class="fc"><i>95</i>&nbsp;                bomb.damageTruck();</b>
-<b class="fc"><i>96</i>&nbsp;                this.removeBomb(bomb);</b>
-<b class="fc"><i>97</i>&nbsp;                return true;</b>
-<b class="nc"><i>98</i>&nbsp;            } else if (bomb.hasReachedTargetTile()) {</b>
-<b class="nc"><i>99</i>&nbsp;                this.removeBomb(bomb);</b>
-<i>100</i>&nbsp;            }
-<i>101</i>&nbsp;        }
-<b class="nc"><i>102</i>&nbsp;        return false;</b>
-<i>103</i>&nbsp;    }
-<i>104</i>&nbsp;
-<i>105</i>&nbsp;    /**
-<i>106</i>&nbsp;     * Removes Bomb from bomb list. This
-<i>107</i>&nbsp;     * occurs when the bomb hits or misses
-<i>108</i>&nbsp;     *
-<i>109</i>&nbsp;     * @param bomb bomb being removed
-<i>110</i>&nbsp;     */
-<i>111</i>&nbsp;    private void removeBomb(Bomb bomb) {
-<b class="fc"><i>112</i>&nbsp;        this.bombs.remove(bomb);</b>
-<b class="fc"><i>113</i>&nbsp;    }</b>
-<i>114</i>&nbsp;
-<i>115</i>&nbsp;    /**
-<i>116</i>&nbsp;     * Draws the health bars above the Fortress
-<i>117</i>&nbsp;     *
-<i>118</i>&nbsp;     * @param shapeMapRenderer  The renderer to be drawn to
-<i>119</i>&nbsp;     */
-<i>120</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
-<b class="nc"><i>121</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.26f, this.getPosition().y + 1.4f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
-<b class="nc"><i>122</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
-<b class="nc"><i>123</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, this.getHP() / this.fortressType.getMaxHP(fixedGameDifficulty) * 1f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
-<b class="nc"><i>124</i>&nbsp;    }</b>
-<i>125</i>&nbsp;
-<i>126</i>&nbsp;    /**
-<i>127</i>&nbsp;     * Draws the Fortress on the map
-<i>128</i>&nbsp;     *
-<i>129</i>&nbsp;     * @param mapBatch  the renderer in line with the map
-<i>130</i>&nbsp;     */
-<i>131</i>&nbsp;    public void draw(Batch mapBatch) {
-<b class="nc"><i>132</i>&nbsp;        mapBatch.draw(this.getFortressType().getTexture(this.getHP(), fixedGameDifficulty), this.getArea().x, this.getArea().y, this.getArea().width, this.getArea().height);</b>
-<b class="nc"><i>133</i>&nbsp;    }</b>
-<i>134</i>&nbsp;
-<i>135</i>&nbsp;    /**
-<i>136</i>&nbsp;     * Creates a instance of DestroyedEntity with the destroyed Fortress&#39;s texture in the same location.
-<i>137</i>&nbsp;     *
-<i>138</i>&nbsp;     * @return DestroyedEntity with Area and destroyed texture from this fortress.
-<i>139</i>&nbsp;     */
-<i>140</i>&nbsp;    public DestroyedEntity createDestroyedFortress(){
-<b class="nc"><i>141</i>&nbsp;        return new DestroyedEntity(this.getFortressType().getTexture(0, fixedGameDifficulty), this.area);</b>
-<i>142</i>&nbsp;    }
+<b class="fc"><i>83</i>&nbsp;            target.setTimeOfLastAttack(System.currentTimeMillis());</b>
+<b class="fc"><i>84</i>&nbsp;            if (SoundFX.music_enabled) {</b>
+<b class="fc"><i>85</i>&nbsp;                SoundFX.sfx_fortress_attack.play();</b>
+<i>86</i>&nbsp;            }
+<i>87</i>&nbsp;        }
+<b class="fc"><i>88</i>&nbsp;    }</b>
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * Updates the position of all the bombs and checks whether
+<i>92</i>&nbsp;     * they have hit their target. If they have, it should deal
+<i>93</i>&nbsp;     * damage to the truck, remove the bomb and shake the screen
+<i>94</i>&nbsp;     * @return  &lt;code&gt;true&lt;/code&gt; if bomb hits a truck
+<i>95</i>&nbsp;     *          &lt;code&gt;false&lt;/code&gt; if bomb does nt hit a true
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public boolean updateBombs() {
+<b class="fc"><i>98</i>&nbsp;        for (int i = 0; i &lt; this.getBombs().size(); i++) {</b>
+<b class="fc"><i>99</i>&nbsp;            Bomb bomb = this.getBombs().get(i);</b>
+<b class="fc"><i>100</i>&nbsp;            bomb.updatePosition();</b>
+<b class="fc"><i>101</i>&nbsp;            if (bomb.checkHit()) {</b>
+<b class="fc"><i>102</i>&nbsp;                bomb.damageTruck();</b>
+<b class="fc"><i>103</i>&nbsp;                this.removeBomb(bomb);</b>
+<b class="fc"><i>104</i>&nbsp;                return true;</b>
+<b class="nc"><i>105</i>&nbsp;            } else if (bomb.hasReachedTargetTile()) {</b>
+<b class="nc"><i>106</i>&nbsp;                this.removeBomb(bomb);</b>
+<i>107</i>&nbsp;            }
+<i>108</i>&nbsp;        }
+<b class="nc"><i>109</i>&nbsp;        return false;</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;    /**
+<i>113</i>&nbsp;     * Removes Bomb from bomb list. This
+<i>114</i>&nbsp;     * occurs when the bomb hits or misses
+<i>115</i>&nbsp;     *
+<i>116</i>&nbsp;     * @param bomb bomb being removed
+<i>117</i>&nbsp;     */
+<i>118</i>&nbsp;    private void removeBomb(Bomb bomb) {
+<b class="fc"><i>119</i>&nbsp;        this.bombs.remove(bomb);</b>
+<b class="fc"><i>120</i>&nbsp;    }</b>
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    /**
+<i>123</i>&nbsp;     * Draws the health bars above the Fortress
+<i>124</i>&nbsp;     *
+<i>125</i>&nbsp;     * @param shapeMapRenderer  The renderer to be drawn to
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
+<b class="nc"><i>128</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.26f, this.getPosition().y + 1.4f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
+<b class="nc"><i>129</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);</b>
+<i>130</i>&nbsp;        //#Assessment 4 implemented difficulty selection
+<b class="nc"><i>131</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, this.getHP() / this.fortressType.getMaxHP(fixedGameDifficulty) * 1f, Color.RED, Color.RED, Color.RED, Color.RED);</b>
+<b class="nc"><i>132</i>&nbsp;    }</b>
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;    /**
+<i>135</i>&nbsp;     * Draws the Fortress on the map
+<i>136</i>&nbsp;     *
+<i>137</i>&nbsp;     * @param mapBatch  the renderer in line with the map
+<i>138</i>&nbsp;     */
+<i>139</i>&nbsp;    public void draw(Batch mapBatch) {
+<i>140</i>&nbsp;        //#Assessment 4 implemented difficulty selection
+<b class="nc"><i>141</i>&nbsp;        mapBatch.draw(this.getFortressType().getTexture(this.getHP(), fixedGameDifficulty), this.getArea().x, this.getArea().y, this.getArea().width, this.getArea().height);</b>
+<b class="nc"><i>142</i>&nbsp;    }</b>
 <i>143</i>&nbsp;
-<i>144</i>&nbsp;    public Vector2 getPosition() {
-<b class="fc"><i>145</i>&nbsp;        return this.position;</b>
-<i>146</i>&nbsp;    }
-<i>147</i>&nbsp;
-<i>148</i>&nbsp;    public float getHP() {
-<b class="fc"><i>149</i>&nbsp;        return this.HP;</b>
-<i>150</i>&nbsp;    }
-<i>151</i>&nbsp;
-<i>152</i>&nbsp;    public void setHP(float hp) {
-<b class="nc"><i>153</i>&nbsp;        this.HP = hp;</b>
-<b class="nc"><i>154</i>&nbsp;    }</b>
-<i>155</i>&nbsp;
-<i>156</i>&nbsp;    public void damage(float HP){
-<b class="fc"><i>157</i>&nbsp;        this.HP -= HP;</b>
-<b class="fc"><i>158</i>&nbsp;    }</b>
-<i>159</i>&nbsp;
-<i>160</i>&nbsp;    public Rectangle getArea() {
-<b class="nc"><i>161</i>&nbsp;        return this.area;</b>
-<i>162</i>&nbsp;    }
-<i>163</i>&nbsp;
-<i>164</i>&nbsp;    public FortressType getFortressType() {
-<b class="fc"><i>165</i>&nbsp;        return this.fortressType;</b>
-<i>166</i>&nbsp;    }
-<i>167</i>&nbsp;
-<i>168</i>&nbsp;    public ArrayList&lt;Bomb&gt; getBombs() {
-<b class="fc"><i>169</i>&nbsp;        return this.bombs;</b>
-<i>170</i>&nbsp;    }
-<i>171</i>&nbsp;
-<i>172</i>&nbsp;    public float getRange(){
-<b class="nc"><i>173</i>&nbsp;        return this.fortressType.getRange();</b>
-<i>174</i>&nbsp;    }
-<i>175</i>&nbsp;
-<i>176</i>&nbsp;}
+<i>144</i>&nbsp;    /**
+<i>145</i>&nbsp;     * Creates a instance of DestroyedEntity with the destroyed Fortress&#39;s texture in the same location.
+<i>146</i>&nbsp;     *
+<i>147</i>&nbsp;     * @return DestroyedEntity with Area and destroyed texture from this fortress.
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    public DestroyedEntity createDestroyedFortress(){
+<b class="nc"><i>150</i>&nbsp;        return new DestroyedEntity(this.getFortressType().getTexture(0, fixedGameDifficulty), this.area);</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    public Vector2 getPosition() {
+<b class="fc"><i>154</i>&nbsp;        return this.position;</b>
+<i>155</i>&nbsp;    }
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;    public float getHP() {
+<b class="fc"><i>158</i>&nbsp;        return this.HP;</b>
+<i>159</i>&nbsp;    }
+<i>160</i>&nbsp;
+<i>161</i>&nbsp;    public void setHP(float hp) {
+<b class="nc"><i>162</i>&nbsp;        this.HP = hp;</b>
+<b class="nc"><i>163</i>&nbsp;    }</b>
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;    public void damage(float HP){
+<b class="fc"><i>166</i>&nbsp;        this.HP -= HP;</b>
+<b class="fc"><i>167</i>&nbsp;    }</b>
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;    public Rectangle getArea() {
+<b class="nc"><i>170</i>&nbsp;        return this.area;</b>
+<i>171</i>&nbsp;    }
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;    public FortressType getFortressType() {
+<b class="fc"><i>174</i>&nbsp;        return this.fortressType;</b>
+<i>175</i>&nbsp;    }
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    public ArrayList&lt;Bomb&gt; getBombs() {
+<b class="fc"><i>178</i>&nbsp;        return this.bombs;</b>
+<i>179</i>&nbsp;    }
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    public float getRange(){
+<b class="nc"><i>182</i>&nbsp;        return this.fortressType.getRange();</b>
+<i>183</i>&nbsp;    }
+<i>184</i>&nbsp;
+<i>185</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

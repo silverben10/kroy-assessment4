@@ -132,115 +132,119 @@
 <b class="nc"><i>58</i>&nbsp;        return false;</b>
 <i>59</i>&nbsp;    }
 <i>60</i>&nbsp;
-<i>61</i>&nbsp;    /**
-<i>62</i>&nbsp;     * Checks if the user clicks on the start, controls or sound button.
-<i>63</i>&nbsp;     * It starts the game, shows the controls screen or toggles the sound
-<i>64</i>&nbsp;     * respectively.
-<i>65</i>&nbsp;     *
-<i>66</i>&nbsp;     * @param screenX The x coordinate, origin is in the upper left corner
-<i>67</i>&nbsp;     * @param screenY The y coordinate, origin is in the upper left corner
-<i>68</i>&nbsp;     * @param pointer the pointer for the event.
-<i>69</i>&nbsp;     * @param button  the button
-<i>70</i>&nbsp;     * @return the input was processed
-<i>71</i>&nbsp;     */
-<i>72</i>&nbsp;    @Override
-<i>73</i>&nbsp;    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-<b class="nc"><i>74</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
-<b class="nc"><i>75</i>&nbsp;        Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
-<b class="nc"><i>76</i>&nbsp;        if (!menu.isDifficultySelect()) {</b>
-<b class="nc"><i>77</i>&nbsp;            if (menu.getStartButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>78</i>&nbsp;                menu.clickedStartButton();</b>
-<b class="nc"><i>79</i>&nbsp;            } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>80</i>&nbsp;                menu.clickedControlsButton();</b>
-<b class="nc"><i>81</i>&nbsp;            } else if (menu.getSoundButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>82</i>&nbsp;                menu.clickedSoundButton();</b>
-<b class="nc"><i>83</i>&nbsp;            } else if (menu.getLoadButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>84</i>&nbsp;                menu.clickedLoadButton();</b>
-<i>85</i>&nbsp;            } else {
-<b class="nc"><i>86</i>&nbsp;                if (menu.getEasyButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>87</i>&nbsp;                    menu.clickedEasyButton();</b>
-<b class="nc"><i>88</i>&nbsp;                } else if (menu.getMediumButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>89</i>&nbsp;                    menu.clickedMediumButton();</b>
-<b class="nc"><i>90</i>&nbsp;                } else if (menu.getHardButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>91</i>&nbsp;                    menu.clickedHardButton();</b>
-<i>92</i>&nbsp;                }
-<i>93</i>&nbsp;            }
-<i>94</i>&nbsp;
-<i>95</i>&nbsp;        }
-<b class="nc"><i>96</i>&nbsp;        return true;</b>
-<i>97</i>&nbsp;    }
-<i>98</i>&nbsp;
-<i>99</i>&nbsp;    /**
-<i>100</i>&nbsp;     * Executes the action according to the button clicked by the user.
-<i>101</i>&nbsp;     * i.e. if the user clicks down on the Start button but lifts their
-<i>102</i>&nbsp;     * click somewhere else, the game will not start.
-<i>103</i>&nbsp;     *
-<i>104</i>&nbsp;     * @param screenX The x coordinate, origin is in the upper left corner
-<i>105</i>&nbsp;     * @param screenY The y coordinate, origin is in the upper left corner
-<i>106</i>&nbsp;     * @param pointer the pointer for the event.
-<i>107</i>&nbsp;     * @param button  the button
-<i>108</i>&nbsp;     * @return the input was processed
-<i>109</i>&nbsp;     */
-<i>110</i>&nbsp;    @Override
-<i>111</i>&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-<b class="nc"><i>112</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
-<b class="nc"><i>113</i>&nbsp;        Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
-<i>114</i>&nbsp;
-<b class="nc"><i>115</i>&nbsp;        if (menu.isDifficultySelect()) {</b>
-<b class="nc"><i>116</i>&nbsp;            if (menu.getEasyButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>117</i>&nbsp;                menu.toGame(1);</b>
-<b class="nc"><i>118</i>&nbsp;            } else if (menu.getMediumButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>119</i>&nbsp;                menu.toGame(2);</b>
-<b class="nc"><i>120</i>&nbsp;            } else if (menu.getHardButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>121</i>&nbsp;                menu.toGame(4);</b>
-<i>122</i>&nbsp;            }
-<b class="nc"><i>123</i>&nbsp;        } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>124</i>&nbsp;            menu.toControlScreen();</b>
-<b class="nc"><i>125</i>&nbsp;        } else if (menu.getSoundButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>126</i>&nbsp;            menu.changeSound();</b>
-<b class="nc"><i>127</i>&nbsp;        } else if (menu.getLoadButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>128</i>&nbsp;            menu.toLoadScreen();</b>
-<b class="nc"><i>129</i>&nbsp;        } else if (menu.getStartButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>130</i>&nbsp;            menu.toDifficultySelect();</b>
-<b class="nc"><i>131</i>&nbsp;        } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>132</i>&nbsp;            menu.toControlScreen();</b>
-<b class="nc"><i>133</i>&nbsp;        } else if (menu.getSoundButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>134</i>&nbsp;            menu.changeSound();</b>
-<i>135</i>&nbsp;        }
-<i>136</i>&nbsp;
-<b class="nc"><i>137</i>&nbsp;        menu.idleStartButton();</b>
-<b class="nc"><i>138</i>&nbsp;        menu.idleControlsButton();</b>
-<b class="nc"><i>139</i>&nbsp;        menu.idleSoundButton();</b>
-<b class="nc"><i>140</i>&nbsp;        menu.idleEasyButton();</b>
-<b class="nc"><i>141</i>&nbsp;        menu.idleMediumButton();</b>
-<b class="nc"><i>142</i>&nbsp;        menu.idleHardButton();</b>
-<b class="nc"><i>143</i>&nbsp;        menu.idleLoadButton();</b>
-<i>144</i>&nbsp;
-<b class="nc"><i>145</i>&nbsp;        return true;</b>
-<i>146</i>&nbsp;}
-<i>147</i>&nbsp;
-<i>148</i>&nbsp;    @Override
-<i>149</i>&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
-<b class="nc"><i>150</i>&nbsp;        return false;</b>
-<i>151</i>&nbsp;    }
-<i>152</i>&nbsp;
-<i>153</i>&nbsp;    @Override
-<i>154</i>&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
-<b class="nc"><i>155</i>&nbsp;        return false;</b>
-<i>156</i>&nbsp;    }
-<i>157</i>&nbsp;
-<i>158</i>&nbsp;
-<i>159</i>&nbsp;    @Override
-<i>160</i>&nbsp;    public boolean scrolled(int amount) {
-<b class="nc"><i>161</i>&nbsp;        return false;</b>
-<i>162</i>&nbsp;    }
-<i>163</i>&nbsp;}
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    //#Assessment 4 difficulty selection behaviour
+<i>63</i>&nbsp;    /**
+<i>64</i>&nbsp;     * Checks if the user clicks on the start, controls or sound button.
+<i>65</i>&nbsp;     * It starts the game, shows the controls screen or toggles the sound
+<i>66</i>&nbsp;     * respectively.
+<i>67</i>&nbsp;     *
+<i>68</i>&nbsp;     * @param screenX The x coordinate, origin is in the upper left corner
+<i>69</i>&nbsp;     * @param screenY The y coordinate, origin is in the upper left corner
+<i>70</i>&nbsp;     * @param pointer the pointer for the event.
+<i>71</i>&nbsp;     * @param button  the button
+<i>72</i>&nbsp;     * @return the input was processed
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    @Override
+<i>75</i>&nbsp;    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+<b class="nc"><i>76</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
+<b class="nc"><i>77</i>&nbsp;        Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
+<b class="nc"><i>78</i>&nbsp;        if (!menu.isDifficultySelect()) {</b>
+<b class="nc"><i>79</i>&nbsp;            if (menu.getStartButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>80</i>&nbsp;                menu.clickedStartButton();</b>
+<b class="nc"><i>81</i>&nbsp;            } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>82</i>&nbsp;                menu.clickedControlsButton();</b>
+<b class="nc"><i>83</i>&nbsp;            } else if (menu.getSoundButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>84</i>&nbsp;                menu.clickedSoundButton();</b>
+<b class="nc"><i>85</i>&nbsp;            } else if (menu.getLoadButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>86</i>&nbsp;                menu.clickedLoadButton();</b>
+<i>87</i>&nbsp;            }
+<i>88</i>&nbsp;        } else {
+<b class="nc"><i>89</i>&nbsp;            if (menu.getEasyButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>90</i>&nbsp;                menu.clickedEasyButton();</b>
+<b class="nc"><i>91</i>&nbsp;            } else if (menu.getMediumButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>92</i>&nbsp;                menu.clickedMediumButton();</b>
+<b class="nc"><i>93</i>&nbsp;            } else if (menu.getHardButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>94</i>&nbsp;                menu.clickedHardButton();</b>
+<i>95</i>&nbsp;            }
+<i>96</i>&nbsp;        }
+<b class="nc"><i>97</i>&nbsp;        return true;</b>
+<i>98</i>&nbsp;    }
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    //#Assessment 4 adjusted to allow for changes with difficulty selection behaviour
+<i>101</i>&nbsp;    /**
+<i>102</i>&nbsp;     * Executes the action according to the button clicked by the user.
+<i>103</i>&nbsp;     * i.e. if the user clicks down on the Start button but lifts their
+<i>104</i>&nbsp;     * click somewhere else, the game will not start.
+<i>105</i>&nbsp;     *
+<i>106</i>&nbsp;     * @param screenX The x coordinate, origin is in the upper left corner
+<i>107</i>&nbsp;     * @param screenY The y coordinate, origin is in the upper left corner
+<i>108</i>&nbsp;     * @param pointer the pointer for the event.
+<i>109</i>&nbsp;     * @param button  the button
+<i>110</i>&nbsp;     * @return the input was processed
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    @Override
+<i>113</i>&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+<b class="nc"><i>114</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
+<b class="nc"><i>115</i>&nbsp;        Vector3 position = menu.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
+<b class="nc"><i>116</i>&nbsp;        if (menu.getSoundButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>117</i>&nbsp;            menu.changeSound();</b>
+<b class="nc"><i>118</i>&nbsp;        } else if (menu.isDifficultySelect()) {</b>
+<b class="nc"><i>119</i>&nbsp;            if (menu.getEasyButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>120</i>&nbsp;                menu.toGame(1);</b>
+<b class="nc"><i>121</i>&nbsp;            } else if (menu.getMediumButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>122</i>&nbsp;                menu.toGame(2);</b>
+<b class="nc"><i>123</i>&nbsp;            } else if (menu.getHardButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>124</i>&nbsp;                menu.toGame(4);</b>
+<i>125</i>&nbsp;            } else{
+<b class="nc"><i>126</i>&nbsp;                menu.idleEasyButton();</b>
+<b class="nc"><i>127</i>&nbsp;                menu.idleMediumButton();</b>
+<b class="nc"><i>128</i>&nbsp;                menu.idleHardButton();</b>
+<i>129</i>&nbsp;            }
+<b class="nc"><i>130</i>&nbsp;        } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>131</i>&nbsp;            menu.toControlScreen();</b>
+<b class="nc"><i>132</i>&nbsp;        } else if (menu.getLoadButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>133</i>&nbsp;            menu.toLoadScreen();</b>
+<b class="nc"><i>134</i>&nbsp;        } else if (menu.getStartButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>135</i>&nbsp;            menu.toDifficultySelect();</b>
+<b class="nc"><i>136</i>&nbsp;        } else if (menu.getControlsButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>137</i>&nbsp;            menu.toControlScreen();</b>
+<b class="nc"><i>138</i>&nbsp;        } else if (menu.getSoundButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>139</i>&nbsp;            menu.changeSound();</b>
+<i>140</i>&nbsp;        }
+<i>141</i>&nbsp;        else {
+<b class="nc"><i>142</i>&nbsp;            menu.idleStartButton();</b>
+<b class="nc"><i>143</i>&nbsp;            menu.idleControlsButton();</b>
+<b class="nc"><i>144</i>&nbsp;            menu.idleSoundButton();</b>
+<b class="nc"><i>145</i>&nbsp;            menu.idleLoadButton();</b>
+<i>146</i>&nbsp;        }
+<b class="nc"><i>147</i>&nbsp;        return true;</b>
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;    @Override
+<i>153</i>&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
+<b class="nc"><i>154</i>&nbsp;        return false;</b>
+<i>155</i>&nbsp;    }
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;    @Override
+<i>158</i>&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
+<b class="nc"><i>159</i>&nbsp;        return false;</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    @Override
+<i>164</i>&nbsp;    public boolean scrolled(int amount) {
+<b class="nc"><i>165</i>&nbsp;        return false;</b>
+<i>166</i>&nbsp;    }
+<i>167</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

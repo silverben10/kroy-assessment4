@@ -81,86 +81,88 @@
 <i>7</i>&nbsp;import com.mozarellabytes.kroy.Screens.ControlsScreen;
 <i>8</i>&nbsp;import com.mozarellabytes.kroy.Screens.SaveScreen;
 <i>9</i>&nbsp;
-<i>10</i>&nbsp;public class SaveScreenInputHandler implements InputProcessor {
-<i>11</i>&nbsp;    private final SaveScreen saveScreen;
-<i>12</i>&nbsp;
-<i>13</i>&nbsp;    /**
-<i>14</i>&nbsp;     * Constructs the Save screen input handler
-<i>15</i>&nbsp;     *
-<i>16</i>&nbsp;     * @param saveScreen the control screen that this input handler controls
-<i>17</i>&nbsp;     */
-<b class="nc"><i>18</i>&nbsp;    public SaveScreenInputHandler(SaveScreen saveScreen) {</b>
-<b class="nc"><i>19</i>&nbsp;        this.saveScreen = saveScreen;</b>
-<i>20</i>&nbsp;    }
-<i>21</i>&nbsp;
-<i>22</i>&nbsp;    /**
-<i>23</i>&nbsp;     * Called when a key was pressed
-<i>24</i>&nbsp;     * &lt;p&gt;
-<i>25</i>&nbsp;     * Closes the save screen when the ESC key is pressed.
-<i>26</i>&nbsp;     *
-<i>27</i>&nbsp;     * @param keycode one of the constants in {@link Input.Keys}
-<i>28</i>&nbsp;     * @return whether the input was processed
-<i>29</i>&nbsp;     */
-<i>30</i>&nbsp;    @Override
-<i>31</i>&nbsp;    public boolean keyDown(int keycode) {
-<b class="nc"><i>32</i>&nbsp;        if (keycode == Input.Keys.ESCAPE) {</b>
-<b class="nc"><i>33</i>&nbsp;            saveScreen.closeScreen();</b>
-<i>34</i>&nbsp;        }
-<b class="nc"><i>35</i>&nbsp;        return true;</b>
-<i>36</i>&nbsp;    }
-<i>37</i>&nbsp;
-<i>38</i>&nbsp;    @Override
-<i>39</i>&nbsp;    public boolean keyUp(int keycode) {
-<b class="nc"><i>40</i>&nbsp;        return false;</b>
-<i>41</i>&nbsp;    }
-<i>42</i>&nbsp;
-<i>43</i>&nbsp;    @Override
-<i>44</i>&nbsp;    public boolean keyTyped(char character) {
-<b class="nc"><i>45</i>&nbsp;        return false;</b>
-<i>46</i>&nbsp;    }
-<i>47</i>&nbsp;
-<i>48</i>&nbsp;    @Override
-<i>49</i>&nbsp;    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-<b class="nc"><i>50</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
-<b class="nc"><i>51</i>&nbsp;        Vector3 position = saveScreen.getCamera().unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
-<b class="nc"><i>52</i>&nbsp;        if (saveScreen.getExitButton().contains(position.x, position.y)) {</b>
-<b class="nc"><i>53</i>&nbsp;            saveScreen.closeScreen();</b>
-<b class="nc"><i>54</i>&nbsp;        } else if (saveScreen.getSaveButton1().contains(position.x, position.y)) {</b>
-<b class="nc"><i>55</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 1);</b>
-<b class="nc"><i>56</i>&nbsp;        } else if (saveScreen.getSaveButton2().contains(position.x, position.y)) {</b>
-<b class="nc"><i>57</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 2);</b>
-<b class="nc"><i>58</i>&nbsp;        } else if (saveScreen.getSaveButton3().contains(position.x, position.y)) {</b>
-<b class="nc"><i>59</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 3);</b>
-<i>60</i>&nbsp;        }
-<b class="nc"><i>61</i>&nbsp;        return false;</b>
-<i>62</i>&nbsp;    }
-<i>63</i>&nbsp;
-<i>64</i>&nbsp;    @Override
-<i>65</i>&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-<b class="nc"><i>66</i>&nbsp;        return false;</b>
-<i>67</i>&nbsp;    }
-<i>68</i>&nbsp;
-<i>69</i>&nbsp;    @Override
-<i>70</i>&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
-<b class="nc"><i>71</i>&nbsp;        return false;</b>
-<i>72</i>&nbsp;    }
-<i>73</i>&nbsp;
-<i>74</i>&nbsp;    @Override
-<i>75</i>&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
-<b class="nc"><i>76</i>&nbsp;        return false;</b>
-<i>77</i>&nbsp;    }
-<i>78</i>&nbsp;
-<i>79</i>&nbsp;    @Override
-<i>80</i>&nbsp;    public boolean scrolled(int amount) {
-<b class="nc"><i>81</i>&nbsp;        return false;</b>
-<i>82</i>&nbsp;    }
-<i>83</i>&nbsp;}
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;//#Assessment 4 handles the inputs for the save screen
+<i>12</i>&nbsp;public class SaveScreenInputHandler implements InputProcessor {
+<i>13</i>&nbsp;    private final SaveScreen saveScreen;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Constructs the Save screen input handler
+<i>17</i>&nbsp;     *
+<i>18</i>&nbsp;     * @param saveScreen the control screen that this input handler controls
+<i>19</i>&nbsp;     */
+<b class="nc"><i>20</i>&nbsp;    public SaveScreenInputHandler(SaveScreen saveScreen) {</b>
+<b class="nc"><i>21</i>&nbsp;        this.saveScreen = saveScreen;</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * Called when a key was pressed
+<i>26</i>&nbsp;     * &lt;p&gt;
+<i>27</i>&nbsp;     * Closes the save screen when the ESC key is pressed.
+<i>28</i>&nbsp;     *
+<i>29</i>&nbsp;     * @param keycode one of the constants in {@link Input.Keys}
+<i>30</i>&nbsp;     * @return whether the input was processed
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    @Override
+<i>33</i>&nbsp;    public boolean keyDown(int keycode) {
+<b class="nc"><i>34</i>&nbsp;        if (keycode == Input.Keys.ESCAPE) {</b>
+<b class="nc"><i>35</i>&nbsp;            saveScreen.closeScreen();</b>
+<i>36</i>&nbsp;        }
+<b class="nc"><i>37</i>&nbsp;        return true;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @Override
+<i>41</i>&nbsp;    public boolean keyUp(int keycode) {
+<b class="nc"><i>42</i>&nbsp;        return false;</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    @Override
+<i>46</i>&nbsp;    public boolean keyTyped(char character) {
+<b class="nc"><i>47</i>&nbsp;        return false;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Override
+<i>51</i>&nbsp;    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+<b class="nc"><i>52</i>&nbsp;        Vector2 clickCoordinates = new Vector2(screenX, screenY);</b>
+<b class="nc"><i>53</i>&nbsp;        Vector3 position = saveScreen.getCamera().unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));</b>
+<b class="nc"><i>54</i>&nbsp;        if (saveScreen.getExitButton().contains(position.x, position.y)) {</b>
+<b class="nc"><i>55</i>&nbsp;            saveScreen.closeScreen();</b>
+<b class="nc"><i>56</i>&nbsp;        } else if (saveScreen.getSaveButton1().contains(position.x, position.y)) {</b>
+<b class="nc"><i>57</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 1);</b>
+<b class="nc"><i>58</i>&nbsp;        } else if (saveScreen.getSaveButton2().contains(position.x, position.y)) {</b>
+<b class="nc"><i>59</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 2);</b>
+<b class="nc"><i>60</i>&nbsp;        } else if (saveScreen.getSaveButton3().contains(position.x, position.y)) {</b>
+<b class="nc"><i>61</i>&nbsp;            SaveManager.saveGameData(saveScreen.getParent(), 3);</b>
+<i>62</i>&nbsp;        }
+<b class="nc"><i>63</i>&nbsp;        return false;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    @Override
+<i>67</i>&nbsp;    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+<b class="nc"><i>68</i>&nbsp;        return false;</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    @Override
+<i>72</i>&nbsp;    public boolean touchDragged(int screenX, int screenY, int pointer) {
+<b class="nc"><i>73</i>&nbsp;        return false;</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    @Override
+<i>77</i>&nbsp;    public boolean mouseMoved(int screenX, int screenY) {
+<b class="nc"><i>78</i>&nbsp;        return false;</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public boolean scrolled(int amount) {
+<b class="nc"><i>83</i>&nbsp;        return false;</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

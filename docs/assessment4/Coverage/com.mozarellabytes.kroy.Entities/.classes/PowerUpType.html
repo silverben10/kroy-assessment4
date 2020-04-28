@@ -84,43 +84,44 @@
 <i>10</i>&nbsp; * contains hovering animation method
 <i>11</i>&nbsp; * contains method for handling interaction with fireTruck
 <i>12</i>&nbsp; */
-<b class="fc"><i>13</i>&nbsp;public enum PowerUpType {</b>
-<b class="fc"><i>14</i>&nbsp;    Mirror(&quot;mirror&quot;, 10f),</b>
-<b class="fc"><i>15</i>&nbsp;    Immunity(&quot;immunity&quot;, 15.0f),</b>
-<b class="fc"><i>16</i>&nbsp;    Repair(&quot;repair&quot;, 0f),</b>
-<b class="fc"><i>17</i>&nbsp;    Speed(&quot;speed&quot;, 20.0f),</b>
-<b class="fc"><i>18</i>&nbsp;    Damage(&quot;damage&quot;, 20.0f);</b>
-<i>19</i>&nbsp;
-<i>20</i>&nbsp;    /** fileName to retrieve the relevant sprite for that powerup */
-<i>21</i>&nbsp;    private final String fileName;
-<i>22</i>&nbsp;
-<i>23</i>&nbsp;    /** timer to state how long a powerup may last*/
-<i>24</i>&nbsp;    private final float timer;
-<i>25</i>&nbsp;
+<i>13</i>&nbsp;//#Assessment 4 added to implement powerups
+<b class="fc"><i>14</i>&nbsp;public enum PowerUpType {</b>
+<b class="fc"><i>15</i>&nbsp;    Mirror(&quot;mirror&quot;, 10f),</b>
+<b class="fc"><i>16</i>&nbsp;    Immunity(&quot;immunity&quot;, 15.0f),</b>
+<b class="fc"><i>17</i>&nbsp;    Repair(&quot;repair&quot;, 0f),</b>
+<b class="fc"><i>18</i>&nbsp;    Speed(&quot;speed&quot;, 20.0f),</b>
+<b class="fc"><i>19</i>&nbsp;    Damage(&quot;damage&quot;, 20.0f);</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /** fileName to retrieve the relevant sprite for that powerup */
+<i>22</i>&nbsp;    private final String fileName;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /** timer to state how long a powerup may last*/
+<i>25</i>&nbsp;    private final float timer;
 <i>26</i>&nbsp;
-<i>27</i>&nbsp;    /** the sprite for the particular powerup */
-<i>28</i>&nbsp;    private final Texture powerUpIcon;
-<i>29</i>&nbsp;
-<b class="fc"><i>30</i>&nbsp;    PowerUpType(String fileName, float timer){</b>
-<b class="fc"><i>31</i>&nbsp;        this.fileName = fileName;</b>
-<b class="fc"><i>32</i>&nbsp;        this.timer = timer;</b>
-<b class="fc"><i>33</i>&nbsp;        this.powerUpIcon = new Texture(Gdx.files.internal(&quot;sprites/powerup/&quot;+fileName+&quot;.png&quot;));</b>
-<b class="fc"><i>34</i>&nbsp;    }</b>
-<i>35</i>&nbsp;
-<b class="fc"><i>36</i>&nbsp;    public String getName(){return this.fileName;}</b>
-<b class="fc"><i>37</i>&nbsp;    public float getTimer(){return this.timer;}</b>
-<b class="fc"><i>38</i>&nbsp;    public Texture getPowerUpIcon(){return this.powerUpIcon;}</b>
-<i>39</i>&nbsp;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /** the sprite for the particular powerup */
+<i>29</i>&nbsp;    private final Texture powerUpIcon;
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;    PowerUpType(String fileName, float timer){</b>
+<b class="fc"><i>32</i>&nbsp;        this.fileName = fileName;</b>
+<b class="fc"><i>33</i>&nbsp;        this.timer = timer;</b>
+<b class="fc"><i>34</i>&nbsp;        this.powerUpIcon = new Texture(Gdx.files.internal(&quot;sprites/powerup/&quot;+fileName+&quot;.png&quot;));</b>
+<b class="fc"><i>35</i>&nbsp;    }</b>
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;    public String getName(){return this.fileName;}</b>
+<b class="fc"><i>38</i>&nbsp;    public float getTimer(){return this.timer;}</b>
+<b class="fc"><i>39</i>&nbsp;    public Texture getPowerUpIcon(){return this.powerUpIcon;}</b>
 <i>40</i>&nbsp;
-<i>41</i>&nbsp;    //Encounter method
-<i>42</i>&nbsp;
-<i>43</i>&nbsp;}
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    //Encounter method
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

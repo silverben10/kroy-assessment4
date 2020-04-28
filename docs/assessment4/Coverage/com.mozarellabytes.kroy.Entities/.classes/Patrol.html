@@ -273,171 +273,184 @@
 <i>199</i>&nbsp;     * @param previous Previous coordinates of the patrol entity.
 <i>200</i>&nbsp;     */
 <i>201</i>&nbsp;    public void addTileToPath(Vector2 coordinate, Vector2 previous) {
-<b class="fc"><i>202</i>&nbsp;        int interpolation = (int) (90/type. getSpeed());</b>
-<b class="fc"><i>203</i>&nbsp;        float offsetX = 0;</b>
-<b class="fc"><i>204</i>&nbsp;        float offsetY = 0;</b>
-<b class="fc"><i>205</i>&nbsp;        for (int i=1; i&lt;interpolation; i++) {</b>
-<b class="fc"><i>206</i>&nbsp;            if (previous.x == coordinate.x) {</b>
-<b class="fc"><i>207</i>&nbsp;                offsetX = getHoverOffset(interpolation, i);</b>
-<i>208</i>&nbsp;            } else {
-<b class="fc"><i>209</i>&nbsp;                offsetX = 0;</b>
-<i>210</i>&nbsp;            }
-<b class="fc"><i>211</i>&nbsp;            if (previous.y == coordinate.y) {</b>
-<b class="fc"><i>212</i>&nbsp;                offsetY = getHoverOffset(interpolation, i);</b>
-<i>213</i>&nbsp;            } else {
-<b class="fc"><i>214</i>&nbsp;                offsetY = 0;</b>
-<i>215</i>&nbsp;            }
-<b class="fc"><i>216</i>&nbsp;            this.path.addNode(new Vector2((((previous.x - coordinate.x) * -1) / interpolation) * i + previous.x + offsetX, (((previous.y - coordinate.y) * -1) / interpolation) * i + previous.y + offsetY));</b>
-<i>217</i>&nbsp;        }
-<b class="fc"><i>218</i>&nbsp;            previousTile = new Vector2(((int) coordinate.x), ((int) coordinate.y));</b>
-<b class="fc"><i>219</i>&nbsp;            this.path.addNode(previousTile);</b>
-<i>220</i>&nbsp;
-<b class="fc"><i>221</i>&nbsp;    }</b>
-<i>222</i>&nbsp;
-<i>223</i>&nbsp;    public float getHoverOffset(int interpolation, double i){
-<i>224</i>&nbsp;        //sin() function on counter i, changes based on interpolation between 0 and 2PiRad for input
-<i>225</i>&nbsp;        float tempOut;
-<b class="fc"><i>226</i>&nbsp;        double radianChange = 2*Math.PI;</b>
-<i>227</i>&nbsp;
-<b class="fc"><i>228</i>&nbsp;        tempOut =(float) (Math.sin(radianChange * (i/interpolation)) / 8);</b>
-<i>229</i>&nbsp;        //Gdx.app.log(&quot;Tag&quot;, String.valueOf(i));
-<b class="fc"><i>230</i>&nbsp;        return tempOut;</b>
-<i>231</i>&nbsp;    }
-<i>232</i>&nbsp;    public void move() {
-<b class="nc"><i>233</i>&nbsp;        if (moving) {</b>
-<b class="nc"><i>234</i>&nbsp;            Node next=path.getNext(current);</b>
-<b class="nc"><i>235</i>&nbsp;            Vector2 nextTile = path.getData(next);</b>
-<i>236</i>&nbsp;
-<b class="nc"><i>237</i>&nbsp;            this.position = nextTile;</b>
-<b class="nc"><i>238</i>&nbsp;            current=next;</b>
-<b class="nc"><i>239</i>&nbsp;            previousTile = nextTile;</b>
-<i>240</i>&nbsp;        }
-<b class="nc"><i>241</i>&nbsp;    }</b>
-<i>242</i>&nbsp;
-<i>243</i>&nbsp;    /**
-<i>244</i>&nbsp;     * Deals damage to Firestation by generating a BlasterParticle and adding
-<i>245</i>&nbsp;     * it to the spray
-<i>246</i>&nbsp;     *
-<i>247</i>&nbsp;     * @param station FireStation being attacked
-<i>248</i>&nbsp;     */
-<i>249</i>&nbsp;    public void attack(FireStation station) {
-<b class="nc"><i>250</i>&nbsp;        this.spray.add(new BlasterParticle(this, station));</b>
-<b class="nc"><i>251</i>&nbsp;    }</b>
-<i>252</i>&nbsp;
-<i>253</i>&nbsp;    /**
-<i>254</i>&nbsp;     * Updates the water spray to display new position and damage entities.
-<i>255</i>&nbsp;     */
-<i>256</i>&nbsp;    public void updateSpray() {
-<b class="nc"><i>257</i>&nbsp;        if (this.spray != null) {</b>
-<b class="nc"><i>258</i>&nbsp;            for (int i=0; i &lt; this.spray.size(); i++) {</b>
-<b class="nc"><i>259</i>&nbsp;                BlasterParticle particle = this.spray.get(i);</b>
-<b class="nc"><i>260</i>&nbsp;                particle.updatePosition();</b>
-<b class="nc"><i>261</i>&nbsp;                if (particle.isHit()) {</b>
-<b class="nc"><i>262</i>&nbsp;                    this.damage(particle);</b>
-<b class="nc"><i>263</i>&nbsp;                    this.removeParticle(particle);</b>
-<i>264</i>&nbsp;                }
-<i>265</i>&nbsp;            }
-<i>266</i>&nbsp;        }
-<b class="nc"><i>267</i>&nbsp;    }</b>
-<i>268</i>&nbsp;
-<i>269</i>&nbsp;    private ArrayList&lt;BlasterParticle&gt; getSpray() {
-<b class="nc"><i>270</i>&nbsp;        return this.spray;</b>
-<i>271</i>&nbsp;    }
-<i>272</i>&nbsp;
-<i>273</i>&nbsp;/**
-<i>274</i>&nbsp;     * Draws the mini health indicators relative to the truck
-<i>275</i>&nbsp;     *
-<i>276</i>&nbsp;     * @param shapeMapRenderer  Renderer that the stats are being drawn to (map  dependant)
-<i>277</i>&nbsp;     */
-<i>278</i>&nbsp;
-<i>279</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
-<b class="nc"><i>280</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.2f, this.getPosition().y + 1.3f, 0.4f, 0.8f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
-<b class="nc"><i>281</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.3f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.OLIVE, Color.OLIVE, Color.OLIVE, Color.OLIVE);</b>
-<b class="nc"><i>282</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.3f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN);</b>
-<b class="nc"><i>283</i>&nbsp;        for (BlasterParticle particle : this.getSpray()) {</b>
-<b class="nc"><i>284</i>&nbsp;            shapeMapRenderer.rect(particle.getPosition().x, particle.getPosition().y, particle.getSize(), particle.getSize(), particle.getColour(), particle.getColour(), particle.getColour(), particle.getColour());</b>
-<b class="nc"><i>285</i>&nbsp;        }</b>
-<b class="nc"><i>286</i>&nbsp;    }</b>
-<i>287</i>&nbsp;
-<i>288</i>&nbsp;
-<i>289</i>&nbsp;/**
-<i>290</i>&nbsp;     * Draws the patrol sprite
-<i>291</i>&nbsp;     *
-<i>292</i>&nbsp;     * @param mapBatch  Batch that the truck is being
-<i>293</i>&nbsp;     *                  drawn to (map dependant)
-<i>294</i>&nbsp;     */
-<i>295</i>&nbsp;
-<i>296</i>&nbsp;    public void drawSprite(Batch mapBatch) {
-<b class="nc"><i>297</i>&nbsp;        mapBatch.draw(this, this.position.x, this.position.y, 1, 1);</b>
-<b class="nc"><i>298</i>&nbsp;    }</b>
-<i>299</i>&nbsp;
+<i>202</i>&nbsp;        //#Assessment 4 changed to give aliens a hovering animation
+<b class="fc"><i>203</i>&nbsp;        int interpolation = (int) (90/type. getSpeed());</b>
+<b class="fc"><i>204</i>&nbsp;        float offsetX = 0;</b>
+<b class="fc"><i>205</i>&nbsp;        float offsetY = 0;</b>
+<b class="fc"><i>206</i>&nbsp;        for (int i=1; i&lt;interpolation; i++) {</b>
+<b class="fc"><i>207</i>&nbsp;            if (previous.x == coordinate.x) {</b>
+<b class="fc"><i>208</i>&nbsp;                offsetX = getHoverOffset(interpolation, i);</b>
+<i>209</i>&nbsp;            } else {
+<b class="fc"><i>210</i>&nbsp;                offsetX = 0;</b>
+<i>211</i>&nbsp;            }
+<b class="fc"><i>212</i>&nbsp;            if (previous.y == coordinate.y) {</b>
+<b class="fc"><i>213</i>&nbsp;                offsetY = getHoverOffset(interpolation, i);</b>
+<i>214</i>&nbsp;            } else {
+<b class="fc"><i>215</i>&nbsp;                offsetY = 0;</b>
+<i>216</i>&nbsp;            }
+<b class="fc"><i>217</i>&nbsp;            this.path.addNode(new Vector2((((previous.x - coordinate.x) * -1) / interpolation) * i + previous.x + offsetX, (((previous.y - coordinate.y) * -1) / interpolation) * i + previous.y + offsetY));</b>
+<i>218</i>&nbsp;        }
+<b class="fc"><i>219</i>&nbsp;            previousTile = new Vector2(((int) coordinate.x), ((int) coordinate.y));</b>
+<b class="fc"><i>220</i>&nbsp;            this.path.addNode(previousTile);</b>
+<i>221</i>&nbsp;
+<b class="fc"><i>222</i>&nbsp;    }</b>
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * Calculates and returns the hover offset of alien partols
+<i>226</i>&nbsp;     * @param interpolation the max offser
+<i>227</i>&nbsp;     * @param i the current offset
+<i>228</i>&nbsp;     * @return the next offset
+<i>229</i>&nbsp;     */
+<i>230</i>&nbsp;    //#Assessment 4 added to help with hovering
+<i>231</i>&nbsp;    public float getHoverOffset(int interpolation, double i){
+<i>232</i>&nbsp;        //sin() function on counter i, changes based on interpolation between 0 and 2PiRad for input
+<i>233</i>&nbsp;        float tempOut;
+<b class="fc"><i>234</i>&nbsp;        double radianChange = 2*Math.PI;</b>
+<i>235</i>&nbsp;
+<b class="fc"><i>236</i>&nbsp;        tempOut =(float) (Math.sin(radianChange * (i/interpolation)) / 8);</b>
+<i>237</i>&nbsp;        //Gdx.app.log(&quot;Tag&quot;, String.valueOf(i));
+<b class="fc"><i>238</i>&nbsp;        return tempOut;</b>
+<i>239</i>&nbsp;    }
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;    /**
+<i>243</i>&nbsp;     * moves the patrol from its current tile to the next
+<i>244</i>&nbsp;     */
+<i>245</i>&nbsp;    public void move() {
+<b class="nc"><i>246</i>&nbsp;        if (moving) {</b>
+<b class="nc"><i>247</i>&nbsp;            Node next=path.getNext(current);</b>
+<b class="nc"><i>248</i>&nbsp;            Vector2 nextTile = path.getData(next);</b>
+<i>249</i>&nbsp;
+<b class="nc"><i>250</i>&nbsp;            this.position = nextTile;</b>
+<b class="nc"><i>251</i>&nbsp;            current=next;</b>
+<b class="nc"><i>252</i>&nbsp;            previousTile = nextTile;</b>
+<i>253</i>&nbsp;        }
+<b class="nc"><i>254</i>&nbsp;    }</b>
+<i>255</i>&nbsp;
+<i>256</i>&nbsp;    /**
+<i>257</i>&nbsp;     * Deals damage to Firestation by generating a BlasterParticle and adding
+<i>258</i>&nbsp;     * it to the spray
+<i>259</i>&nbsp;     *
+<i>260</i>&nbsp;     * @param station FireStation being attacked
+<i>261</i>&nbsp;     */
+<i>262</i>&nbsp;    public void attack(FireStation station) {
+<b class="nc"><i>263</i>&nbsp;        this.spray.add(new BlasterParticle(this, station));</b>
+<b class="nc"><i>264</i>&nbsp;    }</b>
+<i>265</i>&nbsp;
+<i>266</i>&nbsp;    /**
+<i>267</i>&nbsp;     * Updates the water spray to display new position and damage entities.
+<i>268</i>&nbsp;     */
+<i>269</i>&nbsp;    public void updateSpray() {
+<b class="nc"><i>270</i>&nbsp;        if (this.spray != null) {</b>
+<b class="nc"><i>271</i>&nbsp;            for (int i=0; i &lt; this.spray.size(); i++) {</b>
+<b class="nc"><i>272</i>&nbsp;                BlasterParticle particle = this.spray.get(i);</b>
+<b class="nc"><i>273</i>&nbsp;                particle.updatePosition();</b>
+<b class="nc"><i>274</i>&nbsp;                if (particle.isHit()) {</b>
+<b class="nc"><i>275</i>&nbsp;                    this.damage(particle);</b>
+<b class="nc"><i>276</i>&nbsp;                    this.removeParticle(particle);</b>
+<i>277</i>&nbsp;                }
+<i>278</i>&nbsp;            }
+<i>279</i>&nbsp;        }
+<b class="nc"><i>280</i>&nbsp;    }</b>
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;    private ArrayList&lt;BlasterParticle&gt; getSpray() {
+<b class="nc"><i>283</i>&nbsp;        return this.spray;</b>
+<i>284</i>&nbsp;    }
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;/**
+<i>287</i>&nbsp;     * Draws the mini health indicators relative to the truck
+<i>288</i>&nbsp;     *
+<i>289</i>&nbsp;     * @param shapeMapRenderer  Renderer that the stats are being drawn to (map  dependant)
+<i>290</i>&nbsp;     */
+<i>291</i>&nbsp;
+<i>292</i>&nbsp;    public void drawStats(ShapeRenderer shapeMapRenderer) {
+<b class="nc"><i>293</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.2f, this.getPosition().y + 1.3f, 0.4f, 0.8f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);</b>
+<b class="nc"><i>294</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.3f, this.getPosition().y + 1.4f, 0.2f, 0.6f, Color.OLIVE, Color.OLIVE, Color.OLIVE, Color.OLIVE);</b>
+<b class="nc"><i>295</i>&nbsp;        shapeMapRenderer.rect(this.getPosition().x + 0.3f, this.getPosition().y + 1.4f, 0.2f, this.getHP() / this.type.getMaxHP() * 0.6f, Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN);</b>
+<b class="nc"><i>296</i>&nbsp;        for (BlasterParticle particle : this.getSpray()) {</b>
+<b class="nc"><i>297</i>&nbsp;            shapeMapRenderer.rect(particle.getPosition().x, particle.getPosition().y, particle.getSize(), particle.getSize(), particle.getColour(), particle.getColour(), particle.getColour(), particle.getColour());</b>
+<b class="nc"><i>298</i>&nbsp;        }</b>
+<b class="nc"><i>299</i>&nbsp;    }</b>
 <i>300</i>&nbsp;
-<i>301</i>&nbsp;/**
-<i>302</i>&nbsp;     * Helper method that returns where the truck is visually to the player. This is used when
-<i>303</i>&nbsp;     * checking the range when attacking the Fortress and getting attacked by the Fortress
+<i>301</i>&nbsp;
+<i>302</i>&nbsp;/**
+<i>303</i>&nbsp;     * Draws the patrol sprite
 <i>304</i>&nbsp;     *
-<i>305</i>&nbsp;     * @return a vector where the truck is visually
-<i>306</i>&nbsp;     */
-<i>307</i>&nbsp;
-<i>308</i>&nbsp;    public Vector2 getVisualPosition() {
-<b class="nc"><i>309</i>&nbsp;        return new Vector2(this.position.x + 0.5f, this.position.y + 0.5f);</b>
-<i>310</i>&nbsp;    }
-<i>311</i>&nbsp;
+<i>305</i>&nbsp;     * @param mapBatch  Batch that the truck is being
+<i>306</i>&nbsp;     *                  drawn to (map dependant)
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;
+<i>309</i>&nbsp;    public void drawSprite(Batch mapBatch) {
+<b class="nc"><i>310</i>&nbsp;        mapBatch.draw(this, this.position.x, this.position.y, 1, 1);</b>
+<b class="nc"><i>311</i>&nbsp;    }</b>
 <i>312</i>&nbsp;
-<i>313</i>&nbsp;    private void removeParticle(BlasterParticle particle) {
-<b class="nc"><i>314</i>&nbsp;        this.spray.remove(particle);</b>
-<b class="nc"><i>315</i>&nbsp;    }</b>
-<i>316</i>&nbsp;
-<i>317</i>&nbsp;    /**
-<i>318</i>&nbsp;     * Damages the Station depending on the patrol&#39;s AP
-<i>319</i>&nbsp;     *
-<i>320</i>&nbsp;     * @param particle  the particle which damages the station
-<i>321</i>&nbsp;     */
-<i>322</i>&nbsp;    private void damage(BlasterParticle particle) {
-<b class="nc"><i>323</i>&nbsp;        particle.getTarget().damage(0.15f);</b>
-<b class="nc"><i>324</i>&nbsp;    }</b>
+<i>313</i>&nbsp;
+<i>314</i>&nbsp;/**
+<i>315</i>&nbsp;     * Helper method that returns where the truck is visually to the player. This is used when
+<i>316</i>&nbsp;     * checking the range when attacking the Fortress and getting attacked by the Fortress
+<i>317</i>&nbsp;     *
+<i>318</i>&nbsp;     * @return a vector where the truck is visually
+<i>319</i>&nbsp;     */
+<i>320</i>&nbsp;
+<i>321</i>&nbsp;    public Vector2 getVisualPosition() {
+<b class="nc"><i>322</i>&nbsp;        return new Vector2(this.position.x + 0.5f, this.position.y + 0.5f);</b>
+<i>323</i>&nbsp;    }
+<i>324</i>&nbsp;
 <i>325</i>&nbsp;
-<i>326</i>&nbsp;    public float getHP() {
-<b class="nc"><i>327</i>&nbsp;        return this.HP;</b>
-<i>328</i>&nbsp;    }
+<i>326</i>&nbsp;    private void removeParticle(BlasterParticle particle) {
+<b class="nc"><i>327</i>&nbsp;        this.spray.remove(particle);</b>
+<b class="nc"><i>328</i>&nbsp;    }</b>
 <i>329</i>&nbsp;
-<b class="nc"><i>330</i>&nbsp;    public void setHP(int hp) { this.HP = hp; }</b>
-<i>331</i>&nbsp;
-<i>332</i>&nbsp;    public PatrolType getType() {
-<b class="nc"><i>333</i>&nbsp;        return this.type;</b>
-<i>334</i>&nbsp;    }
-<i>335</i>&nbsp;
-<i>336</i>&nbsp;    public Vector2 getPosition() {
-<b class="fc"><i>337</i>&nbsp;        return this.position;</b>
-<i>338</i>&nbsp;    }
-<i>339</i>&nbsp;
-<i>340</i>&nbsp;    public CircularLinkedList getPath() {
-<b class="nc"><i>341</i>&nbsp;        return this.path;</b>
-<i>342</i>&nbsp;    }
-<i>343</i>&nbsp;
+<i>330</i>&nbsp;    /**
+<i>331</i>&nbsp;     * Damages the Station depending on the patrol&#39;s AP
+<i>332</i>&nbsp;     *
+<i>333</i>&nbsp;     * @param particle  the particle which damages the station
+<i>334</i>&nbsp;     */
+<i>335</i>&nbsp;    private void damage(BlasterParticle particle) {
+<b class="nc"><i>336</i>&nbsp;        particle.getTarget().damage(0.15f);</b>
+<b class="nc"><i>337</i>&nbsp;    }</b>
+<i>338</i>&nbsp;
+<i>339</i>&nbsp;    public float getHP() {
+<b class="nc"><i>340</i>&nbsp;        return this.HP;</b>
+<i>341</i>&nbsp;    }
+<i>342</i>&nbsp;
+<b class="nc"><i>343</i>&nbsp;    public void setHP(int hp) { this.HP = hp; }</b>
 <i>344</i>&nbsp;
-<i>345</i>&nbsp;    public boolean getMoving() {
-<b class="nc"><i>346</i>&nbsp;        return this.moving;</b>
+<i>345</i>&nbsp;    public PatrolType getType() {
+<b class="nc"><i>346</i>&nbsp;        return this.type;</b>
 <i>347</i>&nbsp;    }
 <i>348</i>&nbsp;
-<i>349</i>&nbsp;    public boolean withinRange(Vector2 targetPos) {
-<b class="nc"><i>350</i>&nbsp;        return targetPos==this.position;</b>
+<i>349</i>&nbsp;    public Vector2 getPosition() {
+<b class="fc"><i>350</i>&nbsp;        return this.position;</b>
 <i>351</i>&nbsp;    }
 <i>352</i>&nbsp;
-<b class="nc"><i>353</i>&nbsp;    public void setTargetX(float x) {this.type.getTarget().x = x;}</b>
-<b class="nc"><i>354</i>&nbsp;    public void setTargetY(float y) {this.type.getTarget().y = y;}</b>
-<b class="nc"><i>355</i>&nbsp;    public void setPositionX(float x) {this.position.x = x;}</b>
-<b class="nc"><i>356</i>&nbsp;    public void setPositionY(float y) {this.position.y = y;}</b>
-<b class="nc"><i>357</i>&nbsp;    public float getPositionX() {return nextTile.x;}</b>
-<b class="nc"><i>358</i>&nbsp;    public float getPositionY() {return nextTile.y;}</b>
-<i>359</i>&nbsp;
-<i>360</i>&nbsp;}
+<i>353</i>&nbsp;    public CircularLinkedList getPath() {
+<b class="nc"><i>354</i>&nbsp;        return this.path;</b>
+<i>355</i>&nbsp;    }
+<i>356</i>&nbsp;
+<i>357</i>&nbsp;
+<i>358</i>&nbsp;    public boolean getMoving() {
+<b class="nc"><i>359</i>&nbsp;        return this.moving;</b>
+<i>360</i>&nbsp;    }
+<i>361</i>&nbsp;
+<i>362</i>&nbsp;    public boolean withinRange(Vector2 targetPos) {
+<b class="nc"><i>363</i>&nbsp;        return targetPos==this.position;</b>
+<i>364</i>&nbsp;    }
+<i>365</i>&nbsp;
+<b class="nc"><i>366</i>&nbsp;    public void setTargetX(float x) {this.type.getTarget().x = x;}</b>
+<b class="nc"><i>367</i>&nbsp;    public void setTargetY(float y) {this.type.getTarget().y = y;}</b>
+<b class="nc"><i>368</i>&nbsp;    public void setPositionX(float x) {this.position.x = x;}</b>
+<b class="nc"><i>369</i>&nbsp;    public void setPositionY(float y) {this.position.y = y;}</b>
+<b class="nc"><i>370</i>&nbsp;    public float getPositionX() {return nextTile.x;}</b>
+<b class="nc"><i>371</i>&nbsp;    public float getPositionY() {return nextTile.y;}</b>
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

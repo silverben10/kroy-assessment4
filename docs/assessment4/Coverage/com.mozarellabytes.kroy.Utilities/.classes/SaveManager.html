@@ -86,111 +86,113 @@
 <i>12</i>&nbsp;
 <i>13</i>&nbsp;import java.util.ArrayList;
 <i>14</i>&nbsp;
-<i>15</i>&nbsp;public class SaveManager {
-<i>16</i>&nbsp;
-<b class="nc"><i>17</i>&nbsp;    public SaveManager() {</b>
-<i>18</i>&nbsp;    }
-<i>19</i>&nbsp;
-<i>20</i>&nbsp;    public static void saveGameData(GameScreen gameScreen, int saveSlot) {
-<b class="nc"><i>21</i>&nbsp;        Preferences gameData = Gdx.app.getPreferences(&quot;save&quot;+saveSlot+&quot;.xml&quot;);</b>
-<i>22</i>&nbsp;
-<i>23</i>&nbsp;        /* *
-<i>24</i>&nbsp;        GameState.java
-<i>25</i>&nbsp;        - activeFireTrucks
-<i>26</i>&nbsp;        - fortressesDestroyed
-<i>27</i>&nbsp;        - stationDestroyed
-<i>28</i>&nbsp;        - hasShownDanceTutorial
-<i>29</i>&nbsp;
-<i>30</i>&nbsp;        GameScreen.java
-<i>31</i>&nbsp;        - Fortress ArrayList
-<i>32</i>&nbsp;        - FireTruck ArrayList
-<i>33</i>&nbsp;        - deadEntities ArrayList
-<i>34</i>&nbsp;        - difficultyControl
-<i>35</i>&nbsp;        * */
-<i>36</i>&nbsp;
-<i>37</i>&nbsp;        // 1. Save GameState data.
-<b class="nc"><i>38</i>&nbsp;        gameData.putInteger(&quot;activeFireTrucks&quot;, gameScreen.gameState.getActiveFireTrucks());</b>
-<b class="nc"><i>39</i>&nbsp;        gameData.putInteger(&quot;fortressesDestroyed&quot;, gameScreen.gameState.getFortressesDestroyed());</b>
-<b class="nc"><i>40</i>&nbsp;        gameData.putBoolean(&quot;stationDestroyed&quot;, gameScreen.gameState.isStationDestroyed());</b>
-<b class="nc"><i>41</i>&nbsp;        gameData.putBoolean(&quot;hasShownDanceTutorial&quot;, gameScreen.gameState.hasDanceTutorialShown());</b>
-<i>42</i>&nbsp;
-<i>43</i>&nbsp;        // 2. Save GameScreen data.
-<b class="nc"><i>44</i>&nbsp;        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();</b>
-<i>45</i>&nbsp;        // Was causing errors but fixed by removing unnecessary texture attribute from Patrol class.
-<b class="nc"><i>46</i>&nbsp;        gameData.putString(&quot;deadEntitiesList&quot;, gson.toJson(gameScreen.getDeadEntities()));</b>
-<b class="nc"><i>47</i>&nbsp;        gameData.putString(&quot;currentDifficulty&quot;, gson.toJson(gameScreen.getDifficultyControl().getCurrentDifficulty()));</b>
-<b class="nc"><i>48</i>&nbsp;        gameData.putString(&quot;fortressesList&quot;, createFortressArray(gameScreen.getFortresses()).toString());</b>
-<b class="nc"><i>49</i>&nbsp;        gameData.putString(&quot;fireTruckList&quot;, createFireTruckArray(gameScreen.getStation().getTrucks()).toString());</b>
-<b class="nc"><i>50</i>&nbsp;        gameData.putFloat(&quot;fireStationHP&quot;, gameScreen.getStation().getHP());</b>
-<b class="nc"><i>51</i>&nbsp;        gameData.putInteger(&quot;gameDifficulty&quot;, gameScreen.getFixedGameDifficulty());</b>
-<i>52</i>&nbsp;
-<i>53</i>&nbsp;        // 3. Write the data to .JSON file.
-<i>54</i>&nbsp;        try {
-<b class="nc"><i>55</i>&nbsp;            gameData.flush();</b>
-<b class="nc"><i>56</i>&nbsp;            System.out.println(&quot;Saved game state.&quot;);</b>
-<i>57</i>&nbsp;        }
-<b class="nc"><i>58</i>&nbsp;        catch (Exception e) {</b>
-<b class="nc"><i>59</i>&nbsp;            System.out.println(&quot;There was an error...&quot;);</b>
-<b class="nc"><i>60</i>&nbsp;            System.out.println(e.toString());</b>
-<b class="nc"><i>61</i>&nbsp;        }</b>
-<i>62</i>&nbsp;    }
-<i>63</i>&nbsp;
-<i>64</i>&nbsp;    public static Preferences loadGameData(int loadSlot) {
-<b class="nc"><i>65</i>&nbsp;        Preferences prefs = Gdx.app.getPreferences(&quot;save&quot;+loadSlot+&quot;.xml&quot;);</b>
-<b class="nc"><i>66</i>&nbsp;        System.out.println(prefs.get());</b>
-<b class="nc"><i>67</i>&nbsp;        return prefs;</b>
-<i>68</i>&nbsp;    }
-<i>69</i>&nbsp;
-<i>70</i>&nbsp;    /**
-<i>71</i>&nbsp;     * Manually constructs and returns a JsonArray of all the fire trucks in the game. This was needed because the Gson
-<i>72</i>&nbsp;     * library didn&#39;t appear capable of handling the Vector2 positions of the fire trucks (they weren&#39;t being serialised).
-<i>73</i>&nbsp;     * @param truckList The arrayList of FireTrucks from the GameScreen.
-<i>74</i>&nbsp;     * @return JsonArray of FireTruck objects.
-<i>75</i>&nbsp;     */
-<i>76</i>&nbsp;    public static JsonArray createFireTruckArray(ArrayList&lt;FireTruck&gt; truckList) {
-<b class="nc"><i>77</i>&nbsp;        JsonArray JsonTruckArray = new JsonArray();</b>
-<b class="nc"><i>78</i>&nbsp;        for (FireTruck truck : truckList) {</b>
-<b class="nc"><i>79</i>&nbsp;            JsonObject JsonTruck = new JsonObject();</b>
-<b class="nc"><i>80</i>&nbsp;            JsonTruck.addProperty(&quot;type&quot;, truck.getType().toString());</b>
-<b class="nc"><i>81</i>&nbsp;            JsonTruck.addProperty(&quot;HP&quot;, truck.getHP());</b>
-<b class="nc"><i>82</i>&nbsp;            JsonTruck.addProperty(&quot;reserve&quot;, truck.getReserve());</b>
-<i>83</i>&nbsp;
-<i>84</i>&nbsp;            // Creates a new JsonObject for the truck&#39;s position, since it&#39;s composed of x and y coordinates.
-<b class="nc"><i>85</i>&nbsp;            JsonObject JsonTruckPos = new JsonObject();</b>
-<b class="nc"><i>86</i>&nbsp;            JsonTruckPos.addProperty(&quot;x&quot;, Math.round(truck.getPosition().x));</b>
-<b class="nc"><i>87</i>&nbsp;            JsonTruckPos.addProperty(&quot;y&quot;, Math.round(truck.getPosition().y));</b>
-<i>88</i>&nbsp;
-<b class="nc"><i>89</i>&nbsp;            JsonTruck.add(&quot;position&quot;, JsonTruckPos);</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;//#Assessment 4 allows for the saving of the games progress
+<i>17</i>&nbsp;public class SaveManager {
+<i>18</i>&nbsp;
+<b class="nc"><i>19</i>&nbsp;    public SaveManager() {</b>
+<i>20</i>&nbsp;    }
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    public static void saveGameData(GameScreen gameScreen, int saveSlot) {
+<b class="nc"><i>23</i>&nbsp;        Preferences gameData = Gdx.app.getPreferences(&quot;save&quot;+saveSlot+&quot;.xml&quot;);</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;        /* *
+<i>26</i>&nbsp;        GameState.java
+<i>27</i>&nbsp;        - activeFireTrucks
+<i>28</i>&nbsp;        - fortressesDestroyed
+<i>29</i>&nbsp;        - stationDestroyed
+<i>30</i>&nbsp;        - hasShownDanceTutorial
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;        GameScreen.java
+<i>33</i>&nbsp;        - Fortress ArrayList
+<i>34</i>&nbsp;        - FireTruck ArrayList
+<i>35</i>&nbsp;        - deadEntities ArrayList
+<i>36</i>&nbsp;        - difficultyControl
+<i>37</i>&nbsp;        * */
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;        // 1. Save GameState data.
+<b class="nc"><i>40</i>&nbsp;        gameData.putInteger(&quot;activeFireTrucks&quot;, gameScreen.gameState.getActiveFireTrucks());</b>
+<b class="nc"><i>41</i>&nbsp;        gameData.putInteger(&quot;fortressesDestroyed&quot;, gameScreen.gameState.getFortressesDestroyed());</b>
+<b class="nc"><i>42</i>&nbsp;        gameData.putBoolean(&quot;stationDestroyed&quot;, gameScreen.gameState.isStationDestroyed());</b>
+<b class="nc"><i>43</i>&nbsp;        gameData.putBoolean(&quot;hasShownDanceTutorial&quot;, gameScreen.gameState.hasDanceTutorialShown());</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;        // 2. Save GameScreen data.
+<b class="nc"><i>46</i>&nbsp;        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();</b>
+<i>47</i>&nbsp;        // Was causing errors but fixed by removing unnecessary texture attribute from Patrol class.
+<b class="nc"><i>48</i>&nbsp;        gameData.putString(&quot;deadEntitiesList&quot;, gson.toJson(gameScreen.getDeadEntities()));</b>
+<b class="nc"><i>49</i>&nbsp;        gameData.putString(&quot;currentDifficulty&quot;, gson.toJson(gameScreen.getDifficultyControl().getCurrentDifficulty()));</b>
+<b class="nc"><i>50</i>&nbsp;        gameData.putString(&quot;fortressesList&quot;, createFortressArray(gameScreen.getFortresses()).toString());</b>
+<b class="nc"><i>51</i>&nbsp;        gameData.putString(&quot;fireTruckList&quot;, createFireTruckArray(gameScreen.getStation().getTrucks()).toString());</b>
+<b class="nc"><i>52</i>&nbsp;        gameData.putFloat(&quot;fireStationHP&quot;, gameScreen.getStation().getHP());</b>
+<b class="nc"><i>53</i>&nbsp;        gameData.putInteger(&quot;gameDifficulty&quot;, gameScreen.getFixedGameDifficulty());</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;        // 3. Write the data to .JSON file.
+<i>56</i>&nbsp;        try {
+<b class="nc"><i>57</i>&nbsp;            gameData.flush();</b>
+<b class="nc"><i>58</i>&nbsp;            System.out.println(&quot;Saved game state.&quot;);</b>
+<i>59</i>&nbsp;        }
+<b class="nc"><i>60</i>&nbsp;        catch (Exception e) {</b>
+<b class="nc"><i>61</i>&nbsp;            System.out.println(&quot;There was an error...&quot;);</b>
+<b class="nc"><i>62</i>&nbsp;            System.out.println(e.toString());</b>
+<b class="nc"><i>63</i>&nbsp;        }</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    public static Preferences loadGameData(int loadSlot) {
+<b class="nc"><i>67</i>&nbsp;        Preferences prefs = Gdx.app.getPreferences(&quot;save&quot;+loadSlot+&quot;.xml&quot;);</b>
+<b class="nc"><i>68</i>&nbsp;        System.out.println(prefs.get());</b>
+<b class="nc"><i>69</i>&nbsp;        return prefs;</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Manually constructs and returns a JsonArray of all the fire trucks in the game. This was needed because the Gson
+<i>74</i>&nbsp;     * library didn&#39;t appear capable of handling the Vector2 positions of the fire trucks (they weren&#39;t being serialised).
+<i>75</i>&nbsp;     * @param truckList The arrayList of FireTrucks from the GameScreen.
+<i>76</i>&nbsp;     * @return JsonArray of FireTruck objects.
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    public static JsonArray createFireTruckArray(ArrayList&lt;FireTruck&gt; truckList) {
+<b class="nc"><i>79</i>&nbsp;        JsonArray JsonTruckArray = new JsonArray();</b>
+<b class="nc"><i>80</i>&nbsp;        for (FireTruck truck : truckList) {</b>
+<b class="nc"><i>81</i>&nbsp;            JsonObject JsonTruck = new JsonObject();</b>
+<b class="nc"><i>82</i>&nbsp;            JsonTruck.addProperty(&quot;type&quot;, truck.getType().toString());</b>
+<b class="nc"><i>83</i>&nbsp;            JsonTruck.addProperty(&quot;HP&quot;, truck.getHP());</b>
+<b class="nc"><i>84</i>&nbsp;            JsonTruck.addProperty(&quot;reserve&quot;, truck.getReserve());</b>
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;            // Creates a new JsonObject for the truck&#39;s position, since it&#39;s composed of x and y coordinates.
+<b class="nc"><i>87</i>&nbsp;            JsonObject JsonTruckPos = new JsonObject();</b>
+<b class="nc"><i>88</i>&nbsp;            JsonTruckPos.addProperty(&quot;x&quot;, Math.round(truck.getPosition().x));</b>
+<b class="nc"><i>89</i>&nbsp;            JsonTruckPos.addProperty(&quot;y&quot;, Math.round(truck.getPosition().y));</b>
 <i>90</i>&nbsp;
-<b class="nc"><i>91</i>&nbsp;            JsonTruckArray.add(JsonTruck);</b>
-<b class="nc"><i>92</i>&nbsp;        }</b>
-<b class="nc"><i>93</i>&nbsp;        return JsonTruckArray;</b>
-<i>94</i>&nbsp;    }
-<i>95</i>&nbsp;
-<i>96</i>&nbsp;    public static JsonArray createFortressArray(ArrayList&lt;Fortress&gt; fortressList) {
-<b class="nc"><i>97</i>&nbsp;        JsonArray JsonFortressArray = new JsonArray();</b>
-<b class="nc"><i>98</i>&nbsp;        for (Fortress fortress : fortressList) {</b>
-<b class="nc"><i>99</i>&nbsp;            JsonObject JsonFortress = new JsonObject();</b>
-<b class="nc"><i>100</i>&nbsp;            JsonFortress.addProperty(&quot;fortressType&quot;, fortress.getFortressType().toString());</b>
-<b class="nc"><i>101</i>&nbsp;            JsonFortress.addProperty(&quot;HP&quot;, fortress.getHP());</b>
-<i>102</i>&nbsp;
-<b class="nc"><i>103</i>&nbsp;            JsonObject JsonFortressPos = new JsonObject();</b>
-<b class="nc"><i>104</i>&nbsp;            JsonFortressPos.addProperty(&quot;x&quot;, fortress.getPosition().x);</b>
-<b class="nc"><i>105</i>&nbsp;            JsonFortressPos.addProperty(&quot;y&quot;, fortress.getPosition().y);</b>
-<i>106</i>&nbsp;
-<b class="nc"><i>107</i>&nbsp;            JsonFortress.add(&quot;position&quot;, JsonFortressPos);</b>
+<b class="nc"><i>91</i>&nbsp;            JsonTruck.add(&quot;position&quot;, JsonTruckPos);</b>
+<i>92</i>&nbsp;
+<b class="nc"><i>93</i>&nbsp;            JsonTruckArray.add(JsonTruck);</b>
+<b class="nc"><i>94</i>&nbsp;        }</b>
+<b class="nc"><i>95</i>&nbsp;        return JsonTruckArray;</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    public static JsonArray createFortressArray(ArrayList&lt;Fortress&gt; fortressList) {
+<b class="nc"><i>99</i>&nbsp;        JsonArray JsonFortressArray = new JsonArray();</b>
+<b class="nc"><i>100</i>&nbsp;        for (Fortress fortress : fortressList) {</b>
+<b class="nc"><i>101</i>&nbsp;            JsonObject JsonFortress = new JsonObject();</b>
+<b class="nc"><i>102</i>&nbsp;            JsonFortress.addProperty(&quot;fortressType&quot;, fortress.getFortressType().toString());</b>
+<b class="nc"><i>103</i>&nbsp;            JsonFortress.addProperty(&quot;HP&quot;, fortress.getHP());</b>
+<i>104</i>&nbsp;
+<b class="nc"><i>105</i>&nbsp;            JsonObject JsonFortressPos = new JsonObject();</b>
+<b class="nc"><i>106</i>&nbsp;            JsonFortressPos.addProperty(&quot;x&quot;, fortress.getPosition().x);</b>
+<b class="nc"><i>107</i>&nbsp;            JsonFortressPos.addProperty(&quot;y&quot;, fortress.getPosition().y);</b>
 <i>108</i>&nbsp;
-<b class="nc"><i>109</i>&nbsp;            JsonFortressArray.add(JsonFortress);</b>
-<b class="nc"><i>110</i>&nbsp;        }</b>
-<b class="nc"><i>111</i>&nbsp;        return JsonFortressArray;</b>
-<i>112</i>&nbsp;    }
-<i>113</i>&nbsp;}
+<b class="nc"><i>109</i>&nbsp;            JsonFortress.add(&quot;position&quot;, JsonFortressPos);</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;            JsonFortressArray.add(JsonFortress);</b>
+<b class="nc"><i>112</i>&nbsp;        }</b>
+<b class="nc"><i>113</i>&nbsp;        return JsonFortressArray;</b>
+<i>114</i>&nbsp;    }
+<i>115</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>

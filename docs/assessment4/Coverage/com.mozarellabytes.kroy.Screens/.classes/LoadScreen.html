@@ -87,222 +87,224 @@
 <i>13</i>&nbsp;import com.mozarellabytes.kroy.Kroy;
 <i>14</i>&nbsp;import com.mozarellabytes.kroy.Utilities.*;
 <i>15</i>&nbsp;
-<i>16</i>&nbsp;public class LoadScreen implements Screen {
-<i>17</i>&nbsp;
-<i>18</i>&nbsp;    private final Kroy game;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;//#Assessment 4 Allows for loading of saved games
+<i>18</i>&nbsp;public class LoadScreen implements Screen {
 <i>19</i>&nbsp;
-<i>20</i>&nbsp;    private final Texture backgroundImage;
+<i>20</i>&nbsp;    private final Kroy game;
 <i>21</i>&nbsp;
-<i>22</i>&nbsp;    private final OrthographicCamera camera;
+<i>22</i>&nbsp;    private final Texture backgroundImage;
 <i>23</i>&nbsp;
-<i>24</i>&nbsp;    private final Rectangle exitButton;
+<i>24</i>&nbsp;    private final OrthographicCamera camera;
 <i>25</i>&nbsp;
-<i>26</i>&nbsp;    private final Screen parent;
+<i>26</i>&nbsp;    private final Rectangle exitButton;
 <i>27</i>&nbsp;
-<i>28</i>&nbsp;    /**
-<i>29</i>&nbsp;     * Width of the screen
-<i>30</i>&nbsp;     */
-<i>31</i>&nbsp;    private final float screenWidth;
-<i>32</i>&nbsp;
-<i>33</i>&nbsp;    /**
-<i>34</i>&nbsp;     * Height of the screen
-<i>35</i>&nbsp;     */
-<i>36</i>&nbsp;    private final float screenHeight;
-<i>37</i>&nbsp;
-<b class="nc"><i>38</i>&nbsp;    private GlyphLayout layout = new GlyphLayout();</b>
+<i>28</i>&nbsp;    private final Screen parent;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Width of the screen
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    private final float screenWidth;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Height of the screen
+<i>37</i>&nbsp;     */
+<i>38</i>&nbsp;    private final float screenHeight;
 <i>39</i>&nbsp;
-<i>40</i>&nbsp;    private final Rectangle loadButton1;
+<b class="nc"><i>40</i>&nbsp;    private GlyphLayout layout = new GlyphLayout();</b>
 <i>41</i>&nbsp;
-<i>42</i>&nbsp;    private final Rectangle loadButton2;
+<i>42</i>&nbsp;    private final Rectangle loadButton1;
 <i>43</i>&nbsp;
-<i>44</i>&nbsp;    private final Rectangle loadButton3;
+<i>44</i>&nbsp;    private final Rectangle loadButton2;
 <i>45</i>&nbsp;
-<i>46</i>&nbsp;    /**
-<i>47</i>&nbsp;     * Constructor for the Save scree.
-<i>48</i>&nbsp;     *
-<i>49</i>&nbsp;     * @param game   Reference to the Kroy LibGDX game
-<i>50</i>&nbsp;     * @param parent the screen that called the Save screen
-<i>51</i>&nbsp;     */
-<b class="nc"><i>52</i>&nbsp;    public LoadScreen(Kroy game, Screen parent) {</b>
-<b class="nc"><i>53</i>&nbsp;        this.game = game;</b>
-<b class="nc"><i>54</i>&nbsp;        this.parent = parent;</b>
-<i>55</i>&nbsp;
-<b class="nc"><i>56</i>&nbsp;        camera = new OrthographicCamera();</b>
-<b class="nc"><i>57</i>&nbsp;        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
-<i>58</i>&nbsp;
-<b class="nc"><i>59</i>&nbsp;        screenWidth = camera.viewportWidth;</b>
-<b class="nc"><i>60</i>&nbsp;        screenHeight = camera.viewportHeight;</b>
-<i>61</i>&nbsp;
-<b class="nc"><i>62</i>&nbsp;        Gdx.input.setInputProcessor(new LoadScreenInputHandler(this));</b>
+<i>46</i>&nbsp;    private final Rectangle loadButton3;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    /**
+<i>49</i>&nbsp;     * Constructor for the Save scree.
+<i>50</i>&nbsp;     *
+<i>51</i>&nbsp;     * @param game   Reference to the Kroy LibGDX game
+<i>52</i>&nbsp;     * @param parent the screen that called the Save screen
+<i>53</i>&nbsp;     */
+<b class="nc"><i>54</i>&nbsp;    public LoadScreen(Kroy game, Screen parent) {</b>
+<b class="nc"><i>55</i>&nbsp;        this.game = game;</b>
+<b class="nc"><i>56</i>&nbsp;        this.parent = parent;</b>
+<i>57</i>&nbsp;
+<b class="nc"><i>58</i>&nbsp;        camera = new OrthographicCamera();</b>
+<b class="nc"><i>59</i>&nbsp;        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</b>
+<i>60</i>&nbsp;
+<b class="nc"><i>61</i>&nbsp;        screenWidth = camera.viewportWidth;</b>
+<b class="nc"><i>62</i>&nbsp;        screenHeight = camera.viewportHeight;</b>
 <i>63</i>&nbsp;
-<b class="nc"><i>64</i>&nbsp;        backgroundImage = new Texture(Gdx.files.internal(&quot;images/YorkMapEdit.png&quot;), true);</b>
-<b class="nc"><i>65</i>&nbsp;        backgroundImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);</b>
-<i>66</i>&nbsp;
-<b class="nc"><i>67</i>&nbsp;        exitButton = new Rectangle();</b>
-<b class="nc"><i>68</i>&nbsp;        exitButton.x = (int) (screenWidth / 1.08f);</b>
-<b class="nc"><i>69</i>&nbsp;        exitButton.y = (int) (screenHeight / 1.126f);</b>
-<b class="nc"><i>70</i>&nbsp;        exitButton.width = 30;</b>
-<b class="nc"><i>71</i>&nbsp;        exitButton.height = 30;</b>
-<i>72</i>&nbsp;
-<b class="nc"><i>73</i>&nbsp;        loadButton1 = new Rectangle();</b>
-<b class="nc"><i>74</i>&nbsp;        loadButton1.width = 500;</b>
-<b class="nc"><i>75</i>&nbsp;        loadButton1.height = 50;</b>
-<b class="nc"><i>76</i>&nbsp;        loadButton1.x = screenWidth/2 - loadButton1.width/2;</b>
-<b class="nc"><i>77</i>&nbsp;        loadButton1.y = screenHeight - 400;</b>
-<i>78</i>&nbsp;
-<b class="nc"><i>79</i>&nbsp;        loadButton2 = new Rectangle();</b>
-<b class="nc"><i>80</i>&nbsp;        loadButton2.width = 500;</b>
-<b class="nc"><i>81</i>&nbsp;        loadButton2.height = 50;</b>
-<b class="nc"><i>82</i>&nbsp;        loadButton2.x = screenWidth/2 - loadButton2.width/2;</b>
-<b class="nc"><i>83</i>&nbsp;        loadButton2.y = screenHeight - 500;</b>
-<i>84</i>&nbsp;
-<b class="nc"><i>85</i>&nbsp;        loadButton3 = new Rectangle();</b>
-<b class="nc"><i>86</i>&nbsp;        loadButton3.width = 500;</b>
-<b class="nc"><i>87</i>&nbsp;        loadButton3.height = 50;</b>
-<b class="nc"><i>88</i>&nbsp;        loadButton3.x = screenWidth/2 - loadButton3.width/2;</b>
-<b class="nc"><i>89</i>&nbsp;        loadButton3.y = screenHeight - 600;</b>
-<i>90</i>&nbsp;    }
-<i>91</i>&nbsp;
-<i>92</i>&nbsp;    @Override
-<i>93</i>&nbsp;    public void show() {
-<i>94</i>&nbsp;
-<i>95</i>&nbsp;    }
+<b class="nc"><i>64</i>&nbsp;        Gdx.input.setInputProcessor(new LoadScreenInputHandler(this));</b>
+<i>65</i>&nbsp;
+<b class="nc"><i>66</i>&nbsp;        backgroundImage = new Texture(Gdx.files.internal(&quot;images/YorkMapEdit.png&quot;), true);</b>
+<b class="nc"><i>67</i>&nbsp;        backgroundImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);</b>
+<i>68</i>&nbsp;
+<b class="nc"><i>69</i>&nbsp;        exitButton = new Rectangle();</b>
+<b class="nc"><i>70</i>&nbsp;        exitButton.x = (int) (screenWidth / 1.08f);</b>
+<b class="nc"><i>71</i>&nbsp;        exitButton.y = (int) (screenHeight / 1.126f);</b>
+<b class="nc"><i>72</i>&nbsp;        exitButton.width = 30;</b>
+<b class="nc"><i>73</i>&nbsp;        exitButton.height = 30;</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;        loadButton1 = new Rectangle();</b>
+<b class="nc"><i>76</i>&nbsp;        loadButton1.width = 500;</b>
+<b class="nc"><i>77</i>&nbsp;        loadButton1.height = 50;</b>
+<b class="nc"><i>78</i>&nbsp;        loadButton1.x = screenWidth/2 - loadButton1.width/2;</b>
+<b class="nc"><i>79</i>&nbsp;        loadButton1.y = screenHeight - 400;</b>
+<i>80</i>&nbsp;
+<b class="nc"><i>81</i>&nbsp;        loadButton2 = new Rectangle();</b>
+<b class="nc"><i>82</i>&nbsp;        loadButton2.width = 500;</b>
+<b class="nc"><i>83</i>&nbsp;        loadButton2.height = 50;</b>
+<b class="nc"><i>84</i>&nbsp;        loadButton2.x = screenWidth/2 - loadButton2.width/2;</b>
+<b class="nc"><i>85</i>&nbsp;        loadButton2.y = screenHeight - 500;</b>
+<i>86</i>&nbsp;
+<b class="nc"><i>87</i>&nbsp;        loadButton3 = new Rectangle();</b>
+<b class="nc"><i>88</i>&nbsp;        loadButton3.width = 500;</b>
+<b class="nc"><i>89</i>&nbsp;        loadButton3.height = 50;</b>
+<b class="nc"><i>90</i>&nbsp;        loadButton3.x = screenWidth/2 - loadButton3.width/2;</b>
+<b class="nc"><i>91</i>&nbsp;        loadButton3.y = screenHeight - 600;</b>
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    @Override
+<i>95</i>&nbsp;    public void show() {
 <i>96</i>&nbsp;
-<i>97</i>&nbsp;    @Override
-<i>98</i>&nbsp;    public void render(float delta) {
-<b class="nc"><i>99</i>&nbsp;        camera.update();</b>
-<i>100</i>&nbsp;
-<b class="nc"><i>101</i>&nbsp;        drawBackgroundImage();</b>
-<b class="nc"><i>102</i>&nbsp;        drawFilledBackgroundBox();</b>
-<i>103</i>&nbsp;
-<b class="nc"><i>104</i>&nbsp;        game.batch.begin();</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    @Override
+<i>100</i>&nbsp;    public void render(float delta) {
+<b class="nc"><i>101</i>&nbsp;        camera.update();</b>
+<i>102</i>&nbsp;
+<b class="nc"><i>103</i>&nbsp;        drawBackgroundImage();</b>
+<b class="nc"><i>104</i>&nbsp;        drawFilledBackgroundBox();</b>
 <i>105</i>&nbsp;
-<b class="nc"><i>106</i>&nbsp;        layout.setText(game.font50, &quot;Load Game&quot;);</b>
-<b class="nc"><i>107</i>&nbsp;        game.font50.draw(game.batch, layout, screenWidth / 2 - layout.width / 2, screenHeight - 100);</b>
-<i>108</i>&nbsp;
-<b class="nc"><i>109</i>&nbsp;        layout.setText(game.font25, &quot;Select one of the slots below to load a previous game.&quot;);</b>
-<b class="nc"><i>110</i>&nbsp;        game.font25.draw(game.batch, layout, screenWidth / 2 - layout.width / 2, screenHeight - 175);</b>
-<b class="nc"><i>111</i>&nbsp;        game.batch.end();</b>
-<i>112</i>&nbsp;
-<b class="nc"><i>113</i>&nbsp;        renderLoadButton(1, loadButton1.x, loadButton1.y, (int) loadButton1.width, (int) loadButton1.height);</b>
-<b class="nc"><i>114</i>&nbsp;        renderLoadButton(2, loadButton2.x, loadButton2.y, (int) loadButton2.width, (int) loadButton2.height);</b>
-<b class="nc"><i>115</i>&nbsp;        renderLoadButton(3, loadButton3.x,loadButton3.y, (int) loadButton3.width, (int) loadButton3.height);</b>
-<i>116</i>&nbsp;
-<b class="nc"><i>117</i>&nbsp;        renderExitButton();</b>
-<i>118</i>&nbsp;    }
-<i>119</i>&nbsp;
-<i>120</i>&nbsp;    @Override
-<i>121</i>&nbsp;    public void resize(int width, int height) {
-<i>122</i>&nbsp;
-<i>123</i>&nbsp;    }
+<b class="nc"><i>106</i>&nbsp;        game.batch.begin();</b>
+<i>107</i>&nbsp;
+<b class="nc"><i>108</i>&nbsp;        layout.setText(game.font50, &quot;Load Game&quot;);</b>
+<b class="nc"><i>109</i>&nbsp;        game.font50.draw(game.batch, layout, screenWidth / 2 - layout.width / 2, screenHeight - 100);</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;        layout.setText(game.font25, &quot;Select one of the slots below to load a previous game.&quot;);</b>
+<b class="nc"><i>112</i>&nbsp;        game.font25.draw(game.batch, layout, screenWidth / 2 - layout.width / 2, screenHeight - 175);</b>
+<b class="nc"><i>113</i>&nbsp;        game.batch.end();</b>
+<i>114</i>&nbsp;
+<b class="nc"><i>115</i>&nbsp;        renderLoadButton(1, loadButton1.x, loadButton1.y, (int) loadButton1.width, (int) loadButton1.height);</b>
+<b class="nc"><i>116</i>&nbsp;        renderLoadButton(2, loadButton2.x, loadButton2.y, (int) loadButton2.width, (int) loadButton2.height);</b>
+<b class="nc"><i>117</i>&nbsp;        renderLoadButton(3, loadButton3.x,loadButton3.y, (int) loadButton3.width, (int) loadButton3.height);</b>
+<i>118</i>&nbsp;
+<b class="nc"><i>119</i>&nbsp;        renderExitButton();</b>
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    @Override
+<i>123</i>&nbsp;    public void resize(int width, int height) {
 <i>124</i>&nbsp;
-<i>125</i>&nbsp;    @Override
-<i>126</i>&nbsp;    public void pause() {
-<i>127</i>&nbsp;
-<i>128</i>&nbsp;    }
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    @Override
+<i>128</i>&nbsp;    public void pause() {
 <i>129</i>&nbsp;
-<i>130</i>&nbsp;    @Override
-<i>131</i>&nbsp;    public void resume() {
-<i>132</i>&nbsp;
-<i>133</i>&nbsp;    }
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    @Override
+<i>133</i>&nbsp;    public void resume() {
 <i>134</i>&nbsp;
-<i>135</i>&nbsp;    @Override
-<i>136</i>&nbsp;    public void hide() {
-<i>137</i>&nbsp;
-<i>138</i>&nbsp;    }
+<i>135</i>&nbsp;    }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    @Override
+<i>138</i>&nbsp;    public void hide() {
 <i>139</i>&nbsp;
-<i>140</i>&nbsp;    public void closeScreen() {
-<b class="nc"><i>141</i>&nbsp;        Gdx.input.setInputProcessor(new MenuInputHandler((MenuScreen) parent));</b>
-<b class="nc"><i>142</i>&nbsp;        this.game.setScreen(parent);</b>
-<i>143</i>&nbsp;    }
-<i>144</i>&nbsp;
-<i>145</i>&nbsp;    public void toGameScreen(int gameDifficulty, int loadSlot) {
-<b class="nc"><i>146</i>&nbsp;        SoundFX.stopMusic();</b>
-<b class="nc"><i>147</i>&nbsp;        SoundFX.playGameMusic();</b>
-<b class="nc"><i>148</i>&nbsp;        this.game.setScreen(new GameScreen(game, gameDifficulty, loadSlot));</b>
-<i>149</i>&nbsp;    }
-<i>150</i>&nbsp;
-<i>151</i>&nbsp;    /**
-<i>152</i>&nbsp;     * Draws the image being shown behind the controls panel
-<i>153</i>&nbsp;     */
-<i>154</i>&nbsp;    private void drawBackgroundImage() {
-<b class="nc"><i>155</i>&nbsp;        game.batch.begin();</b>
-<b class="nc"><i>156</i>&nbsp;        game.batch.draw(backgroundImage, 0, 0, camera.viewportWidth, camera.viewportHeight);</b>
-<b class="nc"><i>157</i>&nbsp;        game.batch.end();</b>
-<i>158</i>&nbsp;    }
-<i>159</i>&nbsp;
-<i>160</i>&nbsp;    /**
-<i>161</i>&nbsp;     * Draws the black rectangle over which the controls are shown
-<i>162</i>&nbsp;     */
-<i>163</i>&nbsp;    private void drawFilledBackgroundBox() {
-<b class="nc"><i>164</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
-<b class="nc"><i>165</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 25.6f, screenHeight / 16, screenWidth / 1.085f, screenHeight / 1.14f, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK);</b>
-<b class="nc"><i>166</i>&nbsp;        game.shapeRenderer.end();</b>
-<i>167</i>&nbsp;    }
-<i>168</i>&nbsp;
-<i>169</i>&nbsp;    /**
-<i>170</i>&nbsp;     * Renders the exit button
-<i>171</i>&nbsp;     */
-<i>172</i>&nbsp;    private void renderExitButton() {
-<b class="nc"><i>173</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
-<b class="nc"><i>174</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 1.08f, screenHeight / 1.126f, 30, 30, Color.FIREBRICK, Color.FIREBRICK,</b>
-<i>175</i>&nbsp;            Color.FIREBRICK, Color.FIREBRICK);
-<b class="nc"><i>176</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 1.078f, screenHeight / 1.123f, 26, 26, Color.RED, Color.RED, Color.RED,</b>
-<i>177</i>&nbsp;            Color.RED);
-<b class="nc"><i>178</i>&nbsp;        game.shapeRenderer.end();</b>
-<i>179</i>&nbsp;
-<b class="nc"><i>180</i>&nbsp;        game.batch.begin();</b>
-<b class="nc"><i>181</i>&nbsp;        game.font33Red.draw(game.batch, &quot;X&quot;, screenWidth / 1.075f, screenHeight / 1.103f);</b>
-<b class="nc"><i>182</i>&nbsp;        game.batch.end();</b>
-<i>183</i>&nbsp;    }
-<i>184</i>&nbsp;
-<i>185</i>&nbsp;    private void renderLoadButton(int loadSlot, float x, float y, int buttonWidth, int buttonHeight) {
-<b class="nc"><i>186</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
-<b class="nc"><i>187</i>&nbsp;        game.shapeRenderer.rect(x, y, buttonWidth, buttonHeight, Color.LIGHT_GRAY, Color.LIGHT_GRAY,</b>
-<i>188</i>&nbsp;            Color.LIGHT_GRAY, Color.LIGHT_GRAY);
-<b class="nc"><i>189</i>&nbsp;        game.shapeRenderer.end();</b>
-<i>190</i>&nbsp;
-<b class="nc"><i>191</i>&nbsp;        game.batch.begin();</b>
-<b class="nc"><i>192</i>&nbsp;        layout.setText(game.font33Red, &quot;Slot &quot;+ loadSlot);</b>
-<b class="nc"><i>193</i>&nbsp;        game.font33Red.draw(game.batch, layout, x+(buttonWidth/2)-(layout.width/2), y+buttonHeight-(layout.height/2));</b>
-<b class="nc"><i>194</i>&nbsp;        game.batch.end();</b>
-<i>195</i>&nbsp;    }
-<i>196</i>&nbsp;
-<i>197</i>&nbsp;    public Rectangle getExitButton() {
-<b class="nc"><i>198</i>&nbsp;        return this.exitButton;</b>
-<i>199</i>&nbsp;    }
-<i>200</i>&nbsp;
-<i>201</i>&nbsp;    public Rectangle getLoadButton1() {
-<b class="nc"><i>202</i>&nbsp;        return loadButton1;</b>
-<i>203</i>&nbsp;    }
-<i>204</i>&nbsp;
-<i>205</i>&nbsp;    public Rectangle getLoadButton2() {
-<b class="nc"><i>206</i>&nbsp;        return loadButton2;</b>
-<i>207</i>&nbsp;    }
-<i>208</i>&nbsp;
-<i>209</i>&nbsp;    public Rectangle getLoadButton3() {
-<b class="nc"><i>210</i>&nbsp;        return loadButton3;</b>
-<i>211</i>&nbsp;    }
-<i>212</i>&nbsp;
-<i>213</i>&nbsp;    public OrthographicCamera getCamera() {
-<b class="nc"><i>214</i>&nbsp;        return this.camera;</b>
-<i>215</i>&nbsp;    }
-<i>216</i>&nbsp;
-<i>217</i>&nbsp;    public GameScreen getParent() {
-<b class="nc"><i>218</i>&nbsp;        return (GameScreen) this.parent;</b>
-<i>219</i>&nbsp;    }
-<i>220</i>&nbsp;
-<i>221</i>&nbsp;    @Override
-<i>222</i>&nbsp;    public void dispose() {
-<i>223</i>&nbsp;
-<i>224</i>&nbsp;    }
-<i>225</i>&nbsp;}
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;    public void closeScreen() {
+<b class="nc"><i>143</i>&nbsp;        Gdx.input.setInputProcessor(new MenuInputHandler((MenuScreen) parent));</b>
+<b class="nc"><i>144</i>&nbsp;        this.game.setScreen(parent);</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;    public void toGameScreen(int gameDifficulty, int loadSlot) {
+<b class="nc"><i>148</i>&nbsp;        SoundFX.stopMusic();</b>
+<b class="nc"><i>149</i>&nbsp;        SoundFX.playGameMusic();</b>
+<b class="nc"><i>150</i>&nbsp;        this.game.setScreen(new GameScreen(game, gameDifficulty, loadSlot));</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Draws the image being shown behind the controls panel
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    private void drawBackgroundImage() {
+<b class="nc"><i>157</i>&nbsp;        game.batch.begin();</b>
+<b class="nc"><i>158</i>&nbsp;        game.batch.draw(backgroundImage, 0, 0, camera.viewportWidth, camera.viewportHeight);</b>
+<b class="nc"><i>159</i>&nbsp;        game.batch.end();</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * Draws the black rectangle over which the controls are shown
+<i>164</i>&nbsp;     */
+<i>165</i>&nbsp;    private void drawFilledBackgroundBox() {
+<b class="nc"><i>166</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
+<b class="nc"><i>167</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 25.6f, screenHeight / 16, screenWidth / 1.085f, screenHeight / 1.14f, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK);</b>
+<b class="nc"><i>168</i>&nbsp;        game.shapeRenderer.end();</b>
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /**
+<i>172</i>&nbsp;     * Renders the exit button
+<i>173</i>&nbsp;     */
+<i>174</i>&nbsp;    private void renderExitButton() {
+<b class="nc"><i>175</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
+<b class="nc"><i>176</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 1.08f, screenHeight / 1.126f, 30, 30, Color.FIREBRICK, Color.FIREBRICK,</b>
+<i>177</i>&nbsp;            Color.FIREBRICK, Color.FIREBRICK);
+<b class="nc"><i>178</i>&nbsp;        game.shapeRenderer.rect(screenWidth / 1.078f, screenHeight / 1.123f, 26, 26, Color.RED, Color.RED, Color.RED,</b>
+<i>179</i>&nbsp;            Color.RED);
+<b class="nc"><i>180</i>&nbsp;        game.shapeRenderer.end();</b>
+<i>181</i>&nbsp;
+<b class="nc"><i>182</i>&nbsp;        game.batch.begin();</b>
+<b class="nc"><i>183</i>&nbsp;        game.font33Red.draw(game.batch, &quot;X&quot;, screenWidth / 1.075f, screenHeight / 1.103f);</b>
+<b class="nc"><i>184</i>&nbsp;        game.batch.end();</b>
+<i>185</i>&nbsp;    }
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;    private void renderLoadButton(int loadSlot, float x, float y, int buttonWidth, int buttonHeight) {
+<b class="nc"><i>188</i>&nbsp;        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
+<b class="nc"><i>189</i>&nbsp;        game.shapeRenderer.rect(x, y, buttonWidth, buttonHeight, Color.LIGHT_GRAY, Color.LIGHT_GRAY,</b>
+<i>190</i>&nbsp;            Color.LIGHT_GRAY, Color.LIGHT_GRAY);
+<b class="nc"><i>191</i>&nbsp;        game.shapeRenderer.end();</b>
+<i>192</i>&nbsp;
+<b class="nc"><i>193</i>&nbsp;        game.batch.begin();</b>
+<b class="nc"><i>194</i>&nbsp;        layout.setText(game.font33Red, &quot;Slot &quot;+ loadSlot);</b>
+<b class="nc"><i>195</i>&nbsp;        game.font33Red.draw(game.batch, layout, x+(buttonWidth/2)-(layout.width/2), y+buttonHeight-(layout.height/2));</b>
+<b class="nc"><i>196</i>&nbsp;        game.batch.end();</b>
+<i>197</i>&nbsp;    }
+<i>198</i>&nbsp;
+<i>199</i>&nbsp;    public Rectangle getExitButton() {
+<b class="nc"><i>200</i>&nbsp;        return this.exitButton;</b>
+<i>201</i>&nbsp;    }
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;    public Rectangle getLoadButton1() {
+<b class="nc"><i>204</i>&nbsp;        return loadButton1;</b>
+<i>205</i>&nbsp;    }
+<i>206</i>&nbsp;
+<i>207</i>&nbsp;    public Rectangle getLoadButton2() {
+<b class="nc"><i>208</i>&nbsp;        return loadButton2;</b>
+<i>209</i>&nbsp;    }
+<i>210</i>&nbsp;
+<i>211</i>&nbsp;    public Rectangle getLoadButton3() {
+<b class="nc"><i>212</i>&nbsp;        return loadButton3;</b>
+<i>213</i>&nbsp;    }
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;    public OrthographicCamera getCamera() {
+<b class="nc"><i>216</i>&nbsp;        return this.camera;</b>
+<i>217</i>&nbsp;    }
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;    public GameScreen getParent() {
+<b class="nc"><i>220</i>&nbsp;        return (GameScreen) this.parent;</b>
+<i>221</i>&nbsp;    }
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    @Override
+<i>224</i>&nbsp;    public void dispose() {
+<i>225</i>&nbsp;
+<i>226</i>&nbsp;    }
+<i>227</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-04-27 15:22</div>
+    <div style="float:right;">generated on 2020-04-28 14:37</div>
 </div>
 </body>
 </html>
