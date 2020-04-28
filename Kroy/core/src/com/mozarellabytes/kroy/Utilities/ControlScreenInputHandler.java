@@ -82,6 +82,7 @@ public class ControlScreenInputHandler implements InputProcessor {
         Vector2 clickCoordinates = new Vector2(screenX, screenY);
         Vector3 position = controlsScreen.camera.unproject(new Vector3(clickCoordinates.x, clickCoordinates.y, 0));
         if(controlsScreen.getExitButton().contains(position.x, position.y)){
+            isDanceScreen = true;
             controlsScreen.changeScreen();
         }
         return false;
