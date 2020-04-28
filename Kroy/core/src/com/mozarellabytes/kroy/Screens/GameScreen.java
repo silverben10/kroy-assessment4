@@ -274,8 +274,6 @@ public class GameScreen implements Screen {
                 new TypeToken<ArrayList<FireTruck>>() {
                 }.getType());
 
-            System.out.println(trucks);
-
             for (int i = 0; i < trucks.size(); i++) {
                 FireTruck truck = trucks.get(i);
                 Vector2 pos = truck.getPosition();
@@ -285,25 +283,18 @@ public class GameScreen implements Screen {
                 station.getTruck(i).setReserve(truck.getReserve());
             }
 
-            System.out.println(station.getTrucks());
-
             ArrayList<Fortress> fortressList = gson.fromJson(savedData.getString("fortressesList"),
                 new TypeToken<ArrayList<Fortress>>() {
                 }.getType());
 
-            System.out.println(fortressList);
 
             fortresses = new ArrayList<Fortress>();
 
             for (int i = 0; i < fortressList.size(); i++) {
                 Fortress fortress = fortressList.get(i);
-                System.out.println(fortress);
                 Vector2 pos = fortress.getPosition();
-                System.out.println(pos);
-                System.out.println(fortress.getFortressType());
 
                 fortresses.add(new Fortress(pos.x, pos.y, fixedGameDifficulty, fortress.fortressType));
-                System.out.println(fortresses);
                 fortresses.get(i).setHP(fortress.getHP());
             }
 
@@ -334,8 +325,13 @@ public class GameScreen implements Screen {
             //Assessment 4 Added powerups
             powerUps = new ArrayList<PowerUp>();
             powerUpsToRemove = new ArrayList<PowerUp>();
+            mirrorTrucks = new ArrayList<>();
 
             deadEntities = new ArrayList<>(7);
+
+            //#Assessment 4 explosion animations
+            explosions = new ArrayList<>();
+            explosionsToRemove = new ArrayList<>();
 
             // sets the origin point to which all of the polygon's local vertices are relative to.
             for (FireTruck truck : station.getTrucks()) {
@@ -632,7 +628,6 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < this.patrols.size(); i++) {
             Patrol patrol = this.patrols.get(i);
-            System.out.println("Currently using patrol " + patrol);
             patrol.updateSpray();
 
             if (patrol.getType().equals(PatrolType.Station)) {
@@ -653,7 +648,6 @@ public class GameScreen implements Screen {
                     }
                 }
             } else {
-                System.out.println("Moving patrols!");
                 patrol.move();
             }
             if (patrol.getHP() <= 0) {

@@ -147,7 +147,7 @@ public class LoadScreen implements Screen {
     public void toGameScreen(int gameDifficulty, int loadSlot) {
         SoundFX.stopMusic();
         SoundFX.playGameMusic();
-        this.game.setScreen(new GameScreen(game, gameDifficulty, loadSlot));
+        this.game.setScreen(new GameScreen(game, loadSlot, gameDifficulty));
     }
 
     /**
