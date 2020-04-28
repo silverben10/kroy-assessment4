@@ -1,8 +1,6 @@
 package com.mozarellabytes.kroy.Entities;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.GdxTestRunner;
 import com.mozarellabytes.kroy.Screens.GameScreen;
@@ -206,57 +204,69 @@ public class FireTruckTest {
 
     @Test
     public void checkTrucksFillToDifferentLevels() {
-        FireTruck fireTruck1 = new FireTruck(new Vector2(9,10), Ruby, collisionsMock);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
+        FireTruck rubyTruck = new FireTruck(new Vector2(9,10), Ruby, collisionsMock);
+        FireTruck sapphireTruck = new FireTruck(new Vector2(9,10), Sapphire, collisionsMock);
+        FireTruck amethystTruck = new FireTruck(new Vector2(9,10), Amethyst, collisionsMock);
+        FireTruck emeraldTruck = new FireTruck(new Vector2(9,10), Emerald, collisionsMock);
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Walmgate);
         FireStation fireStation = new FireStation(8, 10);
-        fireStation.spawn(fireTruck1);
-        fireStation.spawn(fireTruck2);
+        fireStation.spawn(rubyTruck);
+        fireStation.spawn(sapphireTruck);
+        fireStation.spawn(amethystTruck);
+        fireStation.spawn(emeraldTruck);
         for (int i=0; i<2000; i++) {
-            fireTruck1.attack(fortress);
-            fireTruck1.updateSpray();
-            fireTruck2.attack(fortress);
-            fireTruck2.updateSpray();
+            rubyTruck.attack(fortress);
+            rubyTruck.updateSpray();
+            sapphireTruck.attack(fortress);
+            sapphireTruck.updateSpray();
+            amethystTruck.attack(fortress);
+            amethystTruck.updateSpray();
+            emeraldTruck.attack(fortress);
+            emeraldTruck.updateSpray();
         }
-        float fireTruck1ReserveEmpty = fireTruck1.getReserve();
-        float fireTruck2ReserveEmpty = fireTruck2.getReserve();
 
-        for (int i=0; i<200; i++) {
+        for (int i=0; i<450; i++) {
             fireStation.restoreTrucks();
         }
 
-        boolean checkEmptyReservesAreSame = fireTruck1ReserveEmpty == fireTruck2ReserveEmpty;
-        System.out.println(checkEmptyReservesAreSame);
-        boolean checkSpeedTruckIsFull = fireTruck1.getReserve() == Ruby.getMaxReserve();
-        System.out.println(checkSpeedTruckIsFull);
-        boolean checkOceanTruckIsNotFull = fireTruck2.getReserve() !=  Sapphire.getMaxReserve();
-        System.out.println(checkOceanTruckIsNotFull);
-
-        assertTrue(checkEmptyReservesAreSame && checkSpeedTruckIsFull && checkOceanTruckIsNotFull);
+        assertTrue(
+                rubyTruck.getReserve() < emeraldTruck.getReserve() &&
+                        emeraldTruck.getReserve() < sapphireTruck.getReserve() &&
+                        sapphireTruck.getReserve() < amethystTruck.getReserve()
+        );
 
     }
 
     @Test
     public void checkTrucksRepairToDifferentLevels() {
-        FireTruck fireTruck1 = new FireTruck(new Vector2(9,10), Ruby, collisionsMock);
-        FireTruck fireTruck2 = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
+        FireTruck rubyTruck = new FireTruck(new Vector2(9,10), Ruby, collisionsMock);
+        FireTruck sapphireTruck = new FireTruck(new Vector2(10,10), Sapphire, collisionsMock);
+        FireTruck amethystTruck = new FireTruck(new Vector2(9,10), Amethyst, collisionsMock);
+        FireTruck emeraldTruck = new FireTruck(new Vector2(10,10), Emerald, collisionsMock);
         FireStation fireStation = new FireStation(8, 10);
-        fireStation.spawn(fireTruck1);
-        fireStation.spawn(fireTruck2);
-        fireTruck1.repair(Ruby.getMaxHP()*-1);
-        fireTruck2.repair(Sapphire.getMaxHP()*-1);
-        float fireTruck1Health0 = fireTruck1.getHP();
-        float fireTruck2Health0 = fireTruck2.getHP();
+        fireStation.spawn(rubyTruck);
+        fireStation.spawn(sapphireTruck);
+        fireStation.spawn(amethystTruck);
+        fireStation.spawn(emeraldTruck);
+        rubyTruck.repair(Ruby.getMaxHP()*-1);
+        sapphireTruck.repair(Sapphire.getMaxHP()*-1);
+        amethystTruck.repair(Amethyst.getMaxHP()*-1);
+        emeraldTruck.repair(Sapphire.getMaxHP()*-1);
 
-        for (int i=0; i<300; i++) {
+        for (int i=0; i<500; i++) {
             fireStation.restoreTrucks();
         }
 
-        boolean checkHealth0IsSame = fireTruck1Health0 == fireTruck2Health0;
-        boolean checkOceanTruckIsFullyRepaired = fireTruck2.getHP() == Sapphire.getMaxHP();
-        boolean checkSpeedTruckIsNotFullyRepaired = fireTruck1.getHP() !=  Ruby.getMaxHP();
+        System.out.println(emeraldTruck.getHP());
+        System.out.println(sapphireTruck.getHP());
+        System.out.println(rubyTruck.getHP());
+        System.out.println(amethystTruck.getHP());
 
-        assertTrue(checkHealth0IsSame && checkOceanTruckIsFullyRepaired && checkSpeedTruckIsNotFullyRepaired);
+        assertTrue(
+                emeraldTruck.getHP() < sapphireTruck.getHP() &&
+                        sapphireTruck.getHP() < rubyTruck.getHP() &&
+                        rubyTruck.getHP() < amethystTruck.getHP()
+        );
 
     }
 
@@ -265,7 +275,7 @@ public class FireTruckTest {
         FireTruck fireTruck1 = new FireTruck(new Vector2(10, 15), Ruby, collisionsMock);
         FireTruck fireTruck2 = new FireTruck(new Vector2(10, 15), Sapphire, collisionsMock);
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Clifford);
-        fireTruck1.fortressInRange(fortress.getPosition());
+
         assertNotEquals(fireTruck1.fortressInRange(fortress.getPosition()), fireTruck2.fortressInRange(fortress.getPosition()));
     }
 
@@ -296,7 +306,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void damageFortressWithSpeedByDamageTest() {
+    public void damageFortressWithRubyByDamageTest() {
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Walmgate);
         FireTruck fireTruck = new FireTruck(new Vector2(10, 10), Ruby, collisionsMock);
         fireTruck.attack(fortress);
@@ -308,7 +318,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void damageFortressWithSpeedByReserveTest() {
+    public void damageFortressWithRubyByReserveTest() {
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Walmgate);
         FireTruck fireTruck = new FireTruck(new Vector2(10, 10), Ruby, collisionsMock);
         fireTruck.attack(fortress);
@@ -320,7 +330,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void damageFortressWithOceanByDamageTest() {
+    public void damageFortressWithSapphireByDamageTest() {
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Walmgate);
         FireTruck fireTruck = new FireTruck(new Vector2(10, 10), Sapphire, collisionsMock);
         fireTruck.attack(fortress);
@@ -332,7 +342,7 @@ public class FireTruckTest {
     }
 
     @Test
-    public void damageFortressWithOceanByReserveTest() {
+    public void damageFortressWithSapphireByReserveTest() {
         Fortress fortress = new Fortress(10, 10, 0, FortressType.Walmgate);
         FireTruck fireTruck = new FireTruck(new Vector2(10, 10), Sapphire, collisionsMock);
         fireTruck.attack(fortress);
