@@ -113,6 +113,7 @@ public class FireTruck extends Sprite {
     /** Path firetruck actually uses*/
     private Vector2[] newPath;
 
+    /**The speed at which the fire engine can travel*/
     private float speed;
 
     private Vector2 previous;

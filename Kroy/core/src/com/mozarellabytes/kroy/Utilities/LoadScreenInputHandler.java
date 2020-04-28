@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mozarellabytes.kroy.Screens.LoadScreen;
 
+//#Assessment 4 handles inputs for the load screen
 public class LoadScreenInputHandler implements InputProcessor {
     private final LoadScreen loadScreen;
 

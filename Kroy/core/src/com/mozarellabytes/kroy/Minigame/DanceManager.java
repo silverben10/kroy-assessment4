@@ -89,6 +89,7 @@ public class DanceManager {
      * Gets the distance to the nearest beat where .5f is equidistant between two beats and 0f is directly on the beat
      * @return float distance to nearest beat
      */
+    //#Assessment 4 changed value to make minigame timing easier
     public float getBeatProximity() {
         return 3 * Math.abs(getPhase()-.5f);
     }
@@ -114,6 +115,7 @@ public class DanceManager {
         {
             float proximity = getBeatProximity();
             float phase = getPhase();
+            //#Assessment 4 changed early timing
             if (proximity > .75 && phase > .5f) {
                 doneThisBeat = true;
                 killCombo();

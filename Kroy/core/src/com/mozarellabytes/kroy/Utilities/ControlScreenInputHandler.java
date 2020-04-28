@@ -37,12 +37,14 @@ public class ControlScreenInputHandler implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.ESCAPE:
+                //#Assessment 4 changed to allow esc exiting the controls screen with dance screen parent
                 if(isDanceScreen){
                     Gdx.app.exit();
                 }
                 controlsScreen.changeScreen();
                 isDanceScreen = true;
                 break;
+
             case Input.Keys.C:
                 controlsScreen.changeScreen();
                 isDanceScreen = true;

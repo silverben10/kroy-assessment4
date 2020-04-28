@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-//#Assessment 3
+//#Assessment 4 class that handles the explosion destruction animations
 
 /**
  * Class that handles the explosion animation

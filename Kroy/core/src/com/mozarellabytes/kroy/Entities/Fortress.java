@@ -32,8 +32,10 @@ public class Fortress {
     @Expose
     public final FortressType fortressType;
 
+    //#Assessment 4 implemented difficulty selection
     /** Difficulty selected by the user at the start of the game */
     private final int fixedGameDifficulty;
+
 
     /**
      * Constructs Fortress at certain position and
@@ -47,7 +49,10 @@ public class Fortress {
         this.fixedGameDifficulty = fixedGameDifficulty;
         this.fortressType = type;
         this.position = new Vector2(x, y);
+
+        //#Assessment 4 implemented difficulty selection
         this.HP = type.getMaxHP(fixedGameDifficulty);
+
         this.bombs = new ArrayList<Bomb>();
         this.area = new Rectangle(this.position.x - (float) this.fortressType.getW()/2, this.position.y - (float) this.fortressType.getH()/2,
                 this.fortressType.getW(), this.fortressType.getH());
@@ -72,7 +77,9 @@ public class Fortress {
      */
     public void attack(FireTruck target, boolean randomTarget, float difficultyMultiplier) {
         if (target.getTimeOfLastAttack() + fortressType.getDelay() < System.currentTimeMillis()) {
+            //#Assessment 4 implemented difficulty selection
             this.bombs.add(new Bomb(this, target, randomTarget, difficultyMultiplier*fixedGameDifficulty));
+
             target.setTimeOfLastAttack(System.currentTimeMillis());
             if (SoundFX.music_enabled) {
                 SoundFX.sfx_fortress_attack.play();
@@ -120,6 +127,7 @@ public class Fortress {
     public void drawStats(ShapeRenderer shapeMapRenderer) {
         shapeMapRenderer.rect(this.getPosition().x - 0.26f, this.getPosition().y + 1.4f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
         shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
+        //#Assessment 4 implemented difficulty selection
         shapeMapRenderer.rect(this.getPosition().x - 0.13f, this.getPosition().y + 1.5f, 0.36f, this.getHP() / this.fortressType.getMaxHP(fixedGameDifficulty) * 1f, Color.RED, Color.RED, Color.RED, Color.RED);
     }
 
@@ -129,6 +137,7 @@ public class Fortress {
      * @param mapBatch  the renderer in line with the map
      */
     public void draw(Batch mapBatch) {
+        //#Assessment 4 implemented difficulty selection
         mapBatch.draw(this.getFortressType().getTexture(this.getHP(), fixedGameDifficulty), this.getArea().x, this.getArea().y, this.getArea().width, this.getArea().height);
     }
 

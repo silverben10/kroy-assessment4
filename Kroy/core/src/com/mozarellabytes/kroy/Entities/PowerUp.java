@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.mozarellabytes.kroy.Screens.GameScreen;
 
+//#Assessment 4 added to implement powerups
 public class PowerUp extends Sprite {
 
 
@@ -53,6 +54,10 @@ public class PowerUp extends Sprite {
         this.timer = type.getTimer();
     }
 
+    /**
+     * Draws the powerup onto the game map
+     * @param mapBatch mapbatch that handles rendering
+     */
     public void drawSprite(Batch mapBatch){
         if(!active) {
             mapBatch.draw(this, this.position.x, this.position.y, 1, 1);
@@ -75,6 +80,9 @@ public class PowerUp extends Sprite {
         }
     }
 
+    /**
+     * Handles behaviours for the powerups that should be updated every frame
+     */
     public void update(){
         if(!active){
             timeTillDeletion -= Gdx.graphics.getDeltaTime();
@@ -123,6 +131,9 @@ public class PowerUp extends Sprite {
         }
     }
 
+    /**
+     * Handles changes to be made immediately after an effects activation
+     */
     //Case statement to show all actions for each type of powerup
     public void effect() {
         //effect is called if a powerup is reached
@@ -151,6 +162,10 @@ public class PowerUp extends Sprite {
     public int getSpawnX(){return this.spawnX;}
     public int getSpawnY(){return this.spawnY;}
     public float getTimeTillDeletion(){return this.timeTillDeletion;}
+
+    /**
+     * Sets the powerup to active then triggers its effect
+     */
     public void setActive(){
         active = true;
         effect();

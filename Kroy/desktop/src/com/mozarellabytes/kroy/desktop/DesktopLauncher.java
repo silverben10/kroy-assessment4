@@ -15,6 +15,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		config.forceExit = true;
 		config.useHDPI = true;
+		//#Assessment 4 Changed game to become full screen
 		config.fullscreen = true;
 		new LwjglApplication(new Kroy(), config);
 	}

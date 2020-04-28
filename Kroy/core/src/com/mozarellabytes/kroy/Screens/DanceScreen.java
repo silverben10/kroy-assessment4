@@ -143,10 +143,13 @@ public class DanceScreen implements Screen, BeatListener {
             GUI gui = new GUI(game, (GameScreen) previousScreen);
             Gdx.input.setInputProcessor(new GameInputHandler((GameScreen) previousScreen, gui));
             gui.idleInfoButton();
+
+            //Assessment 4 changed to allow persistent sound settings
             if(SoundFX.music_enabled){
                 SoundFX.stopMusic();
                 SoundFX.playGameMusic();
             }
+
             game.setScreen(previousScreen);
         }
 

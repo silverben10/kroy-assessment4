@@ -47,6 +47,11 @@ public class MenuScreen implements Screen {
      */
     private Texture currentStartTexture;
 
+
+
+
+
+    //#Assessment 4 Buttons for difficulty selection
     /**
      * Rectangle containing the position of the easy difficulty button
      */
@@ -112,6 +117,11 @@ public class MenuScreen implements Screen {
      * easyClickedTexture if the hard difficulty button has been pressed
      */
     private Texture currentHardTexture;
+
+
+
+
+
 
     private final Rectangle loadButton;
 
@@ -204,6 +214,9 @@ public class MenuScreen implements Screen {
         startClickedTexture = new Texture(Gdx.files.internal("ui/start_clicked.png"), true);
         startClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
 
+
+
+        //#Assessment 4 Buttons for difficulty selection
         easyIdleTexture = new Texture(Gdx.files.internal("ui/easy_idle.png"), true);
         easyIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
         easyClickedTexture = new Texture(Gdx.files.internal("ui/easy_clicked.png"), true);
@@ -218,6 +231,10 @@ public class MenuScreen implements Screen {
         hardIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
         hardClickedTexture = new Texture(Gdx.files.internal("ui/hard_clicked.png"), true);
         hardClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+
+
+
+
 
         loadIdleTexture = new Texture(Gdx.files.internal("ui/load_idle.png"), true);
         loadIdleTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
@@ -253,6 +270,8 @@ public class MenuScreen implements Screen {
         currentStartTexture = startIdleTexture;
         currentLoadTexture = loadIdleTexture;
         currentControlsTexture = controlsIdleTexture;
+
+        //#Assessment 4 Buttons for difficulty selection
         currentEasyTexture = easyIdleTexture;
         currentMediumTexture = mediumIdleTexture;
         currentHardTexture = hardIdleTexture;
@@ -275,6 +294,9 @@ public class MenuScreen implements Screen {
         controlsButton.x = (int) (camera.viewportWidth / 2 - controlsButton.width / 2);
         controlsButton.y = (int) ((camera.viewportHeight / 2 - controlsButton.height / 2) * 0.35);
 
+
+
+        //#Assessment 4 Buttons for difficulty selection
         easyButton = new Rectangle();
         easyButton.width = (float) (currentEasyTexture.getWidth());
         easyButton.height = (float) (currentEasyTexture.getHeight());
@@ -292,6 +314,9 @@ public class MenuScreen implements Screen {
         hardButton.height = (float) (currentHardTexture.getHeight());
         hardButton.x = (int) (camera.viewportWidth / 2 - hardButton.width / 2);
         hardButton.y = (int) ((camera.viewportHeight / 2 - hardButton.height / 2) * 0.2);
+
+
+
 
         soundButton = new Rectangle();
         soundButton.width = 50;
@@ -325,6 +350,7 @@ public class MenuScreen implements Screen {
         game.batch.begin();
         game.batch.draw(backgroundImage, 0, 0, camera.viewportWidth, camera.viewportHeight);
 
+        //#Assessment 4 changed to allow rendering of difficulty selection menu
         if (!difficultySelect) {
             game.batch.draw(currentStartTexture, startButton.x, startButton.y, startButton.width, startButton.height);
             game.batch.draw(currentControlsTexture, controlsButton.x, controlsButton.y, controlsButton.width, controlsButton.height);
@@ -334,6 +360,8 @@ public class MenuScreen implements Screen {
             game.batch.draw(currentMediumTexture, mediumButton.x, mediumButton.y, mediumButton.width, mediumButton.height);
             game.batch.draw(currentHardTexture, hardButton.x, hardButton.y, hardButton.width, hardButton.height);
         }
+
+
         game.batch.draw(currentSoundTexture, soundButton.x, soundButton.y, soundButton.width, soundButton.height);
 
         game.batch.end();
@@ -379,12 +407,14 @@ public class MenuScreen implements Screen {
         SoundFX.sfx_menu.stop();
     }
 
+    //#Assessment 4 difficulty selection behaviour
     /**
      * Changes the screen from normal menu screen to the difficulty select screen
      */
     public void toDifficultySelect() {
         difficultySelect = true;
     }
+
 
     /**
      * Changes the screen from menu screen to game screen
@@ -427,6 +457,11 @@ public class MenuScreen implements Screen {
         currentControlsTexture = controlsClickedTexture;
     }
 
+
+
+
+
+    //#Assessment 4 difficulty selection behaviour
     /**
      * Changes the texture of the easy difficulty button when it has been clicked on
      */
@@ -456,6 +491,10 @@ public class MenuScreen implements Screen {
         }
         currentHardTexture = hardClickedTexture;
     }
+
+
+
+
 
     /**
      * Changes the texture of the sound button when it has been clicked on
@@ -504,6 +543,10 @@ public class MenuScreen implements Screen {
         currentControlsTexture = controlsIdleTexture;
     }
 
+
+
+
+    //#Assessment 4 difficulty selection behaviour
     /**
      * The texture of the easy difficulty button when it has not been clicked on
      */
@@ -524,6 +567,10 @@ public class MenuScreen implements Screen {
     public void idleHardButton() {
         currentHardTexture = hardIdleTexture;
     }
+
+
+
+
 
 
     /**
@@ -549,6 +596,10 @@ public class MenuScreen implements Screen {
         return controlsButton;
     }
 
+
+
+
+    //#Assessment 4 difficulty selection behaviour
     public Rectangle getEasyButton() {
         return easyButton;
     }
@@ -560,6 +611,10 @@ public class MenuScreen implements Screen {
     public Rectangle getHardButton() {
         return hardButton;
     }
+
+
+
+
 
     public Rectangle getSoundButton() {
         return soundButton;

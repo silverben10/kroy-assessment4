@@ -58,6 +58,8 @@ public class MenuInputHandler implements InputProcessor {
         return false;
     }
 
+
+    //#Assessment 4 difficulty selection behaviour
     /**
      * Checks if the user clicks on the start, controls or sound button.
      * It starts the game, shows the controls screen or toggles the sound
@@ -95,6 +97,7 @@ public class MenuInputHandler implements InputProcessor {
         return true;
     }
 
+    //#Assessment 4 adjusted to allow for changes with difficulty selection behaviour
     /**
      * Executes the action according to the button clicked by the user.
      * i.e. if the user clicks down on the Start button but lifts their
@@ -142,7 +145,9 @@ public class MenuInputHandler implements InputProcessor {
             menu.idleLoadButton();
         }
         return true;
-}
+    }
+
+
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {

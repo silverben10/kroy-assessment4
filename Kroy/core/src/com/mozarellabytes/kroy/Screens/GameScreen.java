@@ -36,10 +36,12 @@ public class GameScreen implements Screen {
     private final Kroy game;
 
 
+    //#Assessment 4 allows for difficulty selection
     /**
      * The difficulty level of the game
      */
     private int fixedGameDifficulty;
+
 
     /*
      * Renders our tiled map
@@ -105,6 +107,7 @@ public class GameScreen implements Screen {
     private final ArrayList<Patrol> patrols;
 
 
+    //#Assessment 4 Added powerups
     /**
      * List of active PowerUps on the map
      */
@@ -112,6 +115,8 @@ public class GameScreen implements Screen {
 
     /** List of PowerUps to remove from the map */
     private final ArrayList<PowerUp> powerUpsToRemove;
+
+
 
     /**
      * Where the FireEngines' spawn, refill and repair
@@ -157,6 +162,7 @@ public class GameScreen implements Screen {
         PLAY, PAUSE
     }
 
+    //#Assessment 4 Explosion animations
     /**
      * The list of all active explosions
      */
@@ -165,6 +171,8 @@ public class GameScreen implements Screen {
      * The list of all explosions to be removed
      */
     private ArrayList<Explosion> explosionsToRemove;
+
+
 
     /**
      * Constructor which has the game passed in
@@ -206,6 +214,7 @@ public class GameScreen implements Screen {
             mapLayers.getIndex("structures2"),
             mapLayers.getIndex("transparentStructures")};
 
+        //#Assessment 4 changed position to adjust for fullscreen map
         station = new FireStation(3, 8);
 
         if (loadSlot == 0) {
@@ -214,6 +223,7 @@ public class GameScreen implements Screen {
             spawn(FireTruckType.Sapphire);
             spawn(FireTruckType.Ruby);
 
+            //#Assessment 4 changed positions to adjust for fullscreen map and difficulty selection
             fortresses = new ArrayList<Fortress>();
             fortresses.add(new Fortress(12, 24.5f, fixedGamedifficulty, FortressType.Revs));
             fortresses.add(new Fortress(30.5f, 23.5f, fixedGamedifficulty, FortressType.Walmgate));
@@ -231,17 +241,18 @@ public class GameScreen implements Screen {
             patrols.add(new Patrol(this, PatrolType.Yellow));
             patrols.add(new Patrol(this, PatrolType.Station));
 
-
+            //Assessment 4 Added powerups
             powerUps = new ArrayList<PowerUp>();
             powerUpsToRemove = new ArrayList<PowerUp>();
-
             mirrorTrucks = new ArrayList<>();
+
             trucksToDestroy = new ArrayList<>();
 
 
 
             deadEntities = new ArrayList<>(7);
 
+            //#Assessment 4 explosion animations
             explosions = new ArrayList<>();
             explosionsToRemove = new ArrayList<>();
 
@@ -320,6 +331,7 @@ public class GameScreen implements Screen {
             patrols.add(new Patrol(this, PatrolType.Yellow));
             patrols.add(new Patrol(this, PatrolType.Station));
 
+            //Assessment 4 Added powerups
             powerUps = new ArrayList<PowerUp>();
             powerUpsToRemove = new ArrayList<PowerUp>();
 
@@ -369,7 +381,7 @@ public class GameScreen implements Screen {
             fortress.draw(mapBatch);
         }
 
-        //draw powerup sprites on the map
+        //#Assessment 4 draw powerup sprites on the map
         for (PowerUp powerUp : this.powerUps) {
             powerUp.drawSprite(mapBatch);
         }
@@ -394,12 +406,12 @@ public class GameScreen implements Screen {
             }
         }
 
+        //#Assessment 4 sets explosion animations to be removed once they expire
         for (Explosion explosion : explosions) {
             if (explosion.drawExplosion(mapBatch)) {
                 explosionsToRemove.add(explosion);
             }
         }
-
         explosions.removeAll(explosionsToRemove);
 
         mapBatch.end();
@@ -480,6 +492,8 @@ public class GameScreen implements Screen {
         station.checkForCollisions();
 
         gameState.setTrucksInAttackRange(0);
+
+        //#Assessment 4 Code to calculate what powerup to spawn and when//where to spawn it
         int powerUpX = new Random().nextInt(50);
         int powerUpY = new Random().nextInt(30);
         if(new Random().nextInt(20) == 1 && isRoad(powerUpX, powerUpY) && !tileHasPowerup(powerUpX,powerUpY)){
@@ -503,6 +517,7 @@ public class GameScreen implements Screen {
             }
         }
 
+        //#Assessment 4 code for the destruction and activation of powerups
         for(PowerUp powerUp: powerUps){
             powerUp.update();
             if(powerUp.getTimeTillDeletion() <= 0){
@@ -532,6 +547,7 @@ public class GameScreen implements Screen {
         }
         powerUps.removeAll(powerUpsToRemove);
 
+        //Assessment 4 code to spawn mirror trucks
         for(FireTruck mirrorTruck: mirrorTrucks){
             if(!station.getTrucks().contains(mirrorTruck) && mirrorTruck.getHP() > 0){
                 station.spawn(mirrorTruck);
@@ -583,9 +599,10 @@ public class GameScreen implements Screen {
 
             // check if truck is destroyed
             if (truck.getHP() <= 0) {
-                mapBatch.begin();
+
+                //#Assessment 4 Adds explosion animation once firetruck is destroyed
                 explosions.add(new Explosion(4, 4, (int) truck.getPosition().x - 1, (int) truck.getPosition().y - 1, 0.025f));
-                mapBatch.end();
+
                 gameState.removeFireTruck();
                 station.destroyTruck(truck);
                 if (truck.equals(this.selectedTruck)) {
@@ -594,7 +611,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        //#Assessment4 made some changes to the destruction behaviour
+        //#Assessment4 made some changes to the destruction behaviour and added explosion animation
         if (station.getHP() <= 0) {
             if (!(gameState.isStationDestroyed())) {
                 explosions.add(new Explosion(12, 10, (int) station.getPosition().x - 3, (int) station.getPosition().y - 4, 0.1f));
@@ -657,9 +674,10 @@ public class GameScreen implements Screen {
 
             // check if fortress is destroyed
             if (fortress.getHP() <= 0) {
-                mapBatch.begin();
+
+                //#Assessment 4 added explosion animation upon fortress destruction
                 explosions.add(new Explosion(12, 10, (int) fortress.getPosition().x - 5, (int) fortress.getPosition().y - 5, 0.1f));
-                mapBatch.end();
+
                 gameState.addFortress();
                 deadEntities.add(fortress.createDestroyedFortress());
                 this.fortresses.remove(fortress);
@@ -782,6 +800,13 @@ public class GameScreen implements Screen {
         return ((TiledMapTileLayer) mapLayers.get("collisions")).getCell(x, y).getTile().getProperties().get("road").equals(true);
     }
 
+    //#Assessment 4 powerup code
+    /**
+     * Determines if a tile contains a powerup
+     * @param tileX X position of the tile
+     * @param tileY Y position of the tile
+     * @return True if the tile has a powerup
+     */
     public boolean tileHasPowerup(int tileX, int tileY){
         for(PowerUp powerUp: powerUps){
             if(powerUp.getSpawnX() == tileX && powerUp.getSpawnY() == tileY){
@@ -817,12 +842,14 @@ public class GameScreen implements Screen {
         game.setScreen(new SaveScreen(game, this));
     }
 
+
     /**
      * Starts a dance-off between the given firetruck and the given ET
      *
      * @param firetruck
      * @param et
      */
+    //#Assessment 4 changed to allow persistent sound settings
     public void doDanceOff(FireTruck firetruck, Patrol et) {
         if (SoundFX.music_enabled) {
             SoundFX.stopMusic();
@@ -883,9 +910,11 @@ public class GameScreen implements Screen {
         return this.state;
     }
 
+    //#Assessment 4 allows for difficulty selection
     public int getFixedGameDifficulty() {
         return this.fixedGameDifficulty;
     }
+
 
     public void setGUI(GUI gui) {
         this.gui = gui;

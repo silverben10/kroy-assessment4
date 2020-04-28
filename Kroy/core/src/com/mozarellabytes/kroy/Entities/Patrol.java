@@ -199,6 +199,7 @@ public class Patrol extends Sprite {
      * @param previous Previous coordinates of the patrol entity.
      */
     public void addTileToPath(Vector2 coordinate, Vector2 previous) {
+        //#Assessment 4 changed to give aliens a hovering animation
         int interpolation = (int) (90/type. getSpeed());
         float offsetX = 0;
         float offsetY = 0;
@@ -220,6 +221,13 @@ public class Patrol extends Sprite {
 
     }
 
+    /**
+     * Calculates and returns the hover offset of alien partols
+     * @param interpolation the max offser
+     * @param i the current offset
+     * @return the next offset
+     */
+    //#Assessment 4 added to help with hovering
     public float getHoverOffset(int interpolation, double i){
         //sin() function on counter i, changes based on interpolation between 0 and 2PiRad for input
         float tempOut;
@@ -229,6 +237,11 @@ public class Patrol extends Sprite {
         //Gdx.app.log("Tag", String.valueOf(i));
         return tempOut;
     }
+
+
+    /**
+     * moves the patrol from its current tile to the next
+     */
     public void move() {
         if (moving) {
             Node next=path.getNext(current);

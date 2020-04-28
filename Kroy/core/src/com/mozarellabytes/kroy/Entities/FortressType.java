@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public enum FortressType {
 
+    //#Assessment 4 changed constant fortress values for difficulty selection
     /** The preset values for the different fortress types includes the type's:
      * name, delay between firing bombs, attack range, maximum health points,
      * attack points, width, height and sprite.
@@ -105,6 +106,7 @@ public enum FortressType {
 
     public float getRange() { return range; }
 
+    //#Assessment 4 adjusted to account for difficulty selection
     public float getMaxHP(int difficulty) {
         if(difficulty != 1) {
             return maxHP;

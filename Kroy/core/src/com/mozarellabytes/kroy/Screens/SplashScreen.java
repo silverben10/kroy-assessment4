@@ -16,6 +16,7 @@ public class SplashScreen implements Screen {
 
     private final Kroy game;
 
+    //#Assessment 4 added a new background logo
     /** The first image displayed as the splash screen */
     private final Texture backGroundLogo1;
     /** The image displayed as the splash screen */
@@ -62,10 +63,11 @@ public class SplashScreen implements Screen {
         game.batch.draw(backGroundLogo1,0,0,Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
         game.batch.end();
 
+        //#Assessment 4 added code to allow background logo to fade in and out
         if(TimeUtils.timeSinceMillis(startTime) > 1000) {
             spriteBatchTransparency -= Gdx.graphics.getDeltaTime() * 1f;
         }
-        // #Assessment3
+
         if(TimeUtils.timeSinceMillis(startTime) > 3000){
             game.setScreen(new ControlsScreen(game, new MenuScreen(game), "menu"));
         }

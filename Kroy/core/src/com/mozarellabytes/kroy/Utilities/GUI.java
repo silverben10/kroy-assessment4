@@ -132,10 +132,14 @@ public class GUI {
         soundOffClickedTexture = new Texture(Gdx.files.internal("ui/sound_off_clicked.png"), true);
         soundOffClickedTexture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
 
+
+        //#Assessment 4 added save buttons
         saveButtonIdle = new Texture(Gdx.files.internal("ui/save_idle.png"), true);
         saveButtonIdle.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
         saveButtonClicked = new Texture(Gdx.files.internal("ui/save_clicked.png"), true);
         saveButtonClicked.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.MipMapLinearNearest);
+
+
 
         currentHomeTexture = homeButtonIdle;
         currentPauseTexture = pauseButtonIdle;
@@ -367,6 +371,8 @@ public class GUI {
         }
     }
 
+
+    //#Assessment 4 added save buttons
     /**
      * Sets the saveButton texture that is rendered to the screen to clicked if it was clicked,
      * else idle.
@@ -378,6 +384,8 @@ public class GUI {
             currentSaveTexture = saveButtonIdle;
         }
     }
+
+
 
     /** Sets the homeButton texture that is rendered to the screen */
     public void idleHomeButton() {

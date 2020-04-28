@@ -102,6 +102,10 @@ public class FireStation {
         this.patrols.add(patrol);
     }
 
+    /**
+     * Draws the bars above the fire station
+     * @param shapeMapRenderer the shapemaprenderer that will render the bars
+     */
     public void drawStats(ShapeRenderer shapeMapRenderer) {
         shapeMapRenderer.rect(this.getPosition().x + 2.26f, this.getPosition().y + 2.9f, 0.6f, 1.2f, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
         shapeMapRenderer.rect(this.getPosition().x + 2.38f, this.getPosition().y + 3f, 0.36f, 1f, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK, Color.FIREBRICK);
@@ -182,6 +186,7 @@ public class FireStation {
     public void checkForCollisions() {
         for (FireTruck truck : trucks) {
             for (FireTruck truck2 : trucks) {
+                //#Assessment 4 modified condition to allow for mirror trucks to pass through trucks and fixed a bug
                 if (!(truck.equals(truck2)) && truck.type != FireTruckType.Mirror && truck2.type != FireTruckType.Mirror) {
                     if (!truck.trailPath.isEmpty() && !truck.getPosition().equals(truck2.getPosition())) {
                         Vector2 truck2tile = new Vector2(Math.round(truck2.getPosition().x), Math.round(truck2.getPosition().y));

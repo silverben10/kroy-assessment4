@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
  * contains hovering animation method
  * contains method for handling interaction with fireTruck
  */
+//#Assessment 4 added to implement powerups
 public enum PowerUpType {
     Mirror("mirror", 10f),
     Immunity("immunity", 15.0f),

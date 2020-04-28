@@ -12,6 +12,8 @@ import com.mozarellabytes.kroy.Screens.GameScreen;
 
 import java.util.ArrayList;
 
+
+//#Assessment 4 allows for the saving of the games progress
 public class SaveManager {
 
     public SaveManager() {
