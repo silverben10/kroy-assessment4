@@ -17,7 +17,7 @@ public enum FireTruckType {
     /** The preset values for the different truck types includes the type's:
      * maximum reserve, speed, trailColour, name, attack range, attack points
      */
-    Ruby(100, 241.267f, Color.RED, "Ruby Truck", 5, 0.08f, 150, "red"),
+    Ruby(100, 4.2f, Color.RED, "Ruby Truck", 5, 0.08f, 150, "red"),
     Sapphire(250, 2, Color.CYAN, "Sapphire Truck", 6, 0.16f, 120, "blue"),
     Amethyst(280, 1.4f, Color.PURPLE, "Amethyst Truck", 6.5f, 0.2f, 230, "purple"),
     Emerald(120, 4, Color.GREEN, "Emerald Truck", 4.5f, 0.3f, 100, "green"),

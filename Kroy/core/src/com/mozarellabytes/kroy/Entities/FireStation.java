@@ -68,8 +68,8 @@ public class FireStation {
         this.w=5;
         this.h=3;
         this.spawnTile = new Vector2(x+3, y);
-        this.bayTile1 = new Vector2(x+1, y);
-        this.bayTile2 = new Vector2(x+2, y);
+        this.bayTile1 = new Vector2(x+1,y);
+        this.bayTile2 = new Vector2(x+2,y);
         this.texture = new Texture(Gdx.files.internal("sprites/station/station.png"));
         this.deadTexture = new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_dead.png")); // change me pls
         this.trucks = new ArrayList<FireTruck>();
@@ -259,6 +259,7 @@ public class FireStation {
     public Vector2 getPosition() {
         return new Vector2(this.x,this.y);
     }
+
 
     /*public Patrols getPatrol(int i) {
         return this.patrols.get(i);

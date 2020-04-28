@@ -118,6 +118,8 @@ public class GameScreen implements Screen {
      */
     private final FireStation station;
 
+    private ArrayList<FireTruck> trucksToDestroy;
+
     private ArrayList<FireTruck> mirrorTrucks;
 
     /**
@@ -221,7 +223,7 @@ public class GameScreen implements Screen {
             fortresses.add(new Fortress(44.5f, 10.5f, fixedGamedifficulty, FortressType.Shambles));
 
             patrols = new ArrayList<Patrol>();
-            
+
             patrols.add(new Patrol(this, PatrolType.Blue));
             patrols.add(new Patrol(this, PatrolType.Green));
             patrols.add(new Patrol(this, PatrolType.Red));
@@ -234,6 +236,7 @@ public class GameScreen implements Screen {
             powerUpsToRemove = new ArrayList<PowerUp>();
 
             mirrorTrucks = new ArrayList<>();
+            trucksToDestroy = new ArrayList<>();
 
 
 
@@ -591,10 +594,19 @@ public class GameScreen implements Screen {
             }
         }
 
-        //#Assessment4
+        //#Assessment4 made some changes to the destruction behaviour
         if (station.getHP() <= 0) {
             if (!(gameState.isStationDestroyed())) {
                 explosions.add(new Explosion(12, 10, (int) station.getPosition().x - 3, (int) station.getPosition().y - 4, 0.1f));
+                for(FireTruck truck: station.getTrucks()){
+                    if(truck.getTilePosition().y == station.getPosition().y && truck.getTilePosition().x > station.getPosition().x && truck.getTilePosition().x < station.getPosition().x+4){
+                        trucksToDestroy.add(truck);
+                    }
+                }
+                for(FireTruck truck: trucksToDestroy){
+                    station.destroyTruck(truck);
+                    gameState.removeFireTruck();
+                }
                 gameState.setStationDestroyed();
                 deadEntities.add(station.getDestroyedStation());
                 patrols.remove(PatrolType.Station);
