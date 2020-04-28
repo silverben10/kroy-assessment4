@@ -19,32 +19,32 @@ public enum FortressType {
      * name, delay between firing bombs, attack range, maximum health points,
      * attack points, width, height and sprite.
      */
-    Revs ("Revolution", 2500, 7, 100, 5, 5, 3,
+    Revs ("Revolution", 2500, 7, 100, 5, 6, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_revs_dead.png"))),
 
-    Walmgate ("Walmgate Bar", 1500, 8, 200, 8, 5, 5,
+    Walmgate ("Walmgate Bar", 1500, 6, 200, 8, 5, 5,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_walmgate_dead.png"))),
 
-    Clifford ("Clifford's Tower", 500, 7, 150, 5, 4, 3,
+    Clifford ("Clifford's Tower", 500, 4, 150, 4, 4, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_full.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_clifford_dead.png"))),
 
-    Shambles ("Shambles", 500, 7, 200, 10, 5, 3,
+    Shambles ("Shambles", 650, 8, 190, 6, 5, 3,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_shambles_dead.png"))),
 
-    Minster ("York Minster", 1500, 8, 180, 10, 4, 5,
+    Minster ("York Minster", 1600, 9, 180, 10, 4, 5,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_minster_dead.png"))),
     
-    Railway ("Train Station", 1000, 8, 250, 7, 6, 4,
+    Railway ("Train Station", 1000, 5, 250, 7, 6, 4,
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_half.png")),
             new Texture(Gdx.files.internal("sprites/fortress/fortress_train_station_dead.png")));

@@ -29,9 +29,9 @@ public class DancerTest {
     @Test
     public void testDamage() {
         dancer = new Dancer(100);
-        assertEquals(false, dancer.damage(10));
+        assertFalse(dancer.damage(10));
         assertEquals(90, dancer.getHealth());
-        assertEquals(true, dancer.damage(100));
+        assertTrue(dancer.damage(100));
         assertEquals(-10, dancer.getHealth());
 
         // Negative damage shouldn't happen
