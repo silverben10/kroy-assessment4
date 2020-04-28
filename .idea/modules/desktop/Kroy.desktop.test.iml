@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module version="4">
-  <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="Kroy" externalSystemModuleType="sourceSet" externalSystemModuleVersion="1.0" linkedProjectId=":desktop:test" linkedProjectPath="$MODULE_DIR$/../../../Kroy/desktop" rootProjectPath="$MODULE_DIR$/../../../Kroy" />
-</module>
